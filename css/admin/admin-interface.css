@@ -744,8 +744,6 @@ button[data-action^="save"]:hover {
     font-weight: 700;
 }
 
-.nav-close-button { color: #999; }
-
 /* Context and edit panels */
 #sidebar {
     padding: 20px 16px 28px;
