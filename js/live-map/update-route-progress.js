@@ -185,7 +185,7 @@ function updateSmartRouteInformation() {
     ) {
 
         setETAUnavailable(
-            'Updating routeâ€¦ ETA will resume automatically.'
+            'Updating route… ETA will resume automatically.'
         );
 
     }

@@ -23,6 +23,15 @@ foreach ($page in $pages) {
     }
 }
 
+Get-ChildItem -LiteralPath $project -File -Recurse | Where-Object {
+    $_.Extension -in '.html', '.css', '.js', '.md'
+} | ForEach-Object {
+    $content = [System.IO.File]::ReadAllText($_.FullName)
+    if ($content -match '[\u00C2\u00C3]|\u00E2\u20AC|\u00F0\u0178') {
+        $problems.Add("Possible broken character encoding in $($_.FullName.Substring($project.Length + 1))")
+    }
+}
+
 Get-ChildItem -LiteralPath (Join-Path $project 'css') -Filter '*.css' -Recurse | ForEach-Object {
     $css = [System.IO.File]::ReadAllText($_.FullName)
     if (([regex]::Matches($css, '\{')).Count -ne ([regex]::Matches($css, '\}')).Count) {

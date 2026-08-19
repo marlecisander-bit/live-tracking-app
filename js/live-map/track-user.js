@@ -354,7 +354,7 @@ function updateNearestStopCard() {
             userAccuracyMeters > 100
         )
         ?
-        'NEAREST STOP Â· APPROX.'
+            'NEAREST STOP · APPROX.'
         :
         'NEAREST STOP';
 

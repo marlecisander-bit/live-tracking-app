@@ -44,7 +44,7 @@ function createPOIIcon() {
         html:
 
             '<div class="poi-marker">' +
-            'â€¢' +
+            '•' +
             '</div>',
 
         iconSize:
@@ -83,7 +83,7 @@ function createVanIcon(direction) {
                 heading +
                 'deg)">' +
 
-                    'â–²' +
+                    '▲' +
 
                 '</div>' +
 

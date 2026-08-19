@@ -335,7 +335,7 @@ function updateGPSStatus() {
 
 
         text.innerText =
-            'DELAYED Â· ' +
+                'DELAYED · ' +
             ageText;
 
 
@@ -357,7 +357,7 @@ function updateGPSStatus() {
 
 
         text.innerText =
-            'LIVE Â· ' +
+                'LIVE · ' +
             ageText;
 
 

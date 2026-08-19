@@ -120,7 +120,7 @@ function buildPointPopupHTML(
 
             +
 
-            ' Â· '
+            ' · '
 
             +
 
