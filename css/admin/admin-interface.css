@@ -50,7 +50,7 @@
         }
 
         #publish-button {
-            background: var(--ss-red) !important;
+            background: #16803c !important;
             color: white !important;
         }
 
@@ -640,7 +640,11 @@ textarea:focus-visible {
 #draft-button:hover { border-color: #aaa !important; }
 
 #publish-button {
-    box-shadow: 0 6px 16px rgba(217, 0, 0, .18);
+    box-shadow: 0 6px 16px rgba(22, 128, 60, .2);
+}
+
+#publish-button:hover {
+    background: #116b32 !important;
 }
 
 .header-status {
