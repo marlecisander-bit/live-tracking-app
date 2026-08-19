@@ -491,3 +491,367 @@
                     );
             }
         }
+
+/* ==========================================================
+   ADMIN UI v3 - matches the public live-map design
+   ========================================================== */
+
+:root {
+    --ss-red: #d90000;
+    --ss-red-dark: #b60000;
+    --ss-red-soft: #fff3f3;
+    --ss-ink: #202020;
+    --ss-muted: #727272;
+    --ss-border: #e9e9e9;
+    --ss-soft: #f7f7f8;
+    --ss-nav-width: 88px;
+    --ss-panel-width: 300px;
+    --ss-header-height: 72px;
+}
+
+button {
+    transition: background .18s ease, color .18s ease, border-color .18s ease,
+        box-shadow .18s ease, transform .12s ease;
+}
+
+button:hover { opacity: 1; }
+button:active { transform: scale(.98); }
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 3px solid rgba(217, 0, 0, .16);
+    outline-offset: 2px;
+}
+
+/* Login */
+#login-screen {
+    background:
+        radial-gradient(circle at 50% 38%, rgba(217, 0, 0, .07), transparent 30%),
+        #f7f7f8;
+}
+
+#login-box {
+    max-width: 390px;
+    padding: 38px;
+    border: 1px solid var(--ss-border);
+    border-radius: 24px;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, .12);
+    text-align: center;
+}
+
+.login-brand-mark {
+    width: 58px;
+    height: 58px;
+    margin: 0 auto 20px;
+    border-radius: 18px;
+    display: grid;
+    place-items: center;
+    background: var(--ss-red);
+    color: #fff;
+    box-shadow: 0 10px 24px rgba(217, 0, 0, .24);
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: -.5px;
+}
+
+#login-box h1 {
+    font-size: 25px;
+    letter-spacing: -.6px;
+}
+
+#login-box p {
+    margin: 7px 0 26px;
+    color: var(--ss-muted);
+    font-size: 13px;
+}
+
+#login-box input {
+    min-height: 48px;
+    margin-bottom: 12px;
+    padding: 0 15px;
+    border: 1px solid #dedede;
+    border-radius: 12px;
+    background: #fafafa;
+    font-size: 14px;
+}
+
+#login-box input:focus {
+    background: #fff;
+    border-color: var(--ss-red);
+}
+
+#login-box button {
+    min-height: 49px;
+    margin-top: 4px;
+    border-radius: 12px;
+    background: var(--ss-red);
+    font-weight: 700;
+    box-shadow: 0 8px 20px rgba(217, 0, 0, .2);
+}
+
+#login-box button:hover { background: var(--ss-red-dark); }
+#login-error { min-height: 17px; text-align: left; }
+
+/* Top bar */
+#header {
+    padding: 0 20px 0 24px;
+    background: rgba(255, 255, 255, .97);
+}
+
+#brand {
+    font-size: 20px;
+    letter-spacing: -.45px;
+}
+
+#brand small { margin-top: 4px; }
+
+#header-right button {
+    min-height: 40px;
+    padding: 0 14px;
+    border: 1px solid transparent;
+    border-radius: 12px;
+    font-weight: 650;
+}
+
+#header-right .btn-light {
+    background: #f5f5f6;
+    border-color: #ededed;
+}
+
+#header-right .btn-light:hover {
+    background: var(--ss-red-soft);
+    border-color: #ffd8d8;
+    color: var(--ss-red-dark);
+}
+
+#draft-button {
+    background: #fff !important;
+    color: var(--ss-ink) !important;
+    border-color: #d8d8d8 !important;
+}
+
+#draft-button:hover { border-color: #aaa !important; }
+
+#publish-button {
+    box-shadow: 0 6px 16px rgba(217, 0, 0, .18);
+}
+
+.header-status {
+    min-height: 38px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: #fff;
+}
+
+/* Main navigation: white surface and matching live-map icons */
+#app-nav {
+    padding: 12px 8px;
+    gap: 5px;
+    background: #fff;
+    color: var(--ss-ink);
+    border-right: 1px solid var(--ss-border);
+    box-shadow: 5px 0 18px rgba(0, 0, 0, .025);
+}
+
+.nav-brand-dot {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    margin-bottom: 7px;
+    box-shadow: 0 7px 16px rgba(217, 0, 0, .2);
+}
+
+.nav-divider {
+    width: 46px;
+    background: var(--ss-border);
+    margin-bottom: 6px;
+}
+
+.app-nav-button {
+    width: 70px;
+    height: 58px;
+    gap: 2px;
+    flex-direction: column;
+    border-radius: 14px;
+    color: #777;
+    font-size: inherit;
+}
+
+.app-nav-button:hover {
+    background: var(--ss-red-soft);
+    color: var(--ss-red-dark);
+}
+
+.app-nav-button.active {
+    background: var(--ss-red-soft);
+    color: var(--ss-red);
+}
+
+.app-nav-button::after { display: none; }
+
+.admin-nav-icon {
+    width: 30px;
+    height: 30px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+}
+
+.app-nav-button.active .admin-nav-icon {
+    background: var(--ss-red);
+    color: #fff;
+    box-shadow: 0 5px 13px rgba(217, 0, 0, .2);
+}
+
+.admin-nav-icon svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.admin-nav-label {
+    font-size: 9px;
+    line-height: 1;
+    font-weight: 700;
+}
+
+.nav-close-button { color: #999; }
+
+/* Context and edit panels */
+#sidebar {
+    padding: 20px 16px 28px;
+    box-shadow: 6px 0 20px rgba(0, 0, 0, .025);
+}
+
+#context-panel-title {
+    min-height: 38px;
+    margin-bottom: 16px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--ss-border);
+}
+
+#context-panel-title strong {
+    font-size: 17px;
+    letter-spacing: -.25px;
+}
+
+.workflow-card {
+    padding: 14px;
+    border: 0;
+    border-radius: 14px;
+    background: var(--ss-soft);
+}
+
+.workflow-card strong { font-size: 13px; }
+.workflow-card span { font-size: 10px; }
+
+.workflow-steps { gap: 6px; }
+
+.workflow-step {
+    padding: 6px 8px;
+    font-size: 9px !important;
+}
+
+.sidebar-actions { gap: 8px; }
+
+.sidebar-actions button,
+.context-primary,
+.context-secondary {
+    min-height: 44px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 650;
+}
+
+.context-primary {
+    box-shadow: 0 7px 16px rgba(217, 0, 0, .15);
+}
+
+.context-primary:hover { background: var(--ss-red-dark); }
+
+.context-secondary:hover {
+    background: var(--ss-red-soft);
+    border-color: #ffd5d5;
+    color: var(--ss-red-dark);
+}
+
+.section-title {
+    margin-top: 22px;
+    color: #888;
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.admin-object-list-item {
+    min-height: 42px;
+    border-radius: 11px;
+}
+
+#editor {
+    padding: 22px 20px 32px;
+    box-shadow: -8px 0 24px rgba(0, 0, 0, .035);
+}
+
+#editor h2 { letter-spacing: -.35px; }
+
+input, select, textarea {
+    border-radius: 10px;
+}
+
+/* Floating map card */
+#gps-card {
+    padding: 15px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .14);
+}
+
+#gps-card .btn-red {
+    min-height: 44px;
+    border-radius: 11px;
+    font-weight: 700;
+}
+
+/* Modal dialogs use the same calm visual language */
+#poi-manager-dialog,
+#export-map-dialog {
+    border: 1px solid var(--ss-border);
+    border-radius: 22px;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, .18);
+}
+
+@media (max-width: 700px) {
+    :root { --ss-header-height: 64px; }
+
+    #header { padding: 0 12px; }
+    #brand { font-size: 17px; }
+
+    #app-nav {
+        height: calc(72px + env(safe-area-inset-bottom));
+        padding: 7px 5px calc(7px + env(safe-area-inset-bottom));
+        background: rgba(255, 255, 255, .97);
+        border-top-color: var(--ss-border);
+        box-shadow: 0 -8px 25px rgba(0, 0, 0, .08);
+    }
+
+    .app-nav-button {
+        width: 52px;
+        height: 54px;
+        color: #777;
+    }
+
+    .admin-nav-icon { width: 29px; height: 29px; }
+    .admin-nav-label { display: block; font-size: 8px; }
+
+    #login-box {
+        max-width: 360px;
+        padding: 30px 24px;
+        border-radius: 20px;
+    }
+}

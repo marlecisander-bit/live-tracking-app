@@ -76,28 +76,34 @@
 
     <div id="login-box">
 
+        <div class="login-brand-mark" aria-hidden="true"><span>SS</span></div>
+
         <h1>
             Sightseeing Shkodra
         </h1>
 
         <p>
-            Admin Map Manager
+            Sign in to manage your live tour map
         </p>
 
         <input
             id="login-email"
             type="email"
-            placeholder="Email"
+            placeholder="Email address"
+            autocomplete="email"
+            aria-label="Email address"
         >
 
         <input
             id="login-password"
             type="password"
             placeholder="Password"
+            autocomplete="current-password"
+            aria-label="Password"
         >
 
         <button type="button" data-action="adminLogin">
-            Login
+            Sign in
         </button>
 
         <div id="login-error"></div>
@@ -216,16 +222,16 @@
         <div class="nav-brand-dot">SS</div>
         <div class="nav-divider"></div>
 
-            <button class="app-nav-button active" type="button" data-label="Map" data-section="map" data-action="setAdminSection">🗺️</button>
-            <button class="app-nav-button" type="button" data-label="Stops" data-section="stops" data-action="setAdminSection">🚏</button>
-            <button class="app-nav-button" type="button" data-label="Routes" data-section="routes" data-action="setAdminSection">↝</button>
-            <button class="app-nav-button" type="button" data-label="POIs" data-section="pois" data-action="setAdminSection">📍</button>
-            <button class="app-nav-button" type="button" data-label="Analytics" data-section="analytics" data-action="setAdminSection">📊</button>
-            <button class="app-nav-button" type="button" data-label="Export" data-section="export" data-action="setAdminSection">↓</button>
+            <button class="app-nav-button active" type="button" data-label="Map" aria-label="Map" data-section="map" data-action="setAdminSection"><span class="admin-nav-icon"><svg viewBox="0 0 24 24"><path d="M3.5 6.5 9 4l6 2.5L20.5 4v13.5L15 20l-6-2.5L3.5 20Z"/><path d="M9 4v13.5M15 6.5V20"/></svg></span><span class="admin-nav-label">Map</span></button>
+            <button class="app-nav-button" type="button" data-label="Stops" aria-label="Stops" data-section="stops" data-action="setAdminSection"><span class="admin-nav-icon"><svg viewBox="0 0 24 24"><path d="M12 21s6-6 6-12a6 6 0 1 0-12 0c0 6 6 12 6 12Z"/><circle cx="12" cy="9" r="2.2"/></svg></span><span class="admin-nav-label">Stops</span></button>
+            <button class="app-nav-button" type="button" data-label="Routes" aria-label="Routes" data-section="routes" data-action="setAdminSection"><span class="admin-nav-icon"><svg viewBox="0 0 24 24"><path d="M5 17c2 0 2-5 5-5s2-5 6-5"/><circle cx="5" cy="17" r="2"/><circle cx="16" cy="7" r="2"/></svg></span><span class="admin-nav-label">Route</span></button>
+            <button class="app-nav-button" type="button" data-label="POIs" aria-label="Points of interest" data-section="pois" data-action="setAdminSection"><span class="admin-nav-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v10M7 12h10"/></svg></span><span class="admin-nav-label">POIs</span></button>
+            <button class="app-nav-button" type="button" data-label="Analytics" aria-label="Analytics" data-section="analytics" data-action="setAdminSection"><span class="admin-nav-icon"><svg viewBox="0 0 24 24"><path d="M5 19V11M12 19V5M19 19v-9"/></svg></span><span class="admin-nav-label">Stats</span></button>
+            <button class="app-nav-button" type="button" data-label="Export" aria-label="Export" data-section="export" data-action="setAdminSection"><span class="admin-nav-icon"><svg viewBox="0 0 24 24"><path d="M12 4v11M8 11l4 4 4-4M5 20h14"/></svg></span><span class="admin-nav-label">Export</span></button>
 
         <div class="nav-spacer"></div>
 
-            <button class="app-nav-button" type="button" data-label="Close panel" data-action="closeMobileContextPanel">×</button>
+            <button class="app-nav-button nav-close-button" type="button" data-label="Close panel" aria-label="Close panel" data-action="closeMobileContextPanel"><span class="admin-nav-icon"><svg viewBox="0 0 24 24"><path d="m7 7 10 10M17 7 7 17"/></svg></span><span class="admin-nav-label">Close</span></button>
 
     </nav>
 
@@ -279,7 +285,7 @@
         <section class="context-section" data-context-section="routes">
 
             <div class="sidebar-actions">
-                <button class="context-primary" type="button" data-action="startAutoRoute">✨ Auto Route</button>
+                <button class="context-primary" type="button" data-action="startAutoRoute">Auto Route</button>
                 <button class="context-secondary" type="button" data-action="startDrawRoute">Draw Manually</button>
             </div>
 
@@ -293,7 +299,7 @@
 
             <div class="sidebar-actions">
                 <button class="context-primary" type="button" data-action="startAddPOI">+ Add POI</button>
-                <button class="context-secondary" type="button" data-action="openPOIManager">🌍 POI Manager</button>
+                <button class="context-secondary" type="button" data-action="openPOIManager">POI Manager</button>
             </div>
 
             <div class="section-title">POIs</div>
