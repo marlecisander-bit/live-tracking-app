@@ -1,0 +1,242 @@
+        /* =====================================================
+           MAP CONTROLS
+        ===================================================== */
+
+        #map-controls {
+            position: absolute;
+
+            left: 10px;
+            right: 10px;
+
+            bottom:
+                calc(
+                    10px +
+                    env(safe-area-inset-bottom)
+                );
+
+            z-index: 1400;
+
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+
+            gap: 6px;
+
+            padding: 6px;
+
+            background:
+                rgba(255,255,255,0.96);
+
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+
+            border:
+                1px solid rgba(0,0,0,0.06);
+
+            border-radius: 18px;
+
+            box-shadow:
+                0 8px 28px rgba(0,0,0,0.18);
+        }
+
+
+        .map-control-btn {
+            min-height: 58px;
+
+            border: 0;
+            border-radius: 13px;
+
+            background: transparent;
+            color: #252525;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            gap: 4px;
+
+            padding: 7px 4px;
+
+            cursor: pointer;
+
+            transition:
+                background 0.18s ease,
+                color 0.18s ease,
+                transform 0.12s ease;
+        }
+
+
+        .map-control-btn:hover {
+            background:
+                rgba(0,0,0,0.04);
+        }
+
+
+        .map-control-btn:active {
+            transform: scale(0.97);
+        }
+
+
+        .map-control-btn.active {
+            background: #d90000;
+            color: white;
+        }
+
+
+        .map-control-icon {
+            width: 24px;
+            height: 24px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+
+        .map-control-icon svg {
+            width: 23px;
+            height: 23px;
+
+            fill: none;
+            stroke: currentColor;
+
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+
+        .map-control-icon .icon-fill {
+            fill: currentColor;
+            stroke: none;
+        }
+
+
+        .map-control-label {
+            font-size: 10px;
+            font-weight: 700;
+            line-height: 1;
+            white-space: nowrap;
+        }
+
+
+
+        /* =====================================================
+           NEAREST STOP CARD
+        ===================================================== */
+
+        #nearest-stop-card {
+            position: absolute;
+            left: 12px;
+            right: 12px;
+            bottom: calc(86px + env(safe-area-inset-bottom));
+            z-index: 1325;
+            display: none;
+            background: rgba(255,255,255,0.97);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(0,0,0,0.06);
+            border-radius: 18px;
+            padding: 12px 13px;
+            box-shadow: 0 8px 28px rgba(0,0,0,0.16);
+        }
+
+        #nearest-stop-card.visible {
+            display: block;
+        }
+
+        .nearest-stop-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        #nearest-stop-label {
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: 0.8px;
+            color: #2870ff;
+        }
+
+        #nearest-stop-distance {
+            font-size: 11px;
+            font-weight: 700;
+            color: #555;
+        }
+
+        #nearest-stop-name {
+            margin-top: 4px;
+            font-size: 16px;
+            line-height: 1.2;
+            font-weight: 750;
+        }
+
+        .nearest-stop-bottom {
+            margin-top: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        #nearest-stop-van-eta {
+            font-size: 11px;
+            color: #555;
+        }
+
+        #nearest-stop-van-eta strong {
+            color: #16803c;
+        }
+
+        #walk-to-stop {
+            border: 0;
+            border-radius: 999px;
+            background: #171717;
+            color: #fff;
+            padding: 9px 13px;
+            font-size: 11px;
+            font-weight: 750;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        #walk-to-stop:active {
+            transform: scale(0.98);
+        }
+
+        /* =====================================================
+           FOLLOW VAN INDICATOR
+        ===================================================== */
+
+        #follow-indicator {
+            position: absolute;
+
+            bottom:
+                calc(
+                    84px +
+                    env(safe-area-inset-bottom)
+                );
+
+            left: 50%;
+
+            transform:
+                translateX(-50%);
+
+            z-index: 1350;
+
+            display: none;
+
+            background: #171717;
+            color: white;
+
+            padding: 7px 12px;
+
+            border-radius: 999px;
+
+            font-size: 10px;
+            font-weight: 700;
+
+            box-shadow:
+                0 6px 18px rgba(0,0,0,0.18);
+        }

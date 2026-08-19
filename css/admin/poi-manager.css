@@ -1,0 +1,206 @@
+        /* =====================================================
+           POI MANAGER v1.1
+        ===================================================== */
+
+        #poi-manager-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 86000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(0,0,0,0.40);
+        }
+
+        #poi-manager-modal.open { display: flex; }
+
+        #poi-manager-dialog {
+            width: 100%;
+            max-width: 760px;
+            max-height: 90vh;
+            overflow-y: auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 18px 55px rgba(0,0,0,0.28);
+            padding: 20px;
+        }
+
+        .poi-manager-title-row {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .poi-manager-title-row h2 { margin: 0; font-size: 20px; }
+
+        .poi-manager-title-row p {
+            margin: 4px 0 0 0;
+            color: #777;
+            font-size: 11px;
+            line-height: 1.45;
+        }
+
+        #poi-manager-close {
+            flex: 0 0 auto;
+            width: 34px;
+            height: 34px;
+            padding: 0;
+            border-radius: 50%;
+            background: #eee;
+            font-size: 18px;
+        }
+
+        .poi-manager-grid {
+            display: grid;
+            grid-template-columns: 1.4fr 0.8fr auto;
+            gap: 8px;
+            align-items: end;
+        }
+
+        .poi-manager-field label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .poi-manager-location {
+            margin-top: 9px;
+            padding: 8px 10px;
+            border-radius: 8px;
+            background: #f5f6f7;
+            color: #666;
+            font-size: 10px;
+            line-height: 1.4;
+        }
+
+        #poi-manager-status {
+            display: none;
+            margin-top: 10px;
+            padding: 9px 10px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 700;
+            line-height: 1.4;
+            background: #f2f2f2;
+            color: #555;
+        }
+
+        #poi-manager-status.visible { display: block; }
+        #poi-manager-status.ok { background: #e8f7ed; color: #16803c; }
+        #poi-manager-status.warning { background: #fff3dd; color: #9a5a00; }
+        #poi-manager-status.error { background: #fdeaea; color: #b42318; }
+
+        .poi-manager-results-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 14px;
+            margin-bottom: 7px;
+        }
+
+        .poi-manager-results-head strong { font-size: 12px; }
+
+        .poi-manager-mini-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .poi-manager-mini-actions button {
+            padding: 6px 9px;
+            font-size: 10px;
+        }
+
+        #poi-manager-results {
+            display: grid;
+            gap: 5px;
+            max-height: 320px;
+            overflow-y: auto;
+            border: 1px solid #e3e3e3;
+            border-radius: 10px;
+            padding: 7px;
+            background: #fafafa;
+        }
+
+        .poi-import-item {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 9px;
+            align-items: center;
+            padding: 8px 9px;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            background: white;
+        }
+
+        .poi-import-item input { width: auto; }
+
+        .poi-import-item-main {
+            min-width: 0;
+            cursor: pointer;
+        }
+
+        .poi-import-item-name {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .poi-import-item-meta {
+            margin-top: 2px;
+            color: #888;
+            font-size: 9px;
+        }
+
+        .poi-import-badge {
+            padding: 4px 6px;
+            border-radius: 999px;
+            background: #eef3ff;
+            color: #2758a5;
+            font-size: 8px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .poi-import-badge.exists {
+            background: #f0f0f0;
+            color: #888;
+        }
+
+        .poi-manager-footer {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .poi-manager-note {
+            margin-top: 10px;
+            color: #777;
+            font-size: 10px;
+            line-height: 1.45;
+        }
+
+        .poi-source-box {
+            padding: 9px 10px;
+            border: 1px solid #e3e3e3;
+            border-radius: 8px;
+            background: #fafafa;
+            color: #666;
+            font-size: 10px;
+            line-height: 1.45;
+        }
+
+        @media (max-width: 700px) {
+            #poi-manager-dialog { padding: 15px; max-height: 94vh; }
+            .poi-manager-grid { grid-template-columns: 1fr 1fr; }
+            .poi-manager-grid .poi-search-button-wrap { grid-column: 1 / -1; }
+            .poi-manager-grid .poi-search-button-wrap button { width: 100%; }
+            .poi-manager-footer { grid-template-columns: 1fr; }
+        }

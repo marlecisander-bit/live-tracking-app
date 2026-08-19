@@ -1,0 +1,17 @@
+        /* =====================================================
+           LEAFLET
+        ===================================================== */
+
+        .leaflet-control-zoom {
+            margin-top:
+                calc(
+                    78px +
+                    env(safe-area-inset-top)
+                )
+                !important;
+        }
+
+
+        .leaflet-popup-content-wrapper {
+            border-radius: 14px;
+        }

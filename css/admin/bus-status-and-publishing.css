@@ -1,0 +1,181 @@
+        /* =====================================================
+           VAN
+        ===================================================== */
+
+        .live-van-container {
+
+            position: relative;
+
+            width: 54px;
+
+            height: 54px;
+        }
+
+
+        .van-circle {
+
+            position: absolute;
+
+            top: 3px;
+
+            left: 3px;
+
+            width: 48px;
+
+            height: 48px;
+
+            border-radius: 50%;
+
+            background: #d90000;
+
+            border:
+                4px solid white;
+
+            box-shadow:
+                0 3px 12px
+                rgba(0,0,0,0.40);
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 24px;
+
+            z-index: 2;
+        }
+
+
+        .van-heading {
+
+            position: absolute;
+
+            inset: 0;
+
+            width: 54px;
+
+            height: 54px;
+
+            color: #d90000;
+
+            text-align: center;
+
+            font-size: 18px;
+
+            font-weight: bold;
+
+            transform-origin:
+                center center;
+
+            z-index: 1;
+        }
+
+
+
+        /* =====================================================
+           PUBLISH BAR
+        ===================================================== */
+
+        #publish-bar {
+
+            position: fixed;
+
+            left: 240px;
+
+            right: 0;
+
+            bottom: 0;
+
+            min-height: 56px;
+
+            z-index: 1300;
+
+            background:
+                rgba(255,255,255,0.98);
+
+            border-top:
+                1px solid #ddd;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content:
+                space-between;
+
+            padding:
+                7px 14px;
+        }
+
+
+        #publish-info {
+
+            font-size: 12px;
+
+            color: #666;
+        }
+
+
+        #publish-actions {
+
+            display: flex;
+
+            gap: 7px;
+        }
+
+
+
+        /* =====================================================
+           TOAST / LOADING
+        ===================================================== */
+
+        #toast {
+
+            position: fixed;
+
+            top: 85px;
+
+            left: 50%;
+
+            transform:
+                translateX(-50%);
+
+            z-index: 4000;
+
+            background: #222;
+
+            color: white;
+
+            padding:
+                10px 16px;
+
+            border-radius: 7px;
+
+            display: none;
+
+            font-size: 13px;
+        }
+
+
+        #loading-overlay {
+
+            position: fixed;
+
+            inset: 0;
+
+            z-index: 90000;
+
+            background:
+                rgba(255,255,255,0.75);
+
+            display: none;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 14px;
+
+            font-weight: bold;
+        }

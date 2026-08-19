@@ -1,0 +1,133 @@
+        /* =====================================================
+           DESKTOP
+        ===================================================== */
+
+        @media (min-width: 768px) {
+
+            #header {
+                min-height: 68px;
+                padding: 0 18px;
+            }
+
+
+            #brand {
+                font-size: 20px;
+            }
+
+
+            #next-card {
+                left: auto;
+                right: 18px;
+                top: 86px;
+                width: 300px;
+            }
+
+
+            #map-controls {
+                left: 50%;
+                right: auto;
+
+                width: 500px;
+
+                transform:
+                    translateX(-50%);
+
+                bottom: 22px;
+            }
+
+
+
+            #nearest-stop-card {
+                left: 18px;
+                right: auto;
+                bottom: 22px;
+                width: 300px;
+            }
+
+            #stops-panel {
+                left: auto;
+                right: 18px;
+                top: 86px;
+                bottom: auto;
+
+                width: 370px;
+
+                height:
+                    calc(100vh - 108px);
+
+                border-radius: 18px;
+
+                transform:
+                    translateX(115%);
+            }
+
+
+            #stops-panel.open {
+                transform:
+                    translateX(0);
+            }
+
+
+            .leaflet-control-zoom {
+                margin-top:
+                    80px !important;
+            }
+
+        }
+
+
+/* MOBILE UX REFINEMENT */
+@media (max-width: 767px) {
+  #header { min-height:calc(58px + env(safe-area-inset-top)); padding:calc(7px + env(safe-area-inset-top)) 14px 7px; }
+  #brand { font-size:16px; }
+  #brand small { margin-top:2px; font-size:9px; }
+  #live-badge { padding:6px 9px; font-size:9px; }
+
+  #next-card {
+    top:calc(69px + env(safe-area-inset-top));
+    left:10px; right:10px; padding:10px 12px;
+    border-radius:15px; box-shadow:0 5px 18px rgba(0,0,0,.13);
+  }
+  #next-label { font-size:9px; }
+  #next-stop-name { margin-top:2px; font-size:17px; }
+  #next-meta { margin-top:6px; gap:10px; font-size:11px; }
+
+  #route-status-banner {
+    top:calc(139px + env(safe-area-inset-top));
+    left:18px; right:18px; padding:7px 10px;
+    border-radius:999px; background:rgba(255,255,255,.95);
+    color:#666; border:1px solid rgba(0,0,0,.07);
+    box-shadow:0 3px 12px rgba(0,0,0,.09);
+    font-size:9px; font-weight:650; text-align:center;
+  }
+
+  #nearest-stop-card {
+    left:10px; right:10px;
+    bottom:calc(78px + env(safe-area-inset-bottom));
+    padding:9px 11px; border-radius:15px;
+    box-shadow:0 5px 18px rgba(0,0,0,.13);
+  }
+  #nearest-stop-label { font-size:8px; }
+  #nearest-stop-distance { font-size:10px; }
+  #nearest-stop-name { margin-top:2px; font-size:14px; }
+  .nearest-stop-bottom { margin-top:6px; }
+  #nearest-stop-van-eta { font-size:10px; }
+  #walk-to-stop { padding:8px 11px; font-size:10px; }
+
+  #map-controls {
+    left:8px; right:8px;
+    bottom:calc(7px + env(safe-area-inset-bottom));
+    gap:3px; padding:4px; border-radius:16px;
+    box-shadow:0 5px 20px rgba(0,0,0,.16);
+  }
+  .map-control-btn { min-height:54px; gap:3px; padding:5px 2px; border-radius:12px; }
+  .map-control-icon { width:22px; height:22px; }
+  .map-control-icon svg { width:21px; height:21px; }
+  .map-control-label { font-size:9px; }
+
+  .user-location-wrapper, .user-location-pulse { width:26px; height:26px; }
+  .user-location-dot { top:6px; left:6px; width:14px; height:14px; border-width:2px; }
+
+  .leaflet-control-zoom { margin-top:calc(68px + env(safe-area-inset-top)) !important; }
+  #follow-indicator { bottom:calc(76px + env(safe-area-inset-bottom)); padding:6px 10px; font-size:9px; }
+}

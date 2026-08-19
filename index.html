@@ -1,0 +1,1425 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    >
+
+    <title>Sightseeing Shkodra Admin</title>
+
+
+    <!-- LEAFLET -->
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    >
+
+
+    <!-- GEOMAN -->
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/@geoman-io/leaflet-geoman-free@2.20.0/dist/leaflet-geoman.css"
+    >
+
+
+    <script
+        src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+    </script>
+
+
+    <script
+        src="https://unpkg.com/@geoman-io/leaflet-geoman-free@2.20.0/dist/leaflet-geoman.js">
+    </script>
+
+
+    <!-- SUPABASE -->
+    <script
+        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.3">
+    </script>
+
+    <!-- EXPORT MAP -->
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
+
+    <link rel="stylesheet" href="css/shared.css">
+    <link rel="stylesheet" href="css/admin/base-and-login.css">
+    <link rel="stylesheet" href="css/admin/buttons-and-inputs.css">
+    <link rel="stylesheet" href="css/admin/workspace-and-map.css">
+    <link rel="stylesheet" href="css/admin/stop-and-route-editors.css">
+    <link rel="stylesheet" href="css/admin/bus-status-and-publishing.css">
+    <link rel="stylesheet" href="css/admin/export-map.css">
+    <link rel="stylesheet" href="css/admin/poi-manager.css">
+    <link rel="stylesheet" href="css/admin/analytics.css">
+    <link rel="stylesheet" href="css/admin/tablet-and-mobile.css">
+    <link rel="stylesheet" href="css/admin/admin-interface.css">
+
+
+</head>
+
+
+
+<body>
+
+<!-- Admin build: 2026-08-19 · UI v2 minimalist + POI Manager v1.1 -->
+
+
+<!-- =========================================================
+     LOGIN
+========================================================= -->
+
+<div id="login-screen">
+
+    <div id="login-box">
+
+        <h1>
+            Sightseeing Shkodra
+        </h1>
+
+        <p>
+            Admin Map Manager
+        </p>
+
+        <input
+            id="login-email"
+            type="email"
+            placeholder="Email"
+        >
+
+        <input
+            id="login-password"
+            type="password"
+            placeholder="Password"
+            onkeydown="
+                if(event.key === 'Enter') {
+                    adminLogin();
+                }
+            "
+        >
+
+        <button type="button" data-action="adminLogin">
+            Login
+        </button>
+
+        <div id="login-error"></div>
+
+    </div>
+
+</div>
+
+
+<div id="loading-overlay">
+    Loading...
+</div>
+
+
+
+<!-- =========================================================
+     HEADER
+========================================================= -->
+
+<div id="header">
+
+    <div id="brand">
+
+        Sightseeing Shkodra
+
+        <small>
+            Admin Map Manager
+        </small>
+
+    </div>
+
+
+    <div id="header-right">
+
+        <button
+            class="btn-light"
+            id="analytics-view-button"
+            type="button"
+            data-action="setAdminSection"
+            data-section="analytics">
+
+            Analytics
+
+        </button>
+
+
+        <div class="header-status">
+
+            Changes:
+
+            <strong id="unpublished-count">
+                0
+            </strong>
+
+        </div>
+
+
+        <button
+            class="btn-light header-map-action"
+            type="button"
+            data-action="previewPublicMap">
+
+            Preview
+
+        </button>
+
+
+        <button
+            class="btn-primary header-map-action"
+            id="draft-button"
+            type="button"
+            data-action="saveDraft">
+
+            Save Draft
+
+        </button>
+
+
+        <button
+            class="btn-green header-map-action"
+            id="publish-button"
+            type="button"
+            data-action="publishMap">
+
+            Publish
+
+        </button>
+
+
+        <button
+            class="btn-light"
+            type="button"
+            data-action="adminLogout">
+
+            Logout
+
+        </button>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     WORKSPACE
+========================================================= -->
+
+<div id="workspace">
+
+
+    <!-- APP NAV -->
+
+    <nav id="app-nav">
+
+        <div class="nav-brand-dot">SS</div>
+        <div class="nav-divider"></div>
+
+            <button class="app-nav-button active" type="button" data-label="Map" data-section="map" data-action="setAdminSection">🗺️</button>
+            <button class="app-nav-button" type="button" data-label="Stops" data-section="stops" data-action="setAdminSection">🚏</button>
+            <button class="app-nav-button" type="button" data-label="Routes" data-section="routes" data-action="setAdminSection">↝</button>
+            <button class="app-nav-button" type="button" data-label="POIs" data-section="pois" data-action="setAdminSection">📍</button>
+            <button class="app-nav-button" type="button" data-label="Analytics" data-section="analytics" data-action="setAdminSection">📊</button>
+            <button class="app-nav-button" type="button" data-label="Export" data-section="export" data-action="setAdminSection">↓</button>
+
+        <div class="nav-spacer"></div>
+
+            <button class="app-nav-button" type="button" data-label="Close panel" data-action="closeMobileContextPanel">×</button>
+
+    </nav>
+
+
+    <!-- CONTEXT PANEL -->
+
+    <div id="sidebar">
+
+        <div id="context-panel-title">
+            <strong id="context-panel-heading">Map</strong>
+            <span id="context-panel-subheading">Overview</span>
+        </div>
+
+
+        <section class="context-section active" data-context-section="map">
+
+            <div class="workflow-card">
+                <strong>Tour setup</strong>
+                <span>Build and publish the tour in a clear operational order.</span>
+
+                <div class="workflow-steps">
+                    <span class="workflow-step current">1 Stops</span>
+                    <span class="workflow-step">2 Route</span>
+                    <span class="workflow-step">3 POIs</span>
+                    <span class="workflow-step">4 Preview</span>
+                    <span class="workflow-step">5 Publish</span>
+                </div>
+            </div>
+
+            <div class="sidebar-actions">
+                <button class="context-primary" type="button" data-action="setAdminSection" data-section="stops">Manage Stops</button>
+                <button class="context-secondary" type="button" data-action="setAdminSection" data-section="routes">Manage Route</button>
+                <button class="context-secondary" type="button" data-action="setAdminSection" data-section="pois">Manage POIs</button>
+            </div>
+
+        </section>
+
+
+        <section class="context-section" data-context-section="stops">
+
+            <div class="sidebar-actions">
+                <button class="context-primary" type="button" data-action="startAddStop">+ Add Stop</button>
+            </div>
+
+            <div class="section-title">Stops</div>
+            <div id="stop-list"></div>
+
+        </section>
+
+
+        <section class="context-section" data-context-section="routes">
+
+            <div class="sidebar-actions">
+                <button class="context-primary" type="button" data-action="startAutoRoute">✨ Auto Route</button>
+                <button class="context-secondary" type="button" data-action="startDrawRoute">Draw Manually</button>
+            </div>
+
+            <div class="section-title">Routes</div>
+            <div id="route-list"></div>
+
+        </section>
+
+
+        <section class="context-section" data-context-section="pois">
+
+            <div class="sidebar-actions">
+                <button class="context-primary" type="button" data-action="startAddPOI">+ Add POI</button>
+                <button class="context-secondary" type="button" data-action="openPOIManager">🌍 POI Manager</button>
+            </div>
+
+            <div class="section-title">POIs</div>
+            <div id="poi-list"></div>
+
+        </section>
+
+
+        <section class="context-section" data-context-section="export">
+
+            <div class="sidebar-actions">
+                <button class="context-primary" type="button" data-action="openExportMapModal">↓ Export Map</button>
+            </div>
+
+            <div class="section-title">Backup</div>
+
+            <div class="sidebar-actions">
+                <button class="context-secondary" type="button" data-action="exportGeoJSON">Export GeoJSON</button>
+                <button class="context-secondary" type="button" data-action="triggerGeoJsonImport">Import GeoJSON</button>
+        <input id="import-file" type="file" accept=".geojson,.json" style="display:none" data-action="importGeoJSON" data-event="change">
+            </div>
+
+        </section>
+
+    </div>
+
+
+    <!-- MAP -->
+
+    <div id="map-area">
+
+        <div id="map"></div>
+
+
+        <div id="gps-card">
+
+            <div id="gps-title">
+
+                <span class="live-dot"></span>
+
+                    Sightseeing Van — LIVE
+
+            </div>
+
+
+            <div>
+
+                Speed:
+
+                <strong id="gps-speed">
+                    --
+                </strong>
+
+            </div>
+
+
+            <div style="margin-top:4px;">
+
+                Updated:
+
+                <strong id="gps-update">
+                    --
+                </strong>
+
+            </div>
+
+
+            <button
+                class="btn-red btn-full"
+                data-action="findVan">
+
+                    🚐 Find Van
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- EDITOR -->
+
+    <div id="editor">
+
+        <div id="empty-editor"></div>
+
+
+
+        <!-- POINT EDITOR -->
+
+        <div id="point-editor">
+
+            <h2 id="point-editor-title">
+                Edit Point
+            </h2>
+
+
+            <div id="editor-subtitle">
+                Stop / POI information
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Type
+                </label>
+
+                <select
+                    id="point-type"
+                            data-action="updatePointForm" data-event="change">
+
+                    <option value="stop">
+                        Stop
+                    </option>
+
+                    <option value="poi">
+                        POI
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Name
+                </label>
+
+                <input
+                    id="point-name"
+                    type="text"
+                    placeholder="Example: Rozafa Castle"
+                >
+
+            </div>
+
+
+            <div
+                class="form-group"
+                id="stop-number-group">
+
+                <label>
+                    Stop Number
+                </label>
+
+                <input
+                    id="stop-number"
+                    type="number"
+                    min="1"
+                    placeholder="Example: 2"
+                >
+
+            </div>
+
+
+            <div
+                class="form-group"
+                id="poi-category-group"
+                style="display:none">
+
+                <label>
+                    POI Category
+                </label>
+
+                <select id="poi-category">
+                    <option value="attraction">Attraction</option>
+                    <option value="historic">Historic / Heritage</option>
+                    <option value="museum">Museum / Gallery</option>
+                    <option value="religious">Religious</option>
+                    <option value="viewpoint">Viewpoint</option>
+                    <option value="nature">Nature / Park</option>
+                            <option value="food">Restaurant / Café</option>
+                    <option value="accommodation">Accommodation</option>
+                    <option value="tourism">Tourism / Information</option>
+                    <option value="other">Other</option>
+                </select>
+
+            </div>
+
+
+            <div
+                class="form-group"
+                id="poi-source-group"
+                style="display:none">
+
+                <label>
+                    Source
+                </label>
+
+                <div
+                    id="poi-source-info"
+                    class="poi-source-box">
+
+                    Manually created POI
+
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Recommended Visit Time
+                </label>
+
+                <input
+                    id="visit-time"
+                    type="number"
+                    min="0"
+                    placeholder="Minutes"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Description
+                </label>
+
+                <textarea
+                    id="point-description"
+                    placeholder="Information shown to visitors..."></textarea>
+
+            </div>
+
+
+            <div class="switch-row">
+
+                <label>
+                    Active on public map
+                </label>
+
+                <input
+                    id="point-active"
+                    type="checkbox"
+                    checked
+                    style="width:auto"
+                >
+
+            </div>
+
+
+            <button
+                class="btn-primary btn-full"
+                        data-action="savePointObject">
+
+                Save Object
+
+            </button>
+
+
+            <button
+                class="btn-danger btn-full"
+                        data-action="deleteSelectedObject">
+
+                Delete Object
+
+            </button>
+
+
+            <button
+                class="btn-light btn-full"
+                        data-action="closeEditor">
+
+                Close
+
+            </button>
+
+        </div>
+
+
+
+        <!-- ROUTE EDITOR -->
+
+        <div id="route-editor">
+
+            <h2>
+                Edit Route
+            </h2>
+
+
+            <div id="editor-subtitle">
+                Route appearance, direction and stop sequence
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Route Name
+                </label>
+
+                <input
+                    id="route-name"
+                    type="text"
+                    placeholder="Sightseeing Shkodra Route"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Route Color
+                </label>
+
+                <input
+                    id="route-color"
+                    type="color"
+                    value="#d90000"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Line Width
+                </label>
+
+                <input
+                    id="route-weight"
+                    type="number"
+                    value="6"
+                    min="1"
+                    max="15"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Line Style
+                </label>
+
+                <select id="route-style">
+
+                    <option value="solid">
+                        Solid
+                    </option>
+
+                    <option value="dashed">
+                        Dashed
+                    </option>
+
+                    <option value="dotted">
+                        Dotted
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Direction Mode
+                </label>
+
+                <select id="route-direction">
+
+                    <option value="oneway">
+                        One way
+                    </option>
+
+                    <option value="twoway">
+                        Two way
+                    </option>
+
+                </select>
+
+            </div>
+
+
+
+            <!-- AUTO ROUTE BUILDER -->
+
+            <div id="auto-route-builder">
+
+                <div class="auto-route-heading">
+                    Auto Route / Road Snap
+                </div>
+
+
+                <div class="auto-route-help">
+
+                    Build the route automatically on real roads from
+                    the Stop Order. Add optional via points only where
+                    the router needs extra guidance.
+
+                </div>
+
+
+                <div id="auto-route-status">
+                    Ready. Build a Stop Order first.
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Add via point to leg
+                    </label>
+
+                    <select id="auto-route-leg-select"></select>
+
+                </div>
+
+
+                <div class="auto-route-grid">
+
+                    <button
+                        class="btn-light"
+                        type="button"
+                        id="auto-route-add-via-button"
+                            data-action="enableAutoRouteViaMode">
+
+                        + Add Via Point
+
+                    </button>
+
+
+                    <button
+                        class="btn-light"
+                        type="button"
+                            data-action="undoAutoRouteViaPoint">
+
+                        Undo Via
+
+                    </button>
+
+                </div>
+
+
+                <div id="auto-route-waypoint-list"></div>
+
+
+                <div class="auto-route-toggle">
+
+                    <span>
+                        Close route back to first stop
+                    </span>
+
+                    <input
+                        id="auto-route-close-loop"
+                        type="checkbox"
+                        checked
+                    >
+
+                </div>
+
+
+                <button
+                    class="btn-green btn-full"
+                    type="button"
+                    id="auto-route-generate-button"
+                            data-action="generateAutoRouteFromStopOrder">
+
+                    Generate Route on Roads
+
+                </button>
+
+
+                <button
+                    class="btn-light btn-full"
+                    type="button"
+                            data-action="clearAutoRouteViaPoints">
+
+                    Clear Via Points
+
+                </button>
+
+
+                <div class="auto-route-map-hint">
+
+                    Manual fine editing remains available with
+                    Leaflet-Geoman. Route lines are excluded from
+                    snapping targets, so nearby outbound/return lines
+                    will not pull vertices into each other.
+
+                </div>
+
+            </div>
+
+
+            <!-- STOP ORDER -->
+
+            <div id="sequence-editor">
+
+                <div class="sequence-heading">
+                    Stop Order
+                </div>
+
+
+                <div class="sequence-help">
+
+                    Define the real operational order of
+                    the stops. The same stop can appear
+                    more than once for outbound and return.
+
+                </div>
+
+
+                <div id="sequence-status">
+                    Checking Stop Order...
+                </div>
+
+
+                <div id="stop-sequence-list"></div>
+
+
+                <div class="sequence-add-row">
+
+                    <select id="sequence-stop-select"></select>
+
+
+                    <button
+                        class="btn-light"
+                        type="button"
+                            data-action="addStopToSequence">
+
+                        + Add
+
+                    </button>
+
+                </div>
+
+
+                <button
+                    class="btn-light btn-full"
+                    type="button"
+                            data-action="autoBuildSequence">
+
+                    Build from Stop Numbers
+
+                </button>
+
+            </div>
+
+
+
+            <div
+                class="switch-row"
+                style="margin-top:16px;">
+
+                <label>
+                    Active on public map
+                </label>
+
+                <input
+                    id="route-active"
+                    type="checkbox"
+                    checked
+                    style="width:auto"
+                >
+
+            </div>
+
+
+            <button
+                class="btn-primary btn-full"
+                        data-action="saveRouteObject">
+
+                Save Route
+
+            </button>
+
+
+            <button
+                class="btn-danger btn-full"
+                        data-action="deleteSelectedObject">
+
+                Delete Route
+
+            </button>
+
+
+            <button
+                class="btn-light btn-full"
+                        data-action="closeEditor">
+
+                Close
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+<!-- =========================================================
+     POI MANAGER v1.1
+========================================================= -->
+
+<div
+    id="poi-manager-modal"
+    data-action="closePOIManager" data-self-only>
+
+    <div id="poi-manager-dialog">
+
+        <div class="poi-manager-title-row">
+
+            <div>
+                <h2>POI Manager</h2>
+                <p>
+                    Search OpenStreetMap around the current map center,
+                    preview POIs and import only the places you want to curate.
+                </p>
+            </div>
+
+            <button
+                id="poi-manager-close"
+                type="button"
+            data-action="closePOIManager">×</button>
+
+        </div>
+
+
+        <div class="poi-manager-grid">
+
+            <div class="poi-manager-field">
+                <label>Category</label>
+
+                <select id="poi-manager-category">
+                    <option value="tourist" selected>Tourist attractions</option>
+                    <option value="historic">Historic / heritage</option>
+                    <option value="museums">Museums / galleries</option>
+                    <option value="religious">Churches / mosques / religious</option>
+                    <option value="viewpoints">Viewpoints</option>
+                    <option value="nature">Nature / parks</option>
+                            <option value="food">Restaurants / cafés</option>
+                    <option value="accommodation">Hotels / accommodation</option>
+                    <option value="all">All useful POIs</option>
+                </select>
+            </div>
+
+
+            <div class="poi-manager-field">
+                <label>Radius</label>
+
+                <select id="poi-manager-radius">
+                    <option value="2000">2 km</option>
+                    <option value="5000" selected>5 km</option>
+                    <option value="10000">10 km</option>
+                    <option value="15000">15 km</option>
+                    <option value="20000">20 km</option>
+                </select>
+            </div>
+
+
+            <div class="poi-search-button-wrap">
+                <button
+                    class="btn-green"
+                    type="button"
+                    id="poi-manager-search-button"
+                        data-action="searchOpenStreetMapPOIs">
+
+                    Search POIs
+
+                </button>
+            </div>
+
+        </div>
+
+
+        <div
+            id="poi-manager-location"
+            class="poi-manager-location">
+
+            Search center: current map center
+
+        </div>
+
+
+        <div id="poi-manager-status"></div>
+
+
+        <div class="poi-manager-results-head">
+
+            <strong id="poi-manager-result-count">Results</strong>
+
+            <div class="poi-manager-mini-actions">
+                <button
+                    class="btn-light"
+                    type="button"
+                            data-action="setAllPOIImportSelections" data-argument="true">Select all</button>
+
+                <button
+                    class="btn-light"
+                    type="button"
+                            data-action="setAllPOIImportSelections" data-argument="false">None</button>
+            </div>
+
+        </div>
+
+
+        <div id="poi-manager-results">
+            <div style="padding:18px;text-align:center;color:#888;font-size:11px">
+                Search OpenStreetMap to preview POIs.
+            </div>
+        </div>
+
+
+        <div class="poi-manager-footer">
+            <button
+                class="btn-primary"
+                type="button"
+                id="poi-manager-import-button"
+                disabled
+                        data-action="importSelectedOpenStreetMapPOIs">
+
+                Add Selected POIs
+
+            </button>
+
+            <button
+                class="btn-light"
+                type="button"
+                        data-action="clearPOIManagerResults">
+
+                Clear Preview
+
+            </button>
+        </div>
+
+
+        <div class="poi-manager-note">
+            Imported POIs are added as <strong>inactive</strong> by default.
+            Review each POI, add your own description and activate it only
+            when it is ready for the public map.
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     EXPORT MAP
+========================================================= -->
+<div id="export-map-modal" data-action="closeExportMapModal" data-self-only>
+  <div id="export-map-dialog">
+        <div class="export-title-row"><div><h2>Export Map</h2><p>Export the map with routes, stops, names and POIs for print or digital use.</p></div><button id="export-map-close" type="button" data-action="closeExportMapModal">×</button></div>
+    <div class="export-grid">
+      <div class="export-field"><label>Format</label><select id="export-map-format"><option value="png">PNG</option><option value="pdf">PDF</option><option value="svg">SVG Vector</option></select></div>
+      <div class="export-field"><label>Layout</label><select id="export-map-layout"><option value="screen">Screen 16:9</option><option value="a4-landscape">A4 Landscape</option><option value="a4-portrait">A4 Portrait</option><option value="a3-landscape">A3 Landscape</option><option value="a3-portrait">A3 Portrait</option></select></div>
+            <div class="export-field"><label>PNG Quality</label><select id="export-map-scale"><option value="2">2×</option><option value="3" selected>3×</option><option value="4">4×</option></select></div>
+    </div>
+    <div class="export-field"><label>Map Title</label><input id="export-map-title" type="text" value="Sightseeing Shkodra"></div>
+    <div class="export-field"><label>Include</label><div class="export-checks">
+      <label class="export-check"><input id="export-basemap" type="checkbox" checked>Basemap</label>
+      <label class="export-check"><input id="export-routes" type="checkbox" checked>Routes</label>
+      <label class="export-check"><input id="export-stops" type="checkbox" checked>Stops</label>
+      <label class="export-check"><input id="export-stop-names" type="checkbox" checked>Stop Names</label>
+      <label class="export-check"><input id="export-pois" type="checkbox" checked>POIs</label>
+      <label class="export-check"><input id="export-legend" type="checkbox" checked>Legend</label>
+      <label class="export-check"><input id="export-van" type="checkbox">Live Van</label>
+      <label class="export-check"><input id="export-fit" type="checkbox" checked>Fit Route & Stops</label>
+    </div></div>
+        <button class="btn-green btn-full" type="button" id="export-map-button" data-action="exportMapNow">Export Map</button>
+    <div id="export-map-status"></div>
+    <div class="export-note">PNG/PDF can include the OpenStreetMap basemap. SVG is a clean vector export of routes, stops, labels and POIs.</div>
+  </div>
+</div>
+<div id="export-stage"></div>
+
+<!-- =========================================================
+     ANALYTICS DASHBOARD
+========================================================= -->
+
+<div id="analytics-view">
+
+    <div id="analytics-shell">
+
+        <div class="analytics-topbar">
+
+            <div class="analytics-heading">
+
+                <h2>Operations Analytics</h2>
+
+                <p>
+                    Vehicle performance, stops and route segments from Supabase history.
+                </p>
+
+            </div>
+
+
+            <div class="analytics-controls">
+
+                <select
+                    id="analytics-range"
+                        data-action="loadAnalyticsDashboard" data-event="change">
+
+                    <option value="today">Today</option>
+                    <option value="7d">Last 7 days</option>
+                    <option value="30d">Last 30 days</option>
+                    <option value="all">All data</option>
+
+                </select>
+
+                <button
+                    class="btn-primary"
+                    type="button"
+                    id="analytics-refresh-button"
+                        data-action="loadAnalyticsDashboard" data-argument="true">
+
+                    Refresh
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <div id="analytics-message"></div>
+
+
+        <div class="analytics-status-row">
+
+            <div class="analytics-card analytics-live-card">
+
+                <div>
+
+                    <div class="analytics-live-title">
+
+                        <span
+                            class="analytics-live-dot"
+                            id="analytics-live-dot">
+                        </span>
+
+                        Latest Vehicle Position
+
+                    </div>
+
+                    <div id="analytics-live-position">
+                        Waiting for data...
+                    </div>
+
+                    <div id="analytics-live-meta">
+                        --
+                    </div>
+
+                </div>
+
+
+                <div class="analytics-live-speed">
+
+                    <strong id="analytics-current-speed">--</strong>
+                    <span>km/h</span>
+
+                </div>
+
+            </div>
+
+
+            <div class="analytics-card">
+
+                <div class="analytics-kpi-label">
+                    GPS Quality
+                </div>
+
+                <div
+                    class="analytics-kpi-value"
+                    id="analytics-gps-health">
+                    --
+                </div>
+
+                <div
+                    class="analytics-kpi-sub"
+                    id="analytics-gps-health-sub">
+                    Fresh readings within 90 seconds
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="analytics-kpi-grid">
+
+            <div class="analytics-card">
+                <div class="analytics-kpi-label">Distance</div>
+                <div class="analytics-kpi-value" id="analytics-distance">--</div>
+                <div class="analytics-kpi-sub">GPS-derived route distance</div>
+            </div>
+
+            <div class="analytics-card">
+                <div class="analytics-kpi-label">Average Speed</div>
+                <div class="analytics-kpi-value" id="analytics-avg-speed">--</div>
+                <div class="analytics-kpi-sub">Moving readings above 2 km/h</div>
+            </div>
+
+            <div class="analytics-card">
+                <div class="analytics-kpi-label">Max Speed</div>
+                <div class="analytics-kpi-value" id="analytics-max-speed">--</div>
+                <div class="analytics-kpi-sub">Highest valid GPS speed</div>
+            </div>
+
+            <div class="analytics-card">
+                <div class="analytics-kpi-label">Operating Span</div>
+                <div class="analytics-kpi-value" id="analytics-operating-time">--</div>
+                <div class="analytics-kpi-sub">First to latest recorded GPS point</div>
+            </div>
+
+            <div class="analytics-card">
+                <div class="analytics-kpi-label">GPS Records</div>
+                <div class="analytics-kpi-value" id="analytics-gps-records">--</div>
+                <div class="analytics-kpi-sub">Stored vehicle positions</div>
+            </div>
+
+            <div class="analytics-card">
+                <div class="analytics-kpi-label">Arrivals</div>
+                <div class="analytics-kpi-value" id="analytics-arrivals">--</div>
+                <div class="analytics-kpi-sub">Confirmed stop arrivals</div>
+            </div>
+
+            <div class="analytics-card">
+                <div class="analytics-kpi-label">Departures</div>
+                <div class="analytics-kpi-value" id="analytics-departures">--</div>
+                <div class="analytics-kpi-sub">Confirmed stop departures</div>
+            </div>
+
+            <div class="analytics-card">
+                <div class="analytics-kpi-label">Avg Dwell Time</div>
+                <div class="analytics-kpi-value" id="analytics-dwell">--</div>
+                <div class="analytics-kpi-sub">Average stop time from departures</div>
+            </div>
+
+        </div>
+
+
+        <div class="analytics-content-grid">
+
+            <div class="analytics-panel">
+
+                <div class="analytics-panel-header">
+
+                    <div>
+                        <div class="analytics-panel-title">Route Performance</div>
+                        <div class="analytics-panel-subtitle">
+                            Aggregated from segment_runs
+                        </div>
+                    </div>
+
+                    <span class="analytics-pill" id="analytics-segment-count">
+                        0 segments
+                    </span>
+
+                </div>
+
+                <div class="analytics-table-wrap">
+
+                    <table class="analytics-table">
+                        <thead>
+                            <tr>
+                                <th>Segment</th>
+                                <th>Runs</th>
+                                <th>Avg Time</th>
+                                <th>Avg Speed</th>
+                                <th>Stopped</th>
+                            </tr>
+                        </thead>
+                        <tbody id="analytics-segment-body"></tbody>
+                    </table>
+
+                </div>
+
+                <div
+                    class="analytics-empty"
+                    id="analytics-segment-empty">
+                    No segment data yet. It will appear after a departure and the next confirmed arrival.
+                </div>
+
+            </div>
+
+
+            <div class="analytics-panel">
+
+                <div class="analytics-panel-header">
+
+                    <div>
+                        <div class="analytics-panel-title">Recent Stop Events</div>
+                        <div class="analytics-panel-subtitle">
+                            Latest confirmed arrivals and departures
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="analytics-table-wrap">
+
+                    <table class="analytics-table">
+                        <thead>
+                            <tr>
+                                <th>Stop</th>
+                                <th>Event</th>
+                                <th>Time</th>
+                            </tr>
+                        </thead>
+                        <tbody id="analytics-events-body"></tbody>
+                    </table>
+
+                </div>
+
+                <div
+                    class="analytics-empty"
+                    id="analytics-events-empty">
+                    No stop events in this period.
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- =========================================================
+     PUBLISH BAR
+========================================================= -->
+
+<div id="publish-bar">
+
+    <div id="publish-info">
+
+        Last published:
+
+        <strong id="last-published">
+            Never
+        </strong>
+
+    </div>
+
+
+    <div id="publish-actions">
+
+        <button
+            class="btn-light"
+            data-action="previewPublicMap">
+
+            Preview
+
+        </button>
+
+
+        <button
+            class="btn-primary"
+            data-action="saveDraft">
+
+            Save Draft
+
+        </button>
+
+
+        <button
+            class="btn-green"
+            data-action="publishMap">
+
+            Publish
+
+        </button>
+
+    </div>
+
+</div>
+
+
+
+<div id="toast"></div>
+
+<script src="js/shared/app-config.js"></script>
+<script src="js/admin/admin-state.js"></script>
+<script src="js/admin/page-element-helpers.js"></script>
+<script src="js/admin/notifications-and-general-tools.js"></script>
+<script src="js/admin/configure-map-editor.js"></script>
+<script src="js/admin/create-admin-map.js"></script>
+<script src="js/admin/page-events.js"></script>
+<script src="js/admin/route-data-tools.js"></script>
+<script src="js/admin/automatic-route-calculations.js"></script>
+<script src="js/admin/poi-category-tools.js"></script>
+<script src="js/admin/connect-to-database.js"></script>
+<script src="js/admin/bus-location-service.js"></script>
+<script src="js/admin/feature-services.js"></script>
+<script src="js/admin/feature-readiness-checks.js"></script>
+<script src="js/admin/action-and-state-tools.js"></script>
+<script src="js/admin/feature-registry.js"></script>
+<script src="js/admin/prepare-admin-app.js"></script>
+<script src="js/admin/route-editor-actions.js"></script>
+<script src="js/admin/poi-manager-actions.js"></script>
+<script src="js/admin/bus-location-actions.js"></script>
+<script src="js/admin/connect-page-actions.js"></script>
+<script src="js/admin/start-admin-page.js"></script>
+<script src="js/admin/old-action-compatibility.js"></script>
+<script src="js/admin/register-admin-actions.js"></script>
+<script src="js/admin/map-editing-actions.js"></script>
+<script src="js/admin/data-and-poi-actions.js"></script>
+<script src="js/admin/login-and-publishing-actions.js"></script>
+<script src="js/admin/general-map-actions.js"></script>
+<script src="js/admin/finish-action-registration.js"></script>
+
+</body>
+
+</html>

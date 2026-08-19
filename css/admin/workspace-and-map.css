@@ -1,0 +1,220 @@
+        /* =====================================================
+           WORKSPACE
+        ===================================================== */
+
+        #workspace {
+
+            height:
+                calc(100vh - 70px);
+
+            display: grid;
+
+            grid-template-columns:
+                240px 1fr;
+
+            transition:
+                grid-template-columns
+                0.2s ease;
+        }
+
+
+        #workspace.editor-open {
+
+            grid-template-columns:
+                240px 1fr 370px;
+        }
+
+
+
+        /* =====================================================
+           SIDEBAR
+        ===================================================== */
+
+        #sidebar {
+
+            background: white;
+
+            border-right:
+                1px solid #ddd;
+
+            overflow-y: auto;
+
+            padding:
+                16px 16px 75px 16px;
+        }
+
+
+        #sidebar h3 {
+
+            margin:
+                0 0 10px 0;
+
+            font-size: 16px;
+        }
+
+
+        .section-title {
+
+            margin-top: 18px;
+
+            margin-bottom: 7px;
+
+            font-size: 11px;
+
+            font-weight: bold;
+
+            color: #888;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.5px;
+        }
+
+
+        .sidebar-actions {
+
+            display: grid;
+
+            gap: 6px;
+
+            margin-top: 14px;
+        }
+
+
+        .object-item {
+
+            padding:
+                9px 10px;
+
+            border-radius: 6px;
+
+            margin-bottom: 4px;
+
+            cursor: pointer;
+
+            font-size: 13px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content:
+                space-between;
+
+            gap: 8px;
+        }
+
+
+        .object-item:hover {
+
+            background: #f2f2f2;
+        }
+
+
+        .object-item.active {
+
+            background: #e8e8e8;
+
+            font-weight: bold;
+        }
+
+
+        .object-dot {
+
+            flex:
+                0 0 auto;
+
+            width: 7px;
+
+            height: 7px;
+
+            border-radius: 50%;
+
+            background: #16a34a;
+        }
+
+
+        .object-dot.hidden {
+
+            background: #aaa;
+        }
+
+
+
+        /* =====================================================
+           MAP
+        ===================================================== */
+
+        #map-area {
+
+            position: relative;
+
+            min-width: 0;
+
+            height: 100%;
+        }
+
+
+        #map {
+
+            width: 100%;
+
+            height: 100%;
+        }
+
+
+
+        /* =====================================================
+           GPS CARD
+        ===================================================== */
+
+        #gps-card {
+
+            position: absolute;
+
+            bottom: 70px;
+
+            left: 16px;
+
+            z-index: 1200;
+
+            min-width: 195px;
+
+            background:
+                rgba(255,255,255,0.96);
+
+            padding:
+                11px 13px;
+
+            border-radius: 10px;
+
+            box-shadow:
+                0 3px 12px
+                rgba(0,0,0,0.20);
+
+            font-size: 12px;
+        }
+
+
+        #gps-title {
+
+            margin-bottom: 6px;
+
+            font-weight: bold;
+        }
+
+
+        .live-dot {
+
+            display: inline-block;
+
+            width: 8px;
+
+            height: 8px;
+
+            margin-right: 5px;
+
+            border-radius: 50%;
+
+            background: #16a34a;
+        }
