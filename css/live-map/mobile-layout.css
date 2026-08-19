@@ -120,23 +120,33 @@
 
 /* MOBILE UX REFINEMENT */
 @media (max-width: 767px) {
-  #header { min-height:calc(58px + env(safe-area-inset-top)); padding:calc(7px + env(safe-area-inset-top)) 14px 7px; }
-  #brand { font-size:16px; }
-  #brand small { margin-top:2px; font-size:9px; }
-  #live-badge { padding:6px 9px; font-size:9px; }
+  #header {
+    min-height:calc(60px + env(safe-area-inset-top));
+    padding:calc(7px + env(safe-area-inset-top)) 14px 7px;
+    background:rgba(255,255,255,.96);
+    box-shadow:0 3px 14px rgba(0,0,0,.06);
+  }
+  #brand { font-size:17px; }
+  #brand small { margin-top:2px; font-size:9px; color:#777; }
+  #live-badge { padding:7px 10px; font-size:9px; }
 
   #next-card {
-    top:calc(69px + env(safe-area-inset-top));
-    left:10px; right:10px; padding:10px 12px;
-    border-radius:15px; box-shadow:0 5px 18px rgba(0,0,0,.13);
+    top:calc(72px + env(safe-area-inset-top));
+    left:10px; right:10px; padding:12px 13px;
+    border-radius:18px;
+    background:rgba(255,255,255,.97);
+    border:1px solid rgba(0,0,0,.05);
+    box-shadow:0 8px 24px rgba(0,0,0,.14);
   }
   #next-label { font-size:9px; }
-  #next-stop-name { margin-top:2px; font-size:17px; }
-  #next-meta { margin-top:6px; gap:10px; font-size:11px; }
+  #next-direction { font-size:9px; }
+  #next-stop-name { margin-top:3px; font-size:18px; line-height:1.18; }
+  #next-meta { margin-top:8px; gap:12px; font-size:11px; }
+  #eta-progress-wrap { margin-top:8px; }
 
   #route-status-banner {
-    margin:9px -12px -10px; padding:8px 12px;
-    border-radius:0 0 15px 15px; background:#f7f7f7;
+    margin:10px -13px -12px; padding:9px 13px;
+    border-radius:0 0 18px 18px; background:#f7f7f7;
     color:#666; border-top:1px solid rgba(0,0,0,.07);
     box-shadow:none;
     font-size:9px; font-weight:650; text-align:left;
@@ -144,31 +154,69 @@
 
   #nearest-stop-card {
     left:10px; right:10px;
-    bottom:calc(78px + env(safe-area-inset-bottom));
-    padding:9px 11px; border-radius:15px;
-    box-shadow:0 5px 18px rgba(0,0,0,.13);
+    bottom:calc(82px + env(safe-area-inset-bottom));
+    padding:10px 12px; border-radius:17px;
+    border:1px solid rgba(0,0,0,.05);
+    box-shadow:0 7px 22px rgba(0,0,0,.14);
   }
-  #nearest-stop-label { font-size:8px; }
+  #nearest-stop-label { font-size:8px; color:#d90000; }
   #nearest-stop-distance { font-size:10px; }
-  #nearest-stop-name { margin-top:2px; font-size:14px; }
-  .nearest-stop-bottom { margin-top:6px; }
+  #nearest-stop-name { margin-top:3px; font-size:15px; }
+  .nearest-stop-bottom { margin-top:7px; }
   #nearest-stop-van-eta { font-size:10px; }
-  #walk-to-stop { padding:8px 11px; font-size:10px; }
+  #walk-to-stop {
+    min-height:38px;
+    padding:8px 13px;
+    background:#d90000;
+    font-size:10px;
+  }
 
   #map-controls {
     left:8px; right:8px;
-    bottom:calc(7px + env(safe-area-inset-bottom));
-    gap:3px; padding:4px; border-radius:16px;
-    box-shadow:0 5px 20px rgba(0,0,0,.16);
+    bottom:calc(8px + env(safe-area-inset-bottom));
+    gap:3px; padding:5px; border-radius:20px;
+    background:rgba(255,255,255,.97);
+    border:1px solid rgba(0,0,0,.05);
+    box-shadow:0 8px 26px rgba(0,0,0,.18);
   }
-  .map-control-btn { min-height:54px; gap:3px; padding:5px 2px; border-radius:12px; }
-  .map-control-icon { width:30px; height:30px; }
-  .map-control-icon svg { width:21px; height:21px; }
-  .map-control-label { font-size:9px; }
+  .map-control-btn {
+    min-height:58px;
+    gap:3px;
+    padding:5px 2px;
+    border-radius:15px;
+    color:#c90000;
+    touch-action:manipulation;
+  }
+  .map-control-btn:hover { background:transparent; }
+  .map-control-btn:hover .map-control-icon { background:transparent; transform:none; }
+  .map-control-btn:active { background:#fff0f0; }
+  .map-control-btn.active { background:#fff5f5; color:#a90000; }
+  .map-control-icon { width:34px; height:34px; }
+  .map-control-icon svg { width:22px; height:22px; }
+  .map-control-btn.active .map-control-icon {
+    background:#d90000;
+    color:#fff;
+    box-shadow:0 4px 12px rgba(217,0,0,.25);
+  }
+  .map-control-label { font-size:9px; color:#2b2b2b; }
+  .map-control-btn.active .map-control-label { color:#a90000; }
 
   .user-location-wrapper, .user-location-pulse { width:26px; height:26px; }
   .user-location-dot { top:6px; left:6px; width:14px; height:14px; border-width:2px; }
 
-  .leaflet-control-zoom { margin-top:calc(68px + env(safe-area-inset-top)) !important; }
-  #follow-indicator { bottom:calc(76px + env(safe-area-inset-bottom)); padding:6px 10px; font-size:9px; }
+  .leaflet-control-zoom { margin-top:calc(72px + env(safe-area-inset-top)) !important; }
+  #follow-indicator {
+    bottom:calc(82px + env(safe-area-inset-bottom));
+    padding:7px 11px;
+    background:#a90000;
+    font-size:9px;
+  }
+
+  .stop-marker {
+    box-shadow:0 3px 10px rgba(217,0,0,.22);
+  }
+
+  .van-marker-circle {
+    box-shadow:0 5px 17px rgba(217,0,0,.32);
+  }
 }
