@@ -308,7 +308,7 @@
         }
 
         #editor h2 { font-size: 18px; }
-        #editor-subtitle { color: #8c8c8c; font-size: 10px; }
+.editor-subtitle { color: #8c8c8c; font-size: 10px; }
 
         .form-group { margin-bottom: 12px; }
 
