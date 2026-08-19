@@ -647,6 +647,19 @@ textarea:focus-visible {
     background: #116b32 !important;
 }
 
+/* Every current and future admin action beginning with "save" is green. */
+button[data-action^="save"] {
+    background: #16803c !important;
+    color: #fff !important;
+    border-color: #16803c !important;
+    box-shadow: 0 6px 16px rgba(22, 128, 60, .18);
+}
+
+button[data-action^="save"]:hover {
+    background: #116b32 !important;
+    border-color: #116b32 !important;
+}
+
 .header-status {
     min-height: 38px;
     display: flex;
