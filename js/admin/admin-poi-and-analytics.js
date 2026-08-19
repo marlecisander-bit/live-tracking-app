@@ -41,6 +41,44 @@
         if (element) element.textContent = value;
     }
 
+    function firstValue(record, names) {
+        if (!record) return null;
+        for (let index = 0; index < names.length; index += 1) {
+            const value = record[names[index]];
+            if (value !== undefined && value !== null && value !== '') return value;
+        }
+        return null;
+    }
+
+    function recordDate(record) {
+        const value = firstValue(record, ['created_at', 'recorded_at', 'captured_at', 'timestamp', 'updated_at', 'calculated_at']);
+        const date = value ? new Date(value) : null;
+        return date && !Number.isNaN(date.getTime()) ? date : null;
+    }
+
+    function filterAndSortByRange(records, range, fromDate) {
+        return (records || []).filter(function(record) {
+            const date = recordDate(record);
+            return range === 'all' || !date || date >= fromDate;
+        }).sort(function(a, b) {
+            const aDate = recordDate(a), bDate = recordDate(b);
+            return (bDate ? bDate.getTime() : 0) - (aDate ? aDate.getTime() : 0);
+        });
+    }
+
+    function distanceBetween(a, b) {
+        const lat1 = Number(firstValue(a, ['latitude', 'lat']));
+        const lng1 = Number(firstValue(a, ['longitude', 'lng', 'lon']));
+        const lat2 = Number(firstValue(b, ['latitude', 'lat']));
+        const lng2 = Number(firstValue(b, ['longitude', 'lng', 'lon']));
+        if (![lat1, lng1, lat2, lng2].every(Number.isFinite)) return 0;
+        const radians = Math.PI / 180;
+        const dLat = (lat2 - lat1) * radians;
+        const dLng = (lng2 - lng1) * radians;
+        const value = Math.sin(dLat / 2) ** 2 + Math.cos(lat1 * radians) * Math.cos(lat2 * radians) * Math.sin(dLng / 2) ** 2;
+        return 6371 * 2 * Math.atan2(Math.sqrt(value), Math.sqrt(1 - value));
+    }
+
     async function loadAnalytics() {
         document.body.classList.add('analytics-mode');
         analyticsText('analytics-message', 'Loading analytics data...');
@@ -51,31 +89,62 @@
         if (range === '7d') fromDate.setDate(fromDate.getDate() - 7);
         if (range === '30d') fromDate.setDate(fromDate.getDate() - 30);
 
-        function rangeQuery(table) {
-            let query = client.from(table).select('*').order('created_at', { ascending: false }).limit(1000);
-            if (range !== 'all') query = query.gte('created_at', fromDate.toISOString());
-            return query;
-        }
-
-        const results = await Promise.all([rangeQuery('vehicle_positions'), rangeQuery('stop_events'), rangeQuery('segment_runs')]);
-        const positions = results[0].data || [], events = results[1].data || [], segments = results[2].data || [];
+        const vehicleId = window.appConfig && window.appConfig.vehicleId;
+        const results = await Promise.all([
+            client.from('gps_history').select('*').limit(1000),
+            client.from('stop_events').select('*').limit(1000),
+            client.from('segment_runs').select('*').limit(1000),
+            client.from('vehicle_eta_state').select('*').eq('vehicle_id', vehicleId).maybeSingle(),
+            client.from('vehicle_stop_state').select('*').eq('vehicle_id', vehicleId).maybeSingle()
+        ]);
+        const positions = filterAndSortByRange(results[0].data, range, fromDate);
+        const events = filterAndSortByRange(results[1].data, range, fromDate);
+        const segments = filterAndSortByRange(results[2].data, range, fromDate);
+        const etaState = results[3].data || null;
+        const stopState = results[4].data || null;
         analyticsText('analytics-gps-records', String(positions.length));
-        analyticsText('analytics-arrivals', String(events.filter(function(e) { return e.event_type === 'arrival'; }).length));
-        analyticsText('analytics-departures', String(events.filter(function(e) { return e.event_type === 'departure'; }).length));
+        const arrivals = events.filter(function(event) { return String(firstValue(event, ['event_type', 'type']) || '').toLowerCase() === 'arrival'; });
+        const departures = events.filter(function(event) { return String(firstValue(event, ['event_type', 'type']) || '').toLowerCase() === 'departure'; });
+        analyticsText('analytics-arrivals', String(arrivals.length));
+        analyticsText('analytics-departures', String(departures.length));
 
-        const speeds = positions.map(function(p) { return Number(p.speed || p.speed_kmh); }).filter(Number.isFinite);
+        const speeds = positions.map(function(position) { return Number(firstValue(position, ['speed_kmh', 'speed', 'velocity'])); }).filter(Number.isFinite);
         const moving = speeds.filter(function(speed) { return speed > 2; });
-        analyticsText('analytics-current-speed', speeds.length ? speeds[0].toFixed(0) : '--');
+        const currentSpeed = Number(firstValue(etaState, ['live_speed_kmh', 'estimated_speed_kmh']));
+        analyticsText('analytics-current-speed', Number.isFinite(currentSpeed) ? currentSpeed.toFixed(0) : (speeds.length ? speeds[0].toFixed(0) : '--'));
         analyticsText('analytics-avg-speed', moving.length ? (moving.reduce(function(a,b) { return a+b; },0) / moving.length).toFixed(1) + ' km/h' : '--');
         analyticsText('analytics-max-speed', speeds.length ? Math.max.apply(null, speeds).toFixed(1) + ' km/h' : '--');
-        analyticsText('analytics-gps-health', positions.length ? 'Good' : 'No data');
-        analyticsText('analytics-message', results.some(function(r) { return r.error; }) ? 'Some analytics tables are unavailable; available data is shown.' : 'Analytics updated.');
+        analyticsText('analytics-gps-health', etaState || stopState || positions.length ? 'Connected' : 'No data');
+        analyticsText('analytics-gps-health-sub', etaState && etaState.calculated_at ? 'Last update ' + new Date(etaState.calculated_at).toLocaleString() : 'Waiting for a live update');
+
+        let distance = 0;
+        for (let index = 1; index < positions.length; index += 1) distance += distanceBetween(positions[index - 1], positions[index]);
+        analyticsText('analytics-distance', positions.length > 1 ? distance.toFixed(1) + ' km' : '--');
+        const datedPositions = positions.map(recordDate).filter(Boolean);
+        const operatingMs = datedPositions.length > 1 ? datedPositions[0] - datedPositions[datedPositions.length - 1] : 0;
+        analyticsText('analytics-operating-time', operatingMs > 0 ? (operatingMs / 3600000).toFixed(1) + ' h' : '--');
+        const dwellValues = departures.map(function(event) { return Number(firstValue(event, ['dwell_seconds', 'dwell_time_seconds', 'stopped_seconds'])); }).filter(Number.isFinite);
+        analyticsText('analytics-dwell', dwellValues.length ? (dwellValues.reduce(function(a, b) { return a + b; }, 0) / dwellValues.length / 60).toFixed(1) + ' min' : '--');
+
+        const stateName = firstValue(stopState, ['current_stop_name', 'candidate_stop_name', 'expected_next_stop_number']);
+        const nextName = firstValue(etaState, ['next_stop_name', 'next_stop_number']);
+        analyticsText('analytics-live-position', stateName ? 'At or near ' + stateName : (nextName ? 'Travelling to ' + nextName : 'Waiting for vehicle state'));
+        const etaMinutes = Number(firstValue(etaState, ['eta_minutes']));
+        analyticsText('analytics-live-meta', nextName ? 'Next: ' + nextName + (Number.isFinite(etaMinutes) ? ' · ETA ' + Math.max(0, Math.round(etaMinutes)) + ' min' : '') : '--');
+
+        const errors = results.filter(function(result) { return result.error; });
+        if (errors.length) console.warn('Analytics query errors:', errors.map(function(result) { return result.error; }));
+        const hasHistory = positions.length || events.length || segments.length;
+        analyticsText('analytics-message', errors.length
+            ? 'Live data is shown. Some historical analytics are not available to this account.'
+            : (hasHistory ? 'Analytics updated.' : 'Live vehicle status is connected. Historical totals will appear after GPS and stop history is recorded.'));
 
         const eventBody = document.getElementById('analytics-events-body');
         eventBody.innerHTML = '';
         events.slice(0, 50).forEach(function(event) {
             const row = document.createElement('tr');
-            [event.stop_name || event.stop_id || '--', event.event_type || '--', new Date(event.created_at).toLocaleString()].forEach(function(value) {
+            const eventDate = recordDate(event);
+            [firstValue(event, ['stop_name', 'stop_id', 'stop_number']) || '--', firstValue(event, ['event_type', 'type']) || '--', eventDate ? eventDate.toLocaleString() : '--'].forEach(function(value) {
                 const cell = document.createElement('td'); cell.textContent = value; row.appendChild(cell);
             });
             eventBody.appendChild(row);
@@ -86,13 +155,21 @@
         segmentBody.innerHTML = '';
         segments.slice(0, 50).forEach(function(segment) {
             const row = document.createElement('tr');
-            [segment.segment_name || segment.segment_id || '--', segment.run_count || 1, segment.average_time || '--', segment.average_speed || '--', segment.stopped_time || '--'].forEach(function(value) {
+            [firstValue(segment, ['segment_name', 'segment_id']) || '--', firstValue(segment, ['run_count']) || 1, firstValue(segment, ['average_time', 'duration_seconds']) || '--', firstValue(segment, ['average_speed', 'average_speed_kmh']) || '--', firstValue(segment, ['stopped_time', 'stopped_seconds']) || '--'].forEach(function(value) {
                 const cell = document.createElement('td'); cell.textContent = value; row.appendChild(cell);
             });
             segmentBody.appendChild(row);
         });
-        analyticsText('analytics-segment-count', segments.length + ' segments');
-        document.getElementById('analytics-segment-empty').style.display = segments.length ? 'none' : 'block';
+        if (!segments.length && etaState) {
+            const row = document.createElement('tr');
+            const segmentName = (etaState.from_stop_name || etaState.from_stop_number || '--') + ' → ' + (etaState.next_stop_name || etaState.next_stop_number || '--');
+            [segmentName, 'Live', etaState.eta_minutes != null ? etaState.eta_minutes + ' min ETA' : '--', etaState.live_speed_kmh != null ? etaState.live_speed_kmh + ' km/h' : '--', '--'].forEach(function(value) {
+                const cell = document.createElement('td'); cell.textContent = value; row.appendChild(cell);
+            });
+            segmentBody.appendChild(row);
+        }
+        analyticsText('analytics-segment-count', segments.length ? segments.length + ' segments' : (etaState ? 'Live segment' : '0 segments'));
+        document.getElementById('analytics-segment-empty').style.display = segments.length || etaState ? 'none' : 'block';
     }
 
     const actions = {
