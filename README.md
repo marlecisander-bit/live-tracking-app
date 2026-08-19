@@ -42,6 +42,11 @@ Administration behavior is in `js/admin/`. The main feature files are:
 - `login-and-publishing-actions.js` — login, drafts, and publishing.
 - `bus-location-actions.js` and `bus-location-service.js` — administration bus tracking.
 - `connect-page-actions.js` — connects HTML `data-action` labels to JavaScript actions.
+- `admin-map-data.js` — loads the latest Supabase map and renders editable routes, stops, and POIs.
+- `admin-editing-and-dialogs.js` — saves selected map objects and opens the administration dialogs.
+- `admin-publishing-and-export.js` — login, drafts, publishing, backup/import, preview, and map export.
+- `admin-poi-and-analytics.js` — OpenStreetMap POI search/import and operations analytics.
+- `admin-bus-location.js` — displays and refreshes the live sightseeing bus in the admin map.
 
 Files containing “tools,” “registry,” “services,” “readiness,” or “compatibility” support the feature files and normally do not need editing for visible changes.
 

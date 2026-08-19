@@ -43,6 +43,15 @@ window.app.init = function() {
         window.app.services.gps = window.app.gps || window.app.services.gps;
     }
 
+    const passwordInput = document.getElementById('login-password');
+    if (passwordInput) {
+        passwordInput.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter' && typeof window.adminLogin === 'function') {
+                window.adminLogin();
+            }
+        });
+    }
+
     const loginForm = document.getElementById('login-form');
     if (loginForm) {
         loginForm.addEventListener('submit', function(event) {
@@ -53,10 +62,6 @@ window.app.init = function() {
         });
     }
 
-    const publishButton = document.getElementById('publish-button');
-    if (publishButton && typeof publishMap === 'function') {
-        publishButton.addEventListener('click', publishMap);
-    }
 };
 
 if (document.readyState === 'loading') {

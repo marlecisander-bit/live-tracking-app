@@ -17,7 +17,7 @@ foreach ($page in $pages) {
 
     if ($html -match '<style(?:\s|>)') { $problems.Add("$pageName contains an inline style block") }
     if ($html -match '<script\s*>') { $problems.Add("$pageName contains an inline script block") }
-    if ($html -match '\son(?:click|change|input|submit)=') { $problems.Add("$pageName contains an inline event handler") }
+    if ($html -match '\son[a-z]+=') { $problems.Add("$pageName contains an inline event handler") }
     if ($html -match '[\u00C2\u00C3]|\u00E2\u20AC|\u00F0\u0178') {
         $problems.Add("$pageName may contain broken character encoding")
     }
@@ -36,6 +36,13 @@ Get-ChildItem -LiteralPath (Join-Path $project 'css') -Filter '*.css' -Recurse |
     $css = [System.IO.File]::ReadAllText($_.FullName)
     if (([regex]::Matches($css, '\{')).Count -ne ([regex]::Matches($css, '\}')).Count) {
         $problems.Add("Unbalanced CSS braces in $($_.FullName.Substring($project.Length + 1))")
+    }
+}
+
+Get-ChildItem -LiteralPath (Join-Path $project 'js') -Filter '*.js' -Recurse | ForEach-Object {
+    $javascript = [System.IO.File]::ReadAllText($_.FullName)
+    if (([regex]::Matches($javascript, '\{')).Count -ne ([regex]::Matches($javascript, '\}')).Count) {
+        $problems.Add("Unbalanced JavaScript braces in $($_.FullName.Substring($project.Length + 1))")
     }
 }
 
