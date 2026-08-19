@@ -8,6 +8,7 @@ window.appConfig = {
     },
     vehicleId: 'sightseeing-shkodra-van-1',
     scorpionTrackingToken: '95929I1129059978741228',
+    vanFollowZoom: 16,
     gpsUpdateInterval: 5000,
     vehicleStateUpdateInterval: 5000,
     vehicleEtaUpdateInterval: 5000,

@@ -576,7 +576,7 @@ function findVan() {
 
     map.setView(
         vanPosition,
-        16
+        VAN_FOLLOW_ZOOM
     );
 
 }

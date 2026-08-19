@@ -5,6 +5,7 @@
 
 var VEHICLE_ID = window.appConfig.vehicleId;
 var SCORPION_TOKEN = window.appConfig.scorpionTrackingToken;
+var VAN_FOLLOW_ZOOM = window.appConfig.vanFollowZoom;
 
 var GPS_UPDATE_INTERVAL = window.appConfig.gpsUpdateInterval;
 var VEHICLE_STATE_UPDATE_INTERVAL = window.appConfig.vehicleStateUpdateInterval;

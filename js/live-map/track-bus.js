@@ -256,8 +256,9 @@ function updateVanMarker(data) {
     ) {
 
 
-        map.panTo(
+        map.setView(
             vanPosition,
+            VAN_FOLLOW_ZOOM,
             {
                 animate: true
             }
