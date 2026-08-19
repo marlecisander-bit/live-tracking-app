@@ -73,15 +73,19 @@
             const layer = selectedLayer();
             if (!layer || !window.adminMapData.layerGroup) return;
             if (!window.confirm('Delete this object from the draft?')) return;
+            adminSetLayerSelected(layer, false);
             window.adminMapData.layerGroup.removeLayer(layer);
-            window.adminMapData.selectedLayer = null;
             actions.closeEditor();
             adminMarkChanged();
             adminRefreshLists();
         },
         closeEditor: function() {
+            const layer = selectedLayer();
+            if (layer) adminSetLayerSelected(layer, false);
             document.getElementById('point-editor').style.display = 'none';
             document.getElementById('route-editor').style.display = 'none';
+            const workspace = document.getElementById('workspace');
+            if (workspace) workspace.classList.remove('editor-open');
             window.adminMapData.selectedLayer = null;
         },
         addStopToSequence: function() {

@@ -48,7 +48,19 @@ function adminPointIcon(properties) {
 }
 
 function adminSelectLayer(layer) {
+    if (!layer) return;
+
+    const previousLayer = window.adminMapData.selectedLayer;
+    if (previousLayer && previousLayer !== layer) {
+        adminSetLayerSelected(previousLayer, false);
+    }
+
     window.adminMapData.selectedLayer = layer;
+    adminSetLayerSelected(layer, true);
+
+    const workspace = document.getElementById('workspace');
+    if (workspace) workspace.classList.add('editor-open');
+
     const feature = layer.feature || {};
     const properties = feature.properties || {};
     const geometryType = feature.geometry ? feature.geometry.type : '';
@@ -74,6 +86,28 @@ function adminSelectLayer(layer) {
         document.getElementById('point-editor').style.display = 'none';
         document.getElementById('route-editor').style.display = 'block';
         adminRenderStopSequence(properties.stopSequence || []);
+    }
+}
+
+function adminSetLayerSelected(layer, selected) {
+    if (!layer) return;
+
+    if (layer instanceof L.Marker && layer.getElement()) {
+        layer.getElement().classList.toggle('admin-layer-selected', selected);
+        if (selected && layer.setZIndexOffset) layer.setZIndexOffset(1000);
+        if (!selected && layer.setZIndexOffset) layer.setZIndexOffset(0);
+        return;
+    }
+
+    if (layer.setStyle) {
+        const properties = adminFeatureProperties(layer);
+        const style = adminRouteStyle(properties);
+        if (selected) {
+            style.weight = style.weight + 3;
+            style.opacity = 1;
+        }
+        layer.setStyle(style);
+        if (selected && layer.bringToFront) layer.bringToFront();
     }
 }
 

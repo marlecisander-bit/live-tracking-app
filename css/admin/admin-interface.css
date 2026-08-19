@@ -372,7 +372,13 @@
 
         .admin-stop-marker { width: 38px; height: 38px; font-size: 14px; }
         .admin-poi-marker { width: 28px; height: 28px; font-size: 14px; border-width: 2px; }
-        .admin-bus-marker { width: 44px; height: 44px; background: #d90000; color: #fff; border-color: #fff; font-size: 20px; }
+.admin-bus-marker { width: 44px; height: 44px; background: #d90000; color: #fff; border-color: #fff; font-size: 20px; }
+
+.admin-layer-selected .admin-stop-marker,
+.admin-layer-selected .admin-poi-marker {
+    transform: scale(1.12);
+    box-shadow: 0 0 0 5px rgba(217, 0, 0, .16), 0 7px 18px rgba(0, 0, 0, .25);
+}
 
         .poi-search-result {
             display: flex;
