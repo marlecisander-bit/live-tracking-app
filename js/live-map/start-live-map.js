@@ -2,6 +2,18 @@
    START
 ============================================================ */
 
+/* Follow the sightseeing van from the moment the public map opens. */
+followVan =
+    true;
+
+
+setActiveControl(
+    'btn-find-van'
+);
+
+
+updateFollowIndicator();
+
 loadPublishedMap();
 
 

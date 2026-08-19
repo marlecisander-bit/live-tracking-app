@@ -156,6 +156,30 @@ function updateFollowIndicator() {
 }
 
 
+/*
+   Manual map interaction always gives control back to the visitor.
+   The Find Van button can be used at any time to resume following.
+*/
+function stopFollowingVan() {
+
+    if (
+        !followVan
+    ) {
+        return;
+    }
+
+    followVan =
+        false;
+
+    updateFollowIndicator();
+
+    setActiveControl(
+        null
+    );
+
+}
+
+
 
 /*
    If user manually moves map,
@@ -168,18 +192,30 @@ map.on(
 
     function() {
 
-
-        followVan =
-            false;
-
-
-        updateFollowIndicator();
-
-
-        setActiveControl(
-            null
-        );
+        stopFollowingVan();
 
     }
 
 );
+
+
+/*
+   A tap, mouse press, or wheel gesture means the visitor wants to
+   explore the map manually. Pointer events cover mouse, touch, and pen.
+*/
+map
+    .getContainer()
+    .addEventListener(
+        'pointerdown',
+        stopFollowingVan,
+        { passive: true }
+    );
+
+
+map
+    .getContainer()
+    .addEventListener(
+        'wheel',
+        stopFollowingVan,
+        { passive: true }
+    );

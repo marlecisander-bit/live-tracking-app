@@ -150,7 +150,7 @@ var watchID =
 
 
 var followVan =
-    false;
+    true;
 
 
 
