@@ -5,8 +5,8 @@
         @media (min-width: 768px) {
 
             #header {
-                min-height: 68px;
-                padding: 0 18px;
+                min-height: 72px;
+                padding: 0 22px;
             }
 
 
@@ -17,9 +17,27 @@
 
             #next-card {
                 left: auto;
-                right: 18px;
-                top: 86px;
-                width: 300px;
+                right: 22px;
+                top: 94px;
+                width: 374px;
+                padding: 16px 17px;
+                border-radius: 20px;
+                box-shadow: 0 12px 34px rgba(0,0,0,0.15);
+            }
+
+            #next-stop-name {
+                font-size: 21px;
+            }
+
+            #next-meta {
+                margin-top: 12px;
+                font-size: 13px;
+            }
+
+            #route-status-banner {
+                margin: 14px -17px -16px;
+                padding: 11px 17px;
+                border-radius: 0 0 20px 20px;
             }
 
 
@@ -27,12 +45,36 @@
                 left: 50%;
                 right: auto;
 
-                width: 500px;
+                width: 540px;
 
                 transform:
                     translateX(-50%);
 
-                bottom: 22px;
+                bottom: 24px;
+
+                gap: 4px;
+                padding: 7px;
+                border-radius: 24px;
+                box-shadow: 0 12px 38px rgba(0,0,0,0.18);
+            }
+
+            .map-control-btn {
+                min-height: 66px;
+                border-radius: 17px;
+            }
+
+            .map-control-icon {
+                width: 38px;
+                height: 38px;
+            }
+
+            .map-control-icon svg {
+                width: 24px;
+                height: 24px;
+            }
+
+            .map-control-label {
+                font-size: 11px;
             }
 
 
@@ -93,12 +135,11 @@
   #next-meta { margin-top:6px; gap:10px; font-size:11px; }
 
   #route-status-banner {
-    top:calc(139px + env(safe-area-inset-top));
-    left:18px; right:18px; padding:7px 10px;
-    border-radius:999px; background:rgba(255,255,255,.95);
-    color:#666; border:1px solid rgba(0,0,0,.07);
-    box-shadow:0 3px 12px rgba(0,0,0,.09);
-    font-size:9px; font-weight:650; text-align:center;
+    margin:9px -12px -10px; padding:8px 12px;
+    border-radius:0 0 15px 15px; background:#f7f7f7;
+    color:#666; border-top:1px solid rgba(0,0,0,.07);
+    box-shadow:none;
+    font-size:9px; font-weight:650; text-align:left;
   }
 
   #nearest-stop-card {
@@ -121,7 +162,7 @@
     box-shadow:0 5px 20px rgba(0,0,0,.16);
   }
   .map-control-btn { min-height:54px; gap:3px; padding:5px 2px; border-radius:12px; }
-  .map-control-icon { width:22px; height:22px; }
+  .map-control-icon { width:30px; height:30px; }
   .map-control-icon svg { width:21px; height:21px; }
   .map-control-label { font-size:9px; }
 

@@ -46,7 +46,7 @@
             border-radius: 13px;
 
             background: transparent;
-            color: #252525;
+            color: #c90000;
 
             display: flex;
             flex-direction: column;
@@ -67,8 +67,8 @@
 
 
         .map-control-btn:hover {
-            background:
-                rgba(0,0,0,0.04);
+            background: #fff2f2;
+            color: #a90000;
         }
 
 
@@ -78,18 +78,36 @@
 
 
         .map-control-btn.active {
-            background: #d90000;
-            color: white;
+            background: #fff5f5;
+            color: #a90000;
         }
 
 
         .map-control-icon {
-            width: 24px;
-            height: 24px;
+            width: 34px;
+            height: 34px;
 
             display: flex;
             align-items: center;
             justify-content: center;
+
+            border-radius: 50%;
+
+            transition:
+                background 0.18s ease,
+                color 0.18s ease,
+                transform 0.18s ease;
+        }
+
+        .map-control-btn:hover .map-control-icon {
+            background: #ffe5e5;
+            transform: translateY(-1px);
+        }
+
+        .map-control-btn.active .map-control-icon {
+            background: #d90000;
+            color: white;
+            box-shadow: 0 5px 14px rgba(217,0,0,0.25);
         }
 
 
@@ -156,7 +174,7 @@
             font-size: 9px;
             font-weight: 800;
             letter-spacing: 0.8px;
-            color: #2870ff;
+            color: #d90000;
         }
 
         #nearest-stop-distance {
@@ -192,7 +210,7 @@
         #walk-to-stop {
             border: 0;
             border-radius: 999px;
-            background: #171717;
+            background: #d90000;
             color: #fff;
             padding: 9px 13px;
             font-size: 11px;
@@ -227,7 +245,7 @@
 
             display: none;
 
-            background: #171717;
+            background: #a90000;
             color: white;
 
             padding: 7px 12px;
