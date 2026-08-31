@@ -3,6 +3,10 @@
    Their values come from js/shared/app-config.js.
 */
 
+if (new URLSearchParams(window.location.search).get('embed') === '1') {
+    document.documentElement.classList.add('embed-mode');
+}
+
 var VEHICLE_ID = window.appConfig.vehicleId;
 var SCORPION_TOKEN = window.appConfig.scorpionTrackingToken;
 var VAN_FOLLOW_ZOOM = window.appConfig.vanFollowZoom;
@@ -13,6 +17,7 @@ var VEHICLE_ETA_UPDATE_INTERVAL = window.appConfig.vehicleEtaUpdateInterval;
 var MAP_CHECK_INTERVAL = window.appConfig.publishedMapCheckInterval;
 
 var GPS_STALE_AFTER_MS = window.appConfig.gpsStaleAfterMs;
+var PIXEL_GPS_FRESH_AFTER_MS = window.appConfig.pixelGpsFreshAfterMs || 30000;
 var VEHICLE_ETA_STALE_AFTER_MS = window.appConfig.vehicleEtaStaleAfterMs;
 
 var DEFAULT_SERVICE_SPEED_KMH = window.appConfig.defaultServiceSpeedKmh;

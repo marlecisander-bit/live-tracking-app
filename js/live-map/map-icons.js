@@ -34,7 +34,24 @@ function createStopIcon(number) {
 
 
 
-function createPOIIcon() {
+function createPOIIcon(properties) {
+
+    var sticker =
+        properties &&
+        typeof properties.sticker === 'string' &&
+        properties.sticker.indexOf('data:image/png;base64,') === 0
+            ? properties.sticker
+            : '';
+
+    if (sticker) {
+        return L.divIcon({
+            className: '',
+            html: '<div class="poi-sticker-marker"><img src="' + sticker + '" alt=""></div>',
+            iconSize: [58,58],
+            iconAnchor: [29,29],
+            popupAnchor: [0,-32]
+        });
+    }
 
 
     return L.divIcon({
@@ -44,7 +61,7 @@ function createPOIIcon() {
         html:
 
             '<div class="poi-marker">' +
-            '•' +
+            '&bull;' +
             '</div>',
 
         iconSize:
@@ -88,32 +105,7 @@ function createVanIcon(direction) {
                 '</div>' +
 
                 '<div class="van-marker-circle">' +
-
-                    '<svg viewBox="0 0 24 24">' +
-
-                        '<path d="' +
-
-                        'M4 7.5 ' +
-                        'C4 6.7 4.7 6 5.5 6 ' +
-                        'H14.5 ' +
-                        'C15.2 6 15.8 6.3 16.2 6.8 ' +
-                        'L19.4 10.8 ' +
-                        'C19.8 11.3 20 11.9 20 12.5 ' +
-                        'V16H18.5' +
-
-                        '"></path>' +
-
-                        '<path d="M4 7.5V16H5.5"></path>' +
-
-                        '<path d="M7.5 16H14.5"></path>' +
-
-                        '<path d="M15.8 7V11H19"></path>' +
-
-                        '<circle cx="7" cy="16.5" r="1.8"></circle>' +
-
-                        '<circle cx="16" cy="16.5" r="1.8"></circle>' +
-
-                    '</svg>' +
+                    window.vehicleIconMarkup() +
 
                 '</div>' +
 

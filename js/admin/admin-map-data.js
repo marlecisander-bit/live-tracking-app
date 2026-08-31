@@ -14,7 +14,10 @@ function adminMarkChanged() {
     window.adminMapData.hasChanges = true;
     if (window.app && window.app.state) window.app.state.unpublishedChanges = 1;
     const count = document.getElementById('unpublished-count');
-    if (count) count.textContent = '1';
+    if (count) {
+        count.textContent = '1';
+        count.hidden = false;
+    }
 }
 
 function adminFeatureProperties(layer) {
@@ -37,13 +40,18 @@ function adminRouteStyle(properties) {
 
 function adminPointIcon(properties) {
     const isPoi = properties.pointType === 'poi';
+    const sticker = isPoi && typeof properties.sticker === 'string' && properties.sticker.indexOf('data:image/png;base64,') === 0
+        ? properties.sticker
+        : '';
     const label = isPoi ? '•' : String(properties.stopNumber || 'S');
     const className = isPoi ? 'admin-poi-marker' : 'admin-stop-marker';
     return L.divIcon({
         className: '',
-        html: '<div class="' + className + '">' + label + '</div>',
-        iconSize: isPoi ? [28, 28] : [38, 38],
-        iconAnchor: isPoi ? [14, 14] : [19, 19]
+        html: sticker
+            ? '<div class="admin-poi-sticker"><img src="' + sticker + '" alt=""></div>'
+            : '<div class="' + className + '">' + label + '</div>',
+        iconSize: isPoi && sticker ? [58, 58] : (isPoi ? [28, 28] : [38, 38]),
+        iconAnchor: isPoi && sticker ? [29, 29] : (isPoi ? [14, 14] : [19, 19])
     });
 }
 
@@ -52,6 +60,16 @@ function adminSelectLayer(layer) {
 
     const previousLayer = window.adminMapData.selectedLayer;
     if (previousLayer && previousLayer !== layer) {
+        if (previousLayer instanceof L.Marker && previousLayer.dragging && previousLayer.dragging.enabled()) {
+            previousLayer.dragging.disable();
+        }
+        if (
+            previousLayer.pm &&
+            previousLayer.pm.layerDragEnabled &&
+            previousLayer.pm.layerDragEnabled()
+        ) {
+            previousLayer.pm.disableLayerDrag();
+        }
         adminSetLayerSelected(previousLayer, false);
     }
 
@@ -70,6 +88,22 @@ function adminSelectLayer(layer) {
         document.getElementById('point-name').value = properties.name || '';
         document.getElementById('stop-number').value = properties.stopNumber || '';
         document.getElementById('poi-category').value = properties.category || 'attraction';
+        const stickerInput = document.getElementById('poi-sticker-file');
+        const stickerPreview = document.getElementById('poi-sticker-preview');
+        const sticker = typeof properties.sticker === 'string' ? properties.sticker : '';
+        stickerInput.value = '';
+        stickerInput.dataset.sticker = sticker;
+        stickerPreview.innerHTML = '';
+        if (sticker) {
+            const stickerImage = document.createElement('img');
+            stickerImage.src = sticker;
+            stickerImage.alt = 'Selected POI sticker';
+            stickerPreview.appendChild(stickerImage);
+        } else {
+            const stickerEmpty = document.createElement('span');
+            stickerEmpty.textContent = 'No sticker';
+            stickerPreview.appendChild(stickerEmpty);
+        }
         document.getElementById('visit-time').value = properties.visitTime || '';
         document.getElementById('point-description').value = properties.description || '';
         document.getElementById('point-active').checked = properties.active !== false;
@@ -152,16 +186,18 @@ function adminRenderMapData(data) {
 async function adminLoadLatestMap() {
     const client = window.app.supabase.getClient();
     window.app.helpers.setLoading(true, 'Loading your saved map...');
-    let result = await client.from('map_versions')
-        .select('id,status,map_data,published_at,created_at')
-        .order('created_at', { ascending: false })
+    let latestQuery = client.from('map_versions')
+        .select('id,status,map_data,published_at,created_at');
+    if (window.appConfig.projectId) latestQuery = latestQuery.eq('project_id', window.appConfig.projectId);
+    let result = await latestQuery.order('created_at', { ascending: false })
         .limit(1)
         .maybeSingle();
 
     if (result.error || !result.data) {
-        result = await client.from('map_versions')
-            .select('id,status,map_data,published_at,created_at')
-            .eq('status', 'published')
+        let publishedQuery = client.from('map_versions')
+            .select('id,status,map_data,published_at,created_at');
+        if (window.appConfig.projectId) publishedQuery = publishedQuery.eq('project_id', window.appConfig.projectId);
+        result = await publishedQuery.eq('status', 'published')
             .order('published_at', { ascending: false, nullsFirst: false })
             .limit(1)
             .maybeSingle();
@@ -189,6 +225,13 @@ async function adminLoadLatestMap() {
     }
     window.app.helpers.showToast(result.data.status === 'draft' ? 'Draft restored' : 'Published map loaded');
 }
+
+document.addEventListener('projectchange', function() {
+    window.adminMapData.currentVersionId = null;
+    window.adminMapData.currentStatus = null;
+    window.adminMapData.hasChanges = false;
+    adminLoadLatestMap();
+});
 
 function adminGetAllLayers() {
     return window.adminMapData.layerGroup ? window.adminMapData.layerGroup.getLayers() : [];
@@ -256,6 +299,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const map = adminGetMap();
     if (!map) return;
     window.adminMapData.layerGroup = L.featureGroup().addTo(map);
+    map.on('click', function() {
+        const workspace = document.getElementById('workspace');
+        if (!workspace || !workspace.classList.contains('context-open')) return;
+        const activeNavigationButton = document.querySelector('.app-nav-button.active');
+        if (activeNavigationButton) activeNavigationButton.click();
+    });
     map.on('pm:create', function(event) {
         const layer = event.layer;
         const pointType = window.app.getCurrentPointType ? window.app.getCurrentPointType() : 'stop';

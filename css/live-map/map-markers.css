@@ -52,6 +52,29 @@
             font-size: 11px;
         }
 
+        .poi-sticker-marker {
+            width: 58px;
+            height: 58px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            filter: drop-shadow(0 3px 5px rgba(0,0,0,.32));
+            transition: transform .15s ease, filter .15s ease;
+        }
+
+        .poi-sticker-marker:hover {
+            transform: scale(1.12);
+            filter: drop-shadow(0 5px 8px rgba(0,0,0,.38));
+        }
+
+        .poi-sticker-marker img {
+            width: 58px;
+            height: 58px;
+            object-fit: contain;
+            pointer-events: none;
+        }
+
 
         /* =====================================================
            VAN MARKER
@@ -88,40 +111,36 @@
         .van-marker-circle {
             position: absolute;
 
-            top: 7px;
-            left: 7px;
+            top: 5px;
+            left: 5px;
 
-            width: 40px;
-            height: 40px;
+            width: 44px;
+            height: 44px;
 
-            border-radius: 50%;
+            box-sizing: border-box;
 
-            background: #d90000;
+            border-radius: 0;
 
-            border:
-                3px solid white;
+            background: transparent;
 
-            box-shadow:
-                0 5px 16px rgba(0,0,0,0.28);
+            border: 0;
+
+            box-shadow: none;
 
             display: flex;
             align-items: center;
             justify-content: center;
 
-            color: white;
+            color: #fff;
         }
 
 
-        .van-marker-circle svg {
-            width: 22px;
-            height: 22px;
+        .van-marker-circle .vehicle-symbol {
+            width: 43px;
+            height: 28px;
 
-            fill: none;
-            stroke: currentColor;
+            filter: drop-shadow(0 3px 3px rgba(0,0,0,.35));
 
-            stroke-width: 1.8;
-            stroke-linecap: round;
-            stroke-linejoin: round;
         }
 
 

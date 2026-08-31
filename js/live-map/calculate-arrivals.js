@@ -22,7 +22,7 @@ function calculateUpcomingArrivals(
 
 
     var effectiveSpeed =
-        getEffectiveSpeed();
+        getArrivalPlanningSpeed();
 
 
     var cumulativeDistance =
@@ -478,13 +478,12 @@ function applyBackendEtaToArrival(
 
 async function loadVehicleEtaState() {
 
+    if (vehicleEtaRequestInFlight || document.hidden) return;
+    vehicleEtaRequestInFlight = true;
+
     try {
 
-        const {
-            data,
-            error
-        } =
-            await supabaseClient
+        var etaQuery = supabaseClient
             .from(
                 'vehicle_eta_state'
             )
@@ -499,8 +498,9 @@ async function loadVehicleEtaState() {
             .eq(
                 'vehicle_id',
                 VEHICLE_ID
-            )
-            .maybeSingle();
+            );
+        if (window.PROJECT_ID) etaQuery = etaQuery.eq('project_id', window.PROJECT_ID);
+        const { data, error } = await etaQuery.maybeSingle();
 
         if (error) {
 
@@ -535,5 +535,10 @@ async function loadVehicleEtaState() {
             'Unable to load vehicle_eta_state:',
             error
         );
+    }
+    finally {
+
+        vehicleEtaRequestInFlight = false;
+
     }
 }

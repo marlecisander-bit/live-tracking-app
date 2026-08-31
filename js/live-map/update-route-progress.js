@@ -2,6 +2,157 @@
    SMART INFO
 ============================================================ */
 
+function operationalStopDetails(stopNumber, fallbackName) {
+
+    if (stopNumber === null || stopNumber === undefined || String(stopNumber).trim() === '') {
+        return null;
+    }
+
+    var record = findStopRecordByNumber(stopNumber);
+    var properties = record && record.feature ? record.feature.properties || {} : {};
+
+    return {
+        number: String(properties.stopNumber ?? stopNumber),
+        name: properties.name || fallbackName || 'Sightseeing stop',
+        record: record
+    };
+}
+
+
+function formatOperationalStop(stop) {
+
+    return stop ? stop.number + '. ' + stop.name : '--';
+}
+
+
+/*
+   Resolve the card from operational state only. PARKED has first
+   priority. ARRIVING is allowed only for the authoritative next
+   stop and only inside the 100 m physical GPS radius.
+*/
+function resolveVehicleOperationalStatus(nextArrival) {
+
+    var etaState = getFreshVehicleEtaState();
+    var currentStop = operationalStopDetails(
+        vehicleStopState && vehicleStopState.current_stop_number,
+        vehicleStopState && vehicleStopState.current_stop_name
+    );
+    var previousStop = operationalStopDetails(
+        vehicleStopState && vehicleStopState.last_completed_stop_number,
+        etaState && etaState.from_stop_name
+    );
+    var nextProperties =
+        nextArrival && nextArrival.stop && nextArrival.stop.feature
+        ? nextArrival.stop.feature.properties || {}
+        : {};
+    var nextStop = operationalStopDetails(
+        nextProperties.stopNumber,
+        nextProperties.name || (etaState && etaState.next_stop_name)
+    );
+    var physicalDistanceToNextKm = null;
+
+    if (vanPosition && nextArrival && nextArrival.stop && nextArrival.stop.feature) {
+        physicalDistanceToNextKm = turf.distance(
+            turf.point([vanPosition.lng, vanPosition.lat]),
+            turf.point(nextArrival.stop.feature.geometry.coordinates),
+            { units: 'kilometers' }
+        );
+    }
+
+    var state = 'unknown';
+    var stopStateReady = vehicleStopStateLoaded && vehicleStopState;
+
+    if (currentStop) {
+        state = 'parked';
+    }
+    else if (
+        stopStateReady
+        &&
+        !isVanGPSStale()
+        &&
+        nextStop
+        &&
+        physicalDistanceToNextKm !== null
+        &&
+        physicalDistanceToNextKm <= 0.100
+    ) {
+        state = 'arriving';
+    }
+    else if (previousStop && nextStop) {
+        state = 'en_route';
+    }
+
+    return {
+        state: state,
+        currentStop: currentStop,
+        previousStop: previousStop,
+        nextStop: nextStop,
+        physicalDistanceToNextKm: physicalDistanceToNextKm,
+        etaMinutes: nextArrival ? nextArrival.etaMinutes : null,
+        remainingDistanceKm: nextArrival ? nextArrival.distanceKm : null
+    };
+}
+
+
+function renderVehicleOperationalStatus(status) {
+
+    var card = document.getElementById('next-card');
+    var stateLabel = document.getElementById('next-label');
+    var messageLabel = document.getElementById('van-message-label');
+    var mainMessage = document.getElementById('van-movement-status');
+    var destinationLabel = document.getElementById('next-destination-label');
+    var destination = document.getElementById('next-stop-name');
+
+    card.classList.remove('parked', 'en-route', 'arriving', 'unknown');
+    card.classList.add(status.state.replace('_', '-'));
+
+    if (status.state === 'parked') {
+        stateLabel.innerText = 'AT STOP';
+        messageLabel.innerText = 'Van parked at';
+        mainMessage.innerText = formatOperationalStop(status.currentStop);
+        destinationLabel.innerText = 'Next';
+    }
+    else if (status.state === 'arriving') {
+        stateLabel.innerText = 'ARRIVING';
+        messageLabel.innerText = 'Van arriving at';
+        mainMessage.innerText = formatOperationalStop(status.nextStop);
+        destinationLabel.innerText = 'Going to';
+    }
+    else if (status.state === 'en_route') {
+        stateLabel.innerText = 'EN ROUTE';
+        messageLabel.innerText = 'Van departed from';
+        mainMessage.innerText = formatOperationalStop(status.previousStop);
+        destinationLabel.innerText = 'Going to';
+    }
+    else {
+        stateLabel.innerText = 'VAN STATUS';
+        messageLabel.innerText = 'Live vehicle';
+        mainMessage.innerText = 'Calculating route position...';
+        destinationLabel.innerText = 'Next stop';
+    }
+
+    destination.innerText = formatOperationalStop(status.nextStop);
+    document.getElementById('eta-value').innerText = formatETA(status.etaMinutes);
+    document.getElementById('next-stop-distance').innerText = formatDistance(
+        status.state === 'arriving'
+        ? status.physicalDistanceToNextKm
+        : status.remainingDistanceKm
+    );
+}
+
+
+function renderVehicleLoadingStatus(message) {
+
+    document.getElementById('next-card').className = 'unknown';
+    document.getElementById('next-label').innerText = 'VAN STATUS';
+    document.getElementById('van-message-label').innerText = 'Live vehicle';
+    document.getElementById('van-movement-status').innerText = message;
+    document.getElementById('next-destination-label').innerText = 'Next stop';
+    document.getElementById('next-stop-name').innerText = '--';
+    document.getElementById('eta-value').innerText = '--';
+    document.getElementById('next-stop-distance').innerText = '--';
+}
+
 function updateSmartRouteInformation() {
 
     if (
@@ -14,28 +165,7 @@ function updateSmartRouteInformation() {
         2
     ) {
 
-        document
-            .getElementById(
-                'next-stop-name'
-            )
-            .innerText =
-            'Waiting for route data...';
-
-
-        document
-            .getElementById(
-                'eta-value'
-            )
-            .innerText =
-            '--';
-
-
-        document
-            .getElementById(
-                'next-stop-distance'
-            )
-            .innerText =
-            '--';
+        renderVehicleLoadingStatus('Locating sightseeing van...');
 
 
         clearEtaProgressUI();
@@ -61,6 +191,9 @@ function updateSmartRouteInformation() {
        ========================================================
     */
 
+    updateRouteCycleResetFromVanPosition();
+
+
     var expectedStopNumber =
         getExpectedNextStopNumber();
 
@@ -74,7 +207,7 @@ function updateSmartRouteInformation() {
     ) {
 
         backendLegMatch =
-            syncRouteContextWithBackendState();
+            syncRouteContextWithBackendState(expectedStopNumber);
 
     }
 
@@ -103,12 +236,7 @@ function updateSmartRouteInformation() {
         0
     ) {
 
-        document
-            .getElementById(
-                'next-stop-name'
-            )
-            .innerText =
-            'Waiting for route data...';
+        renderVehicleLoadingStatus('Waiting for route data...');
 
 
         return;
@@ -252,12 +380,7 @@ function updateSmartRouteInformation() {
         !currentLeg
     ) {
 
-        document
-            .getElementById(
-                'next-stop-name'
-            )
-            .innerText =
-            'Calculating route position...';
+        renderVehicleLoadingStatus('Calculating route position...');
 
 
         return;
@@ -450,52 +573,6 @@ function updateSmartRouteInformation() {
     }
 
 
-    var p =
-        next.stop
-        .feature
-        .properties || {};
-
-
-    var physicalDistance =
-        turf.distance(
-
-            vanPoint,
-
-            turf.point(
-                next.stop
-                .feature
-                .geometry
-                .coordinates
-            ),
-
-            {
-                units:
-                    'kilometers'
-            }
-
-        );
-
-
-    /*
-       If the van is physically inside the expected Stop radius,
-       display 0 distance / 0 ETA.
-    */
-
-    if (
-        physicalDistance <=
-        STOP_ARRIVAL_RADIUS_KM
-    ) {
-
-        next.distanceKm =
-            0;
-
-
-        next.etaMinutes =
-            0;
-
-    }
-
-
     /*
        Fresh backend ETA overrides the local speed-based estimate
        for the immediate next stop only.
@@ -505,61 +582,30 @@ function updateSmartRouteInformation() {
     );
 
 
-    document
-        .getElementById(
-            'next-stop-name'
-        )
-        .innerText =
-
-        (
-            p.stopNumber
-            ?
-            p.stopNumber +
-            '. '
-            :
-            ''
-        )
-
-        +
-
-        (
-            p.name ||
-            'Next Stop'
-        );
+    var operationalStatus =
+        resolveVehicleOperationalStatus(next);
 
 
-    document
-        .getElementById(
-            'next-stop-distance'
-        )
-        .innerText =
-        formatDistance(
-            next.distanceKm
-        );
+    if (operationalStatus.state === 'arriving') {
+        operationalStatus.etaMinutes = 0;
+    }
+
+
+    renderVehicleOperationalStatus(operationalStatus);
+
+
+    if (
+        isVanGPSStale()
+        ||
+        offRouteStreak >= OFF_ROUTE_CONFIRM_READINGS
+    ) {
+        document.getElementById('eta-value').innerText = '--';
+    }
 
 
     updateEtaProgressUI(
         getFreshVehicleEtaState()
     );
-
-
-    if (
-        !isVanGPSStale()
-        &&
-        offRouteStreak <
-        OFF_ROUTE_CONFIRM_READINGS
-    ) {
-
-        document
-            .getElementById(
-                'eta-value'
-            )
-            .innerText =
-            formatETA(
-                next.etaMinutes
-            );
-
-    }
 
 
     document
@@ -568,6 +614,10 @@ function updateSmartRouteInformation() {
         )
         .innerText =
 
+        operationalStatus.state === 'parked'
+        ?
+        'Parked'
+        :
         routeProperties.directionMode ===
         'twoway'
         ?

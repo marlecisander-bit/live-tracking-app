@@ -51,7 +51,7 @@ var currentOperationalLegIndex =
 
 /* ============================================================
    BACKEND OPERATIONAL STATE
-   stop-detector v2.1 is the authority for the van stop sequence.
+   stop-detector v2.5 is the authority for the van stop sequence.
 ============================================================ */
 
 var vehicleStopState =
@@ -59,6 +59,23 @@ var vehicleStopState =
 
 
 var vehicleStopStateLoaded =
+    false;
+
+var vehicleStopStateRequestInFlight =
+    false;
+
+var stopDetectorRequestInFlight =
+    false;
+
+var lastStopDetectorRequestAt =
+    0;
+
+
+/* A return to Stop 1 starts a new operational route cycle. */
+var routeCycleResetActive =
+    false;
+
+var vanWasAtRouteOrigin =
     false;
 
 
@@ -70,6 +87,9 @@ var vehicleEtaState =
     null;
 
 var vehicleEtaStateLoaded =
+    false;
+
+var vehicleEtaRequestInFlight =
     false;
 
 var currentPublishedId =
@@ -106,6 +126,15 @@ var vanSpeed =
 
 
 var lastVanGPSReceivedAt =
+    null;
+
+var vanPositionRequestInFlight =
+    false;
+
+var lastVanRequestErrorAt =
+    0;
+
+var activeVanGpsSource =
     null;
 
 

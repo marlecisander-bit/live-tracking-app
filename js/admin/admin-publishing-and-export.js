@@ -15,6 +15,7 @@
             status: status,
             map_data: adminBuildFeatureCollection()
         };
+        if (window.appConfig.projectId) payload.project_id = window.appConfig.projectId;
         if (window.app && window.app.state && window.app.state.currentUser) {
             payload.created_by = window.app.state.currentUser.id;
         }
@@ -35,7 +36,10 @@
         window.adminMapData.hasChanges = false;
         if (window.app && window.app.state) window.app.state.unpublishedChanges = 0;
         const count = document.getElementById('unpublished-count');
-        if (count) count.textContent = '0';
+        if (count) {
+            count.textContent = '0';
+            count.hidden = true;
+        }
         if (status === 'published') {
             const published = document.getElementById('last-published');
             if (published) published.textContent = new Date(result.data.published_at || result.data.created_at).toLocaleString();
@@ -89,6 +93,7 @@
                 if (result.error) throw result.error;
                 if (window.app && window.app.state) window.app.state.currentUser = result.data.user;
                 document.getElementById('login-screen').style.display = 'none';
+                await window.app.projects.load();
                 await adminLoadLatestMap();
                 window.app.helpers.showToast('Logged in successfully');
             } catch (error) {
@@ -159,6 +164,8 @@
             if (result.data && result.data.session) {
                 if (window.app && window.app.state) window.app.state.currentUser = result.data.session.user;
                 document.getElementById('login-screen').style.display = 'none';
+                await window.app.projects.load();
+                await adminLoadLatestMap();
             }
         } catch (error) {
             console.warn('Could not restore admin session.', error);

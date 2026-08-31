@@ -13,6 +13,7 @@
     <meta name="theme-color" content="#ffffff">
 
     <title>Sightseeing Shkodra - Live Map</title>
+    <link rel="icon" href="assets/brand/sightseeing-shkodra-light.svg" type="image/svg+xml">
 
     <link rel="stylesheet" href="css/shared.css">
     <link rel="stylesheet" href="css/live-map/page-layout.css">
@@ -47,6 +48,7 @@
     </script>
 
     <script src="js/shared/app-config.js"></script>
+    <script src="js/shared/gps-source.js"></script>
 
 </head>
 
@@ -62,11 +64,8 @@
 
         <div id="brand">
 
-            Sightseeing Shkodra
-
-            <small>
-                Hop On Hop Off • Live Map
-            </small>
+            <img class="brand-logo" src="assets/brand/sightseeing-shkodra-light.svg" alt="Sightseeing Shkodra">
+            <span class="brand-title">Sightseeing Shkodra</span>
 
         </div>
 
@@ -75,7 +74,7 @@
 
             <span class="live-dot"></span>
 
-            <span id="live-badge-text">
+            <span id="live-badge-text" aria-live="polite">
                 LIVE
             </span>
 
@@ -90,7 +89,7 @@
     <div id="map"></div>
 
 
-    <div id="map-loading">
+    <div id="map-loading" role="status" aria-live="polite">
         Locating sightseeing van...
     </div>
 
@@ -104,26 +103,47 @@
         <div id="next-card-top">
 
             <div id="next-label">
-                NEXT STOP
+                VAN STATUS
             </div>
 
 
-            <div id="next-direction">
-                --
+            <div class="next-card-actions">
+                <div id="next-direction">--</div>
+                <button
+                    id="status-card-toggle"
+                    type="button"
+                    aria-label="Show more vehicle information"
+                    aria-expanded="false"
+                    data-action="toggleStatusCard"
+                >
+                    <span aria-hidden="true">&#8964;</span>
+                </button>
             </div>
 
         </div>
 
 
-        <div id="next-stop-name">
-            Calculating...
+        <div id="van-message-label">
+            Live vehicle
         </div>
 
 
-        <div id="next-meta">
+        <div id="van-movement-status" aria-live="polite" aria-atomic="true">
+            Locating sightseeing van...
+        </div>
+
+
+        <div id="next-destination-row">
+            <span id="next-destination-label">Going to</span>
+            <strong id="next-stop-name">Calculating...</strong>
+        </div>
+
+
+        <div id="next-meta" aria-live="polite">
 
             <span>
-                🚐 <strong id="eta-value">--</strong>
+                <span class="vehicle-inline-icon" data-vehicle-icon></span>
+                <strong id="eta-value">--</strong>
             </span>
 
 
@@ -134,7 +154,7 @@
         </div>
 
 
-        <div id="eta-progress-wrap">
+        <div id="eta-progress-wrap" class="status-card-extra">
 
             <div id="eta-progress-head">
 
@@ -156,7 +176,7 @@
         </div>
 
         <!-- Temporary route messages stay with the next-stop information. -->
-        <div id="route-status-banner"></div>
+        <div id="route-status-banner" class="status-card-extra" aria-live="polite"></div>
 
     </div>
 
@@ -185,7 +205,7 @@
                 type="button"
         data-action="walkToNearestStop"
             >
-                Walk to Stop →
+                Walk to Stop &rarr;
             </button>
 
         </div>
@@ -195,9 +215,9 @@
 
     <!-- FOLLOW INDICATOR -->
 
-    <div id="follow-indicator">
-        Following van
-    </div>
+    <button id="follow-indicator" type="button" data-action="handleFindVan">
+        Following van <span aria-hidden="true">&bull;</span> Tap to recenter
+    </button>
 
 
 
@@ -258,41 +278,7 @@
             type="button"
         >
 
-            <span class="map-control-icon">
-
-                <svg viewBox="0 0 24 24">
-
-                    <path
-                        d="M4 7.5
-                           C4 6.7 4.7 6 5.5 6
-                           H14.5
-                           C15.2 6 15.8 6.3 16.2 6.8
-                           L19.4 10.8
-                           C19.8 11.3 20 11.9 20 12.5
-                           V16H18.5"
-                    ></path>
-
-                    <path d="M4 7.5V16H5.5"></path>
-
-                    <path d="M7.5 16H14.5"></path>
-
-                    <path d="M15.8 7V11H19"></path>
-
-                    <circle
-                        cx="7"
-                        cy="16.5"
-                        r="1.8"
-                    ></circle>
-
-                    <circle
-                        cx="16"
-                        cy="16.5"
-                        r="1.8"
-                    ></circle>
-
-                </svg>
-
-            </span>
+            <span class="map-control-icon" data-vehicle-icon></span>
 
             <span class="map-control-label">
                 Find Van
@@ -389,16 +375,24 @@
 
     <!-- BACKDROP -->
 
-    <div
+    <button
         id="panel-backdrop"
+        type="button"
+        aria-label="Close stops panel"
             data-action="closeStopsPanel">
-    </div>
+    </button>
 
 
 
     <!-- STOPS PANEL -->
 
-    <div id="stops-panel">
+    <div
+        id="stops-panel"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="stops-panel-title"
+        aria-hidden="true"
+        tabindex="-1">
 
 
         <div id="stops-panel-header">
@@ -423,9 +417,11 @@
 
                 <button
                     id="close-stops"
+                    type="button"
+                    aria-label="Close stops panel"
                 data-action="closeStopsPanel">
 
-                    ×
+                    &times;
 
                 </button>
 
@@ -434,7 +430,7 @@
         </div>
 
 
-        <div id="stop-arrivals-list">
+        <div id="stop-arrivals-list" aria-live="polite">
 
             Waiting for route information...
 
@@ -445,7 +441,7 @@
 
 
 
-    <div id="toast"></div>
+    <div id="toast" role="status" aria-live="polite"></div>
 
 
 </div>
@@ -453,7 +449,9 @@
 
 <!-- Live Map features load in dependency order. -->
 <script src="js/live-map/app-settings.js"></script>
+<script src="js/shared/vehicle-icon.js"></script>
 <script src="js/live-map/connect-to-database.js"></script>
+<script src="js/live-map/project-context.js"></script>
 <script src="js/live-map/create-map.js"></script>
 <script src="js/live-map/app-state.js"></script>
 <script src="js/live-map/map-buttons.js"></script>

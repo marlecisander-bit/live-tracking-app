@@ -300,6 +300,7 @@
         }
 
         #gps-card .btn-red { background: var(--ss-red); }
+        #gps-card .btn-red .vehicle-inline-icon { --vehicle-icon-surface: var(--ss-red); }
 
         #editor {
             border-left: 1px solid var(--ss-border);
@@ -372,12 +373,27 @@
 
         .admin-stop-marker { width: 38px; height: 38px; font-size: 14px; }
         .admin-poi-marker { width: 28px; height: 28px; font-size: 14px; border-width: 2px; }
-.admin-bus-marker { width: 44px; height: 44px; background: #d90000; color: #fff; border-color: #fff; font-size: 20px; }
+        .admin-poi-sticker {
+            width: 58px;
+            height: 58px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            filter: drop-shadow(0 3px 5px rgba(0,0,0,.3));
+        }
+        .admin-poi-sticker img { width: 58px; height: 58px; object-fit: contain; }
+.admin-bus-marker { box-sizing: border-box; width: 44px; height: 44px; background: transparent; color: #fff; border: 0; border-radius: 0; box-shadow: none; font-size: 20px; }
+.admin-bus-marker .vehicle-symbol { width: 43px; height: 28px; filter: drop-shadow(0 3px 3px rgba(0,0,0,.35)); }
 
 .admin-layer-selected .admin-stop-marker,
 .admin-layer-selected .admin-poi-marker {
     transform: scale(1.12);
     box-shadow: 0 0 0 5px rgba(217, 0, 0, .16), 0 7px 18px rgba(0, 0, 0, .25);
+}
+
+.admin-layer-selected .admin-poi-sticker {
+    transform: scale(1.12);
+    filter: drop-shadow(0 0 5px rgba(217, 0, 0, .75));
 }
 
         .poi-search-result {
@@ -547,19 +563,18 @@ textarea:focus-visible {
 }
 
 .login-brand-mark {
-    width: 58px;
-    height: 58px;
+    width: 210px;
+    height: 132px;
     margin: 0 auto 20px;
-    border-radius: 18px;
+    border-radius: 22px;
     display: grid;
     place-items: center;
-    background: var(--ss-red);
-    color: #fff;
-    box-shadow: 0 10px 24px rgba(217, 0, 0, .24);
-    font-size: 18px;
-    font-weight: 800;
-    letter-spacing: -.5px;
+    background: #fff;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, .08);
+    overflow: hidden;
 }
+
+.login-brand-mark img { width: 100%; height: 100%; object-fit: contain; }
 
 #login-box h1 {
     font-size: 25px;
@@ -606,9 +621,21 @@ textarea:focus-visible {
 }
 
 #brand {
-    font-size: 20px;
-    letter-spacing: -.45px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: 1fr auto;
+    align-items: center;
+    column-gap: 10px;
 }
+
+#brand .brand-logo {
+    grid-row: 1 / 3;
+    width: 150px;
+    height: 58px;
+    object-fit: contain;
+}
+
+#brand .brand-title { display: none; }
 
 #brand small { margin-top: 4px; }
 
@@ -684,6 +711,13 @@ button[data-action^="save"]:hover {
     border-radius: 14px;
     margin-bottom: 7px;
     box-shadow: 0 7px 16px rgba(217, 0, 0, .2);
+}
+
+.nav-brand-dot img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    border-radius: 12px;
 }
 
 .nav-divider {
@@ -875,4 +909,73 @@ input, select, textarea {
         padding: 30px 24px;
         border-radius: 20px;
     }
+}
+        .admin-project-switcher { display: flex; align-items: center; gap: 7px; }
+        .admin-project-switcher label { color: rgba(255,255,255,.72); font-size: 10px; font-weight: 800; text-transform: uppercase; }
+        .admin-project-switcher select { max-width: 190px; padding: 7px 28px 7px 9px; border: 1px solid rgba(255,255,255,.28); border-radius: 7px; background: #fff; color: #222; font-weight: 700; }
+        @media (max-width: 760px) { .admin-project-switcher label, #create-project-button, #invite-admin-button { display: none; } .admin-project-switcher select { max-width: 135px; } }
+
+/* Compact project workflow header. Analytics remains available in the side navigation. */
+#header-right { gap: 8px; }
+.admin-project-switcher { padding-right: 8px; border-right: 1px solid var(--ss-border); }
+.admin-project-switcher select {
+    width: 180px;
+    max-width: 22vw;
+    min-height: 38px;
+    border-color: transparent;
+    background-color: #f5f5f6;
+}
+
+/* Collapsible map-first navigation. Context panels consume space only while open. */
+@media (min-width: 701px) {
+    #workspace,
+    #workspace.editor-open {
+        grid-template-columns: var(--ss-nav-width) minmax(0, 1fr);
+    }
+
+    #workspace.context-open {
+        grid-template-columns: var(--ss-nav-width) var(--ss-panel-width) minmax(0, 1fr);
+    }
+
+    #workspace.editor-open {
+        grid-template-columns: var(--ss-nav-width) minmax(0, 1fr) var(--ss-editor-width);
+    }
+
+    #workspace.context-open.editor-open {
+        grid-template-columns: var(--ss-nav-width) var(--ss-panel-width) minmax(0, 1fr) var(--ss-editor-width);
+    }
+
+    #sidebar { display: none; }
+    #workspace.context-open #sidebar { display: block; }
+}
+#header-right .header-quiet-action {
+    min-height: 36px;
+    padding: 0 9px;
+    border: 0;
+    background: transparent;
+    color: #555;
+    box-shadow: none;
+}
+#header-right .header-quiet-action:hover { background: #f5f5f6; color: var(--ss-red-dark); }
+#header-right .header-map-action { min-height: 38px; padding: 0 13px; }
+.save-change-count {
+    display: inline-flex;
+    min-width: 17px;
+    height: 17px;
+    margin-left: 4px;
+    padding: 0 4px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: #ededed;
+    color: #555;
+    font-size: 10px;
+}
+.save-change-count[hidden] { display: none; }
+#draft-button .save-change-count { background: #f1f1f1; }
+@media (max-width: 900px) {
+    #header-right { gap: 5px; }
+    .admin-project-switcher { padding-right: 5px; }
+    .admin-project-switcher select { width: 145px; max-width: 25vw; }
+    #header-right button { padding-left: 9px; padding-right: 9px; }
 }

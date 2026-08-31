@@ -3,6 +3,90 @@
 ============================================================ */
 
 function loadVanPosition() {
+    var preference = window.gpsSource ? window.gpsSource.get() : 'automatic';
+    if (preference === 'scorpion') {
+        loadScorpionPosition();
+        return;
+    }
+    loadPixelPosition(preference === 'automatic');
+}
+
+var pixelPositionChannel = null;
+
+function subscribeToPixelPosition() {
+    if (pixelPositionChannel) supabaseClient.removeChannel(pixelPositionChannel);
+    pixelPositionChannel = supabaseClient
+        .channel('pixel-position-' + VEHICLE_ID)
+        .on('postgres_changes', {
+            event: 'UPDATE', schema: 'public', table: 'vehicle_positions',
+            filter: 'vehicle_id=eq.' + VEHICLE_ID
+        }, function(payload) {
+            var row = payload && payload.new;
+            if (!row || (window.PROJECT_ID && row.project_id !== window.PROJECT_ID)) return;
+            var preference = window.gpsSource ? window.gpsSource.get() : 'automatic';
+            if (preference === 'scorpion') return;
+            updateVanMarker({
+                lat: row.latitude, lng: row.longitude, viteza: row.speed_kmh,
+                directie: row.bearing_deg == null ? row.derived_course_deg : row.bearing_deg,
+                source_recorded_at: row.source_recorded_at || row.received_at
+            }, 'Google Pixel');
+        })
+        .subscribe();
+}
+
+async function loadPixelPosition(allowFallback) {
+    if (vanPositionRequestInFlight || document.hidden) return;
+    vanPositionRequestInFlight = true;
+    var fallbackStarted = false;
+    try {
+        var pixelQuery = supabaseClient
+            .from('vehicle_positions')
+            .select('latitude,longitude,speed_kmh,bearing_deg,derived_course_deg,source_recorded_at,received_at,quality_state')
+            .eq('vehicle_id', VEHICLE_ID);
+        if (window.PROJECT_ID) pixelQuery = pixelQuery.eq('project_id', window.PROJECT_ID);
+        var result = await pixelQuery.maybeSingle();
+        if (result.error) throw result.error;
+
+        var row = result.data;
+        var recordedAt = getTrackerRecordedAt(row);
+        var pixelIsFresh = row && recordedAt !== null && Date.now() - recordedAt <= PIXEL_GPS_FRESH_AFTER_MS;
+        if (row && (!allowFallback || pixelIsFresh)) {
+            updateVanMarker({
+                lat: row.latitude,
+                lng: row.longitude,
+                viteza: row.speed_kmh,
+                directie: row.bearing_deg == null ? row.derived_course_deg : row.bearing_deg,
+                source_recorded_at: row.source_recorded_at || row.received_at
+            }, 'Google Pixel');
+            return;
+        }
+
+        if (allowFallback) {
+            vanPositionRequestInFlight = false;
+            fallbackStarted = true;
+            loadScorpionPosition();
+        } else if (!row && Date.now() - lastVanRequestErrorAt > 30000) {
+            lastVanRequestErrorAt = Date.now();
+            showToast('Waiting for the van GPS signal');
+        }
+    } catch (error) {
+        if (allowFallback) {
+            vanPositionRequestInFlight = false;
+            fallbackStarted = true;
+            loadScorpionPosition();
+        } else if (Date.now() - lastVanRequestErrorAt > 30000) {
+            lastVanRequestErrorAt = Date.now();
+            showToast('Van GPS is temporarily unavailable');
+        }
+    } finally {
+        if (!fallbackStarted) vanPositionRequestInFlight = false;
+    }
+}
+
+function loadScorpionPosition() {
+
+    if (vanPositionRequestInFlight || document.hidden) return;
+    vanPositionRequestInFlight = true;
 
 
     var callbackName =
@@ -10,6 +94,16 @@ function loadVanPosition() {
         'scorpionGPS_' +
         Date.now();
 
+
+    var script = null;
+    var requestTimeout = null;
+
+    function finishVanRequest() {
+        if (requestTimeout) window.clearTimeout(requestTimeout);
+        delete window[callbackName];
+        if (script && script.parentNode) script.parentNode.removeChild(script);
+        vanPositionRequestInFlight = false;
+    }
 
     window[callbackName] =
 
@@ -29,7 +123,8 @@ function loadVanPosition() {
 
 
                     updateVanMarker(
-                        data.markers[0]
+                        data.markers[0],
+                        'ScorpionTrack'
                     );
 
                 }
@@ -40,29 +135,14 @@ function loadVanPosition() {
             finally {
 
 
-                delete window[
-                    callbackName
-                ];
-
-
-                if (
-                    script.parentNode
-                ) {
-
-
-                    script.parentNode
-                    .removeChild(
-                        script
-                    );
-
-                }
+                finishVanRequest();
 
             }
 
         };
 
 
-    var script =
+    script =
         document.createElement(
             'script'
         );
@@ -108,11 +188,22 @@ function loadVanPosition() {
     script.onerror =
         function() {
 
-            showToast(
-                'Unable to refresh van location'
-            );
+            finishVanRequest();
+
+            if (Date.now() - lastVanRequestErrorAt > 30000) {
+                lastVanRequestErrorAt = Date.now();
+                showToast('Van location is temporarily unavailable');
+            }
 
         };
+
+    requestTimeout = window.setTimeout(function() {
+        finishVanRequest();
+        if (Date.now() - lastVanRequestErrorAt > 30000) {
+            lastVanRequestErrorAt = Date.now();
+            showToast('Van location is taking longer than expected');
+        }
+    }, 10000);
 
 
     document.body
@@ -122,13 +213,39 @@ function loadVanPosition() {
 
 }
 
+function getTrackerRecordedAt(data) {
+    var candidates = [
+        data && data.source_recorded_at,
+        data && data.recorded_at,
+        data && data.gpsTime,
+        data && data.timestamp,
+        data && data.datetime,
+        data && data.dataOra
+    ];
+
+    for (var index = 0; index < candidates.length; index += 1) {
+        var candidate = candidates[index];
+        if (candidate === null || candidate === undefined || candidate === '') continue;
+        var numeric = Number(candidate);
+        var parsed = Number.isFinite(numeric)
+            ? new Date(numeric < 100000000000 ? numeric * 1000 : numeric)
+            : new Date(candidate);
+        if (Number.isFinite(parsed.getTime())) return parsed.getTime();
+    }
+
+    return null;
+}
+
 
 
 /* ============================================================
    UPDATE VAN
 ============================================================ */
 
-function updateVanMarker(data) {
+function updateVanMarker(data, gpsSourceName) {
+
+    var previousVanPosition = vanPosition;
+    var previousVanHeading = vanHeading;
 
 
     var latitude =
@@ -187,7 +304,9 @@ function updateVanMarker(data) {
 
 
     lastVanGPSReceivedAt =
-        Date.now();
+        getTrackerRecordedAt(data) || Date.now();
+
+    activeVanGpsSource = gpsSourceName || 'GPS';
 
 
     recordSpeed(
@@ -239,14 +358,13 @@ function updateVanMarker(data) {
             );
 
 
-        vanMarker
-            .setIcon(
-
-                createVanIcon(
-                    direction
-                )
-
-            );
+        if (
+            previousVanHeading === null
+            || vanHeading === null
+            || Math.abs(previousVanHeading - vanHeading) >= 5
+        ) {
+            vanMarker.setIcon(createVanIcon(direction));
+        }
 
     }
 
@@ -256,13 +374,15 @@ function updateVanMarker(data) {
     ) {
 
 
-        map.setView(
-            vanPosition,
-            VAN_FOLLOW_ZOOM,
-            {
-                animate: true
-            }
-        );
+        var movementMeters = previousVanPosition
+            ? previousVanPosition.distanceTo(vanPosition)
+            : Infinity;
+
+        if (!previousVanPosition || map.getZoom() !== VAN_FOLLOW_ZOOM) {
+            map.setView(vanPosition, VAN_FOLLOW_ZOOM, { animate: false });
+        } else if (movementMeters >= 20) {
+            map.panTo(vanPosition, { animate: true, duration: 0.35 });
+        }
 
     }
 

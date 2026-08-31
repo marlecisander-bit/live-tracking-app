@@ -1,20 +1,15 @@
 (function() {
     let poiResults = [];
 
-    function poiQuery(category, lat, lng, radius) {
-        const filters = {
-            tourist: '[tourism=attraction]', historic: '[historic]', museums: '[tourism=museum]',
-            religious: '[amenity=place_of_worship]', viewpoints: '[tourism=viewpoint]',
-            nature: '[leisure=park]', food: '[amenity~"restaurant|cafe"]',
-            accommodation: '[tourism~"hotel|hostel|guest_house"]', all: '[tourism]'
-        };
-        const filter = filters[category] || filters.tourist;
-        return '[out:json][timeout:25];(node' + filter + '(around:' + radius + ',' + lat + ',' + lng + ');way' + filter + '(around:' + radius + ',' + lat + ',' + lng + '););out center tags;';
-    }
-
     function renderPoiResults() {
         const container = document.getElementById('poi-manager-results');
         container.innerHTML = '';
+        if (!poiResults.length) {
+            const empty = document.createElement('div');
+            empty.className = 'poi-manager-empty';
+            empty.textContent = 'No POIs to preview.';
+            container.appendChild(empty);
+        }
         poiResults.forEach(function(item, index) {
             const row = document.createElement('label');
             row.className = 'poi-search-result';
@@ -30,6 +25,38 @@
         });
         document.getElementById('poi-manager-result-count').textContent = poiResults.length + ' results';
         updatePoiSelection();
+    }
+
+    function setPoiStatus(message, type) {
+        const status = document.getElementById('poi-manager-status');
+        if (!status) return;
+        status.textContent = message || '';
+        status.className = message ? 'visible' + (type ? ' ' + type : '') : '';
+        status.setAttribute('role', message ? 'status' : '');
+        status.setAttribute('aria-live', message ? 'polite' : 'off');
+    }
+
+    async function fetchPoiData(category, lat, lng, radius) {
+        const supabaseClient = window.app.supabase && window.app.supabase.getClient
+            ? window.app.supabase.getClient()
+            : null;
+        if (!supabaseClient || !supabaseClient.functions) throw new Error('Supabase is not available');
+
+        const result = await supabaseClient.functions.invoke('osm-poi-search', {
+            body: { category: category, lat: lat, lng: lng, radius: radius }
+        });
+        if (!result.error && result.data && !result.data.error) return result.data;
+
+        let message = result.data && result.data.error;
+        if (!message && result.error && result.error.context && typeof result.error.context.json === 'function') {
+            try {
+                const details = await result.error.context.json();
+                message = details && details.error;
+            } catch (contextError) {
+                console.warn('Could not read POI proxy error response:', contextError);
+            }
+        }
+        throw new Error(message || (result.error && result.error.message) || 'Supabase POI function failed');
     }
 
     function updatePoiSelection() {
@@ -51,27 +78,46 @@
     }
 
     function recordDate(record) {
-        const value = firstValue(record, ['created_at', 'recorded_at', 'captured_at', 'timestamp', 'updated_at', 'calculated_at']);
+        const value = firstValue(record, [
+            'source_recorded_at', 'received_at',
+            'created_at', 'recorded_at', 'captured_at', 'timestamp',
+            'gps_timestamp', 'gps_time', 'gps_recorded_at', 'recorded_time',
+            'position_timestamp', 'position_time', 'event_time', 'event_at', 'occurred_at',
+            'started_at', 'ended_at', 'updated_at', 'calculated_at'
+        ]);
         const date = value ? new Date(value) : null;
         return date && !Number.isNaN(date.getTime()) ? date : null;
     }
 
-    function filterAndSortByRange(records, range, fromDate) {
+    function belongsToVehicle(record, vehicleId) {
+        const recordVehicleId = firstValue(record, ['vehicle_id', 'vehicleId', 'device_id']);
+        return !vehicleId || recordVehicleId == null || String(recordVehicleId) === String(vehicleId);
+    }
+
+    function filterAndSortByRange(records, range, fromDate, vehicleId) {
         return (records || []).filter(function(record) {
             const date = recordDate(record);
-            return range === 'all' || !date || date >= fromDate;
+            if (!belongsToVehicle(record, vehicleId)) return false;
+            return range === 'all' || (date && date >= fromDate);
         }).sort(function(a, b) {
             const aDate = recordDate(a), bDate = recordDate(b);
             return (bDate ? bDate.getTime() : 0) - (aDate ? aDate.getTime() : 0);
         });
     }
 
+    function coordinates(record) {
+        const rawLat = firstValue(record, ['latitude', 'lat']);
+        const rawLng = firstValue(record, ['longitude', 'lng', 'lon']);
+        if (rawLat == null || rawLng == null) return null;
+        const lat = Number(rawLat), lng = Number(rawLng);
+        if (!Number.isFinite(lat) || !Number.isFinite(lng) || Math.abs(lat) > 90 || Math.abs(lng) > 180) return null;
+        return { lat: lat, lng: lng };
+    }
+
     function distanceBetween(a, b) {
-        const lat1 = Number(firstValue(a, ['latitude', 'lat']));
-        const lng1 = Number(firstValue(a, ['longitude', 'lng', 'lon']));
-        const lat2 = Number(firstValue(b, ['latitude', 'lat']));
-        const lng2 = Number(firstValue(b, ['longitude', 'lng', 'lon']));
-        if (![lat1, lng1, lat2, lng2].every(Number.isFinite)) return 0;
+        const first = coordinates(a), second = coordinates(b);
+        if (!first || !second) return 0;
+        const lat1 = first.lat, lng1 = first.lng, lat2 = second.lat, lng2 = second.lng;
         const radians = Math.PI / 180;
         const dLat = (lat2 - lat1) * radians;
         const dLng = (lng2 - lng1) * radians;
@@ -91,24 +137,27 @@
 
         const vehicleId = window.appConfig && window.appConfig.vehicleId;
         const results = await Promise.all([
-            client.from('gps_history').select('*').limit(1000),
-            client.from('stop_events').select('*').limit(1000),
-            client.from('segment_runs').select('*').limit(1000),
-            client.from('vehicle_eta_state').select('*').eq('vehicle_id', vehicleId).maybeSingle(),
-            client.from('vehicle_stop_state').select('*').eq('vehicle_id', vehicleId).maybeSingle()
+            client.from('gps_history').select('*').eq('project_id', window.appConfig.projectId).eq('vehicle_id', vehicleId).order('received_at', { ascending: false }).limit(1000),
+            client.from('stop_events').select('*').eq('project_id', window.appConfig.projectId).eq('vehicle_id', vehicleId).order('event_at', { ascending: false }).limit(1000),
+            client.from('segment_runs').select('*').eq('project_id', window.appConfig.projectId).limit(1000),
+            client.from('vehicle_eta_state').select('*').eq('project_id', window.appConfig.projectId).eq('vehicle_id', vehicleId).maybeSingle(),
+            client.from('vehicle_stop_state').select('*').eq('project_id', window.appConfig.projectId).eq('vehicle_id', vehicleId).maybeSingle()
         ]);
-        const positions = filterAndSortByRange(results[0].data, range, fromDate);
-        const events = filterAndSortByRange(results[1].data, range, fromDate);
-        const segments = filterAndSortByRange(results[2].data, range, fromDate);
+        const positions = filterAndSortByRange(results[0].data, range, fromDate, vehicleId)
+            .filter(function(position) { return recordDate(position) && coordinates(position); });
+        const events = filterAndSortByRange(results[1].data, range, fromDate, vehicleId);
+        const segments = filterAndSortByRange(results[2].data, range, fromDate, vehicleId);
         const etaState = results[3].data || null;
         const stopState = results[4].data || null;
         analyticsText('analytics-gps-records', String(positions.length));
-        const arrivals = events.filter(function(event) { return String(firstValue(event, ['event_type', 'type']) || '').toLowerCase() === 'arrival'; });
-        const departures = events.filter(function(event) { return String(firstValue(event, ['event_type', 'type']) || '').toLowerCase() === 'departure'; });
+        const arrivals = events.filter(function(event) { return String(firstValue(event, ['event_type', 'type', 'event']) || '').toLowerCase().includes('arriv'); });
+        const departures = events.filter(function(event) { return String(firstValue(event, ['event_type', 'type', 'event']) || '').toLowerCase().includes('depart'); });
         analyticsText('analytics-arrivals', String(arrivals.length));
         analyticsText('analytics-departures', String(departures.length));
 
-        const speeds = positions.map(function(position) { return Number(firstValue(position, ['speed_kmh', 'speed', 'velocity'])); }).filter(Number.isFinite);
+        const speeds = positions.map(function(position) { return Number(firstValue(position, ['speed_kmh', 'speed', 'velocity'])); }).filter(function(speed) {
+            return Number.isFinite(speed) && speed >= 0 && speed <= 120;
+        });
         const moving = speeds.filter(function(speed) { return speed > 2; });
         const currentSpeed = Number(firstValue(etaState, ['live_speed_kmh', 'estimated_speed_kmh']));
         analyticsText('analytics-current-speed', Number.isFinite(currentSpeed) ? currentSpeed.toFixed(0) : (speeds.length ? speeds[0].toFixed(0) : '--'));
@@ -118,7 +167,15 @@
         analyticsText('analytics-gps-health-sub', etaState && etaState.calculated_at ? 'Last update ' + new Date(etaState.calculated_at).toLocaleString() : 'Waiting for a live update');
 
         let distance = 0;
-        for (let index = 1; index < positions.length; index += 1) distance += distanceBetween(positions[index - 1], positions[index]);
+        const chronologicalPositions = positions.slice().reverse();
+        for (let index = 1; index < chronologicalPositions.length; index += 1) {
+            const previous = chronologicalPositions[index - 1], current = chronologicalPositions[index];
+            const elapsedHours = (recordDate(current) - recordDate(previous)) / 3600000;
+            const legDistance = distanceBetween(previous, current);
+            const impliedSpeed = elapsedHours > 0 ? legDistance / elapsedHours : Infinity;
+            // A long telemetry gap or an impossible jump must not become travelled distance.
+            if (elapsedHours > 0 && elapsedHours <= 0.25 && impliedSpeed <= 120) distance += legDistance;
+        }
         analyticsText('analytics-distance', positions.length > 1 ? distance.toFixed(1) + ' km' : '--');
         const datedPositions = positions.map(recordDate).filter(Boolean);
         const operatingMs = datedPositions.length > 1 ? datedPositions[0] - datedPositions[datedPositions.length - 1] : 0;
@@ -173,30 +230,72 @@
     }
 
     const actions = {
-        setAdminSection: function(section) {
-            const isAnalytics = section === 'analytics';
+        setAdminSection: function(section, event, element) {
+            const workspace = document.getElementById('workspace');
+            const target = typeof section === 'string' ? section : 'map';
+            const clickedNavigationIcon = Boolean(element && element.classList.contains('app-nav-button'));
+            const isAlreadyOpen = target === 'analytics'
+                ? document.body.classList.contains('analytics-mode')
+                : workspace && workspace.classList.contains('context-open')
+                    && workspace.dataset.contextSection === target;
+            const shouldClose = clickedNavigationIcon && isAlreadyOpen;
+
+            if (shouldClose) {
+                workspace.classList.remove('context-open');
+                workspace.dataset.contextSection = '';
+                document.body.classList.remove('mobile-context-open', 'analytics-mode');
+                document.querySelectorAll('.context-section').forEach(function(panel) {
+                    panel.classList.remove('active');
+                });
+                document.querySelectorAll('.app-nav-button').forEach(function(button) {
+                    button.classList.remove('active');
+                    button.setAttribute('aria-expanded', 'false');
+                });
+                window.setTimeout(function() { if (adminGetMap()) adminGetMap().invalidateSize(); }, 0);
+                return null;
+            }
+
+            const isAnalytics = target === 'analytics';
             document.body.classList.toggle('analytics-mode', isAnalytics);
+            document.body.classList.toggle('mobile-context-open', !isAnalytics);
+            if (workspace) {
+                workspace.classList.toggle('context-open', !isAnalytics);
+                workspace.dataset.contextSection = isAnalytics ? '' : target;
+            }
             document.querySelectorAll('.context-section').forEach(function(panel) {
-                panel.classList.toggle('active', panel.getAttribute('data-context-section') === section);
+                panel.classList.toggle('active', !isAnalytics && panel.getAttribute('data-context-section') === target);
             });
             document.querySelectorAll('.app-nav-button').forEach(function(button) {
-                button.classList.toggle('active', button.getAttribute('data-section') === section);
+                const active = button.getAttribute('data-section') === target;
+                button.classList.toggle('active', active);
+                button.setAttribute('aria-expanded', String(active));
             });
+            const labels = {
+                map: ['Map', 'Overview'], stops: ['Stops', 'Manage stops'], routes: ['Route', 'Build route'],
+                pois: ['POIs', 'Manage places'], export: ['Export', 'Files and backup']
+            };
+            const label = labels[target] || [target, ''];
+            const heading = document.getElementById('context-panel-heading');
+            const subheading = document.getElementById('context-panel-subheading');
+            if (heading) heading.textContent = label[0];
+            if (subheading) subheading.textContent = label[1];
             if (isAnalytics) loadAnalytics();
+            window.setTimeout(function() { if (adminGetMap()) adminGetMap().invalidateSize(); }, 0);
+            return target;
         },
         loadAnalyticsDashboard: loadAnalytics,
         searchOpenStreetMapPOIs: async function() {
             const map = adminGetMap(), center = map.getCenter();
             const category = document.getElementById('poi-manager-category').value;
             const radius = Number(document.getElementById('poi-manager-radius').value) || 5000;
-            const status = document.getElementById('poi-manager-status');
-            status.textContent = 'Searching OpenStreetMap...';
+            const searchButton = document.getElementById('poi-manager-search-button');
+            const location = document.getElementById('poi-manager-location');
+            searchButton.disabled = true;
+            searchButton.textContent = 'Searching...';
+            location.textContent = 'Search center: ' + center.lat.toFixed(5) + ', ' + center.lng.toFixed(5);
+            setPoiStatus('Searching OpenStreetMap…', 'warning');
             try {
-                const response = await fetch('https://overpass-api.de/api/interpreter', {
-                    method: 'POST', body: poiQuery(category, center.lat, center.lng, radius)
-                });
-                if (!response.ok) throw new Error('Search service unavailable');
-                const data = await response.json();
+                const data = await fetchPoiData(category, center.lat, center.lng, radius);
                 poiResults = (data.elements || []).map(function(element) {
                     const tags = element.tags || {};
                     return {
@@ -208,11 +307,22 @@
                         selected: true
                     };
                 }).filter(function(item) { return Number.isFinite(item.lat) && Number.isFinite(item.lng); });
-                status.textContent = poiResults.length ? 'Review the results and import the places you want.' : 'No matching places found.';
                 renderPoiResults();
+                setPoiStatus(
+                    poiResults.length ? poiResults.length + ' POIs found. Review and select the places to import.' : 'No matching places were found in this area.',
+                    poiResults.length ? 'ok' : 'warning'
+                );
             } catch (error) {
                 console.error(error);
-                status.textContent = 'POI search failed. Please try again.';
+                setPoiStatus(
+                    error && error.name === 'AbortError'
+                        ? 'Both POI search services timed out. Try a smaller radius or search again.'
+                        : 'POI search failed' + (error && error.message ? ': ' + error.message : '') + '. Try again shortly.',
+                    'error'
+                );
+            } finally {
+                searchButton.disabled = false;
+                searchButton.textContent = 'Search POIs';
             }
         },
         setAllPOIImportSelections: function(value) {
@@ -222,7 +332,7 @@
         clearPOIManagerResults: function() {
             poiResults = [];
             renderPoiResults();
-            document.getElementById('poi-manager-status').textContent = '';
+            setPoiStatus('', '');
         },
         importSelectedOpenStreetMapPOIs: function() {
             poiResults.filter(function(item) { return item.selected; }).forEach(function(item) {

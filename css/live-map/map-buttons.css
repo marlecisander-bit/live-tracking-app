@@ -107,9 +107,9 @@
         .map-control-btn.active .map-control-icon {
             background: #d90000;
             color: white;
+            --vehicle-icon-surface: #d90000;
             box-shadow: 0 5px 14px rgba(217,0,0,0.25);
         }
-
 
         .map-control-icon svg {
             width: 23px;
@@ -232,7 +232,7 @@
 
             bottom:
                 calc(
-                    84px +
+                    106px +
                     env(safe-area-inset-bottom)
                 );
 
@@ -244,6 +244,10 @@
             z-index: 1350;
 
             display: none;
+
+            border: 0;
+            cursor: pointer;
+            font: inherit;
 
             background: #a90000;
             color: white;
@@ -257,4 +261,10 @@
 
             box-shadow:
                 0 6px 18px rgba(0,0,0,0.18);
+        }
+
+        button:focus-visible,
+        .arrival-item:focus-visible {
+            outline: 3px solid rgba(217,0,0,0.35);
+            outline-offset: 2px;
         }

@@ -19,6 +19,8 @@ function setActiveControl(buttonId) {
                         'active'
                     );
 
+                button.setAttribute('aria-pressed', 'false');
+
             }
 
         );
@@ -37,6 +39,8 @@ function setActiveControl(buttonId) {
             .add(
                 'active'
             );
+
+        document.getElementById(buttonId).setAttribute('aria-pressed', 'true');
 
     }
 
@@ -153,6 +157,19 @@ function updateFollowIndicator() {
         :
         'none';
 
+}
+
+function toggleStatusCard() {
+    var card = document.getElementById('next-card');
+    var button = document.getElementById('status-card-toggle');
+    if (!card || !button) return;
+
+    var expanded = card.classList.toggle('expanded');
+    button.setAttribute('aria-expanded', String(expanded));
+    button.setAttribute(
+        'aria-label',
+        expanded ? 'Show less vehicle information' : 'Show more vehicle information'
+    );
 }
 
 

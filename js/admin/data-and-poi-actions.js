@@ -20,7 +20,7 @@ window.app.actions.previewPublicMap = function() {
     }
 
     if (window.open) {
-        window.open('live-map.html', '_blank');
+        window.open('live-map.html?project=' + encodeURIComponent(window.appConfig.projectSlug || window.appConfig.defaultProjectSlug), '_blank');
     }
 
     return true;

@@ -84,6 +84,22 @@ Public-map behavior is in `js/live-map/`:
 
 JavaScript files are loaded in dependency order near the bottom of each HTML page. Keep that order unless their dependencies are intentionally changed.
 
+### Embedding the live map
+
+Use `embed=1` when placing the map inside another website. The embedded layout prioritizes the map and live van and hides secondary cards that could overlap in a short section.
+
+```html
+<iframe
+  src="https://your-domain.example/live-map.html?embed=1"
+  title="Sightseeing Shkodra live map"
+  loading="lazy"
+  style="width:100%;height:600px;border:0"
+  allow="geolocation">
+</iframe>
+```
+
+The map observes changes to the iframe size, so responsive website columns and resizable sections remain correctly rendered.
+
 ## Checking the project
 
 Run this command from PowerShell after file moves or structural changes:

@@ -4,6 +4,8 @@
 
 function openStopsPanel() {
 
+    window.stopsPanelPreviousFocus = document.activeElement;
+
 
     document
         .getElementById(
@@ -13,6 +15,8 @@ function openStopsPanel() {
         .add(
             'open'
         );
+
+    document.getElementById('stops-panel').setAttribute('aria-hidden', 'false');
 
 
     document
@@ -26,6 +30,10 @@ function openStopsPanel() {
 
 
     renderArrivalList();
+
+    window.setTimeout(function() {
+        document.getElementById('stops-panel').focus();
+    }, 260);
 
 }
 
@@ -43,6 +51,8 @@ function closeStopsPanel() {
             'open'
         );
 
+    document.getElementById('stops-panel').setAttribute('aria-hidden', 'true');
+
 
     document
         .getElementById(
@@ -57,6 +67,10 @@ function closeStopsPanel() {
     setActiveControl(
         null
     );
+
+    if (window.stopsPanelPreviousFocus && window.stopsPanelPreviousFocus.focus) {
+        window.stopsPanelPreviousFocus.focus();
+    }
 
 }
 
@@ -189,8 +203,10 @@ function renderArrivalList(
             var item =
                 document
                 .createElement(
-                    'div'
+                    'button'
                 );
+
+            item.type = 'button';
 
 
             item.className =
@@ -418,6 +434,12 @@ function renderArrivalList(
     );
 
 }
+
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape' && document.getElementById('stops-panel').classList.contains('open')) {
+        closeStopsPanel();
+    }
+});
 
 
 

@@ -19,15 +19,17 @@
                 left: auto;
                 right: 22px;
                 top: 94px;
-                width: 374px;
-                padding: 16px 17px;
-                border-radius: 20px;
-                box-shadow: 0 12px 34px rgba(0,0,0,0.15);
+                width: 348px;
+                padding: 15px 16px;
+                border-radius: 18px;
+                box-shadow: 0 10px 28px rgba(0,0,0,0.14);
             }
 
-            #next-stop-name {
+            #van-movement-status {
                 font-size: 21px;
             }
+
+            #next-stop-name { font-size: 15px; }
 
             #next-meta {
                 margin-top: 12px;
@@ -45,12 +47,12 @@
                 left: 50%;
                 right: auto;
 
-                width: 540px;
+                width: 440px;
 
                 transform:
                     translateX(-50%);
 
-                bottom: 24px;
+                bottom: 20px;
 
                 gap: 4px;
                 padding: 7px;
@@ -59,7 +61,7 @@
             }
 
             .map-control-btn {
-                min-height: 66px;
+                min-height: 60px;
                 border-radius: 17px;
             }
 
@@ -82,8 +84,8 @@
             #nearest-stop-card {
                 left: 18px;
                 right: auto;
-                bottom: 22px;
-                width: 300px;
+                bottom: 100px;
+                width: 280px;
             }
 
             #stops-panel {
@@ -120,27 +122,37 @@
 
 /* MOBILE UX REFINEMENT */
 @media (max-width: 767px) {
+  #status-card-toggle { display:block; min-width:44px; min-height:44px; }
   #header {
-    min-height:calc(60px + env(safe-area-inset-top));
-    padding:calc(7px + env(safe-area-inset-top)) 14px 7px;
-    background:rgba(255,255,255,.96);
-    box-shadow:0 3px 14px rgba(0,0,0,.06);
+    min-height:calc(56px + env(safe-area-inset-top));
+    padding:calc(5px + env(safe-area-inset-top)) 10px 5px;
+    background:#fff;
+    backdrop-filter:none;
+    -webkit-backdrop-filter:none;
+    box-shadow:0 2px 10px rgba(0,0,0,.06);
   }
   #brand { font-size:17px; }
   #brand small { margin-top:2px; font-size:9px; color:#777; }
-  #live-badge { padding:7px 10px; font-size:9px; }
+  #live-badge { padding:7px 9px; font-size:10px; white-space:nowrap; }
+  #map-loading {
+    top:50%;
+    transform:translate(-50%,-50%);
+  }
 
   #next-card {
-    top:calc(72px + env(safe-area-inset-top));
+    top:calc(64px + env(safe-area-inset-top));
     left:10px; right:10px; padding:12px 13px;
-    border-radius:18px;
-    background:rgba(255,255,255,.97);
+    border-radius:16px;
+    background:#fff;
+    backdrop-filter:none;
+    -webkit-backdrop-filter:none;
     border:1px solid rgba(0,0,0,.05);
     box-shadow:0 8px 24px rgba(0,0,0,.14);
   }
   #next-label { font-size:9px; }
   #next-direction { font-size:9px; }
-  #next-stop-name { margin-top:3px; font-size:18px; line-height:1.18; }
+  #van-movement-status { margin-top:3px; font-size:18px; line-height:1.18; }
+  #next-stop-name { font-size:14px; line-height:1.2; }
   #next-meta { margin-top:8px; gap:12px; font-size:11px; }
   #eta-progress-wrap { margin-top:8px; }
 
@@ -155,7 +167,10 @@
   #nearest-stop-card {
     left:10px; right:10px;
     bottom:calc(82px + env(safe-area-inset-bottom));
-    padding:10px 12px; border-radius:17px;
+    padding:10px 12px; border-radius:16px;
+    background:#fff;
+    backdrop-filter:none;
+    -webkit-backdrop-filter:none;
     border:1px solid rgba(0,0,0,.05);
     box-shadow:0 7px 22px rgba(0,0,0,.14);
   }
@@ -175,7 +190,9 @@
     left:8px; right:8px;
     bottom:calc(8px + env(safe-area-inset-bottom));
     gap:3px; padding:5px; border-radius:20px;
-    background:rgba(255,255,255,.97);
+    background:#fff;
+    backdrop-filter:none;
+    -webkit-backdrop-filter:none;
     border:1px solid rgba(0,0,0,.05);
     box-shadow:0 8px 26px rgba(0,0,0,.18);
   }
@@ -204,9 +221,9 @@
   .user-location-wrapper, .user-location-pulse { width:26px; height:26px; }
   .user-location-dot { top:6px; left:6px; width:14px; height:14px; border-width:2px; }
 
-  .leaflet-control-zoom { margin-top:calc(72px + env(safe-area-inset-top)) !important; }
+  .leaflet-control-zoom { display:none; }
   #follow-indicator {
-    bottom:calc(82px + env(safe-area-inset-bottom));
+    bottom:calc(118px + env(safe-area-inset-bottom));
     padding:7px 11px;
     background:#a90000;
     font-size:9px;
@@ -217,6 +234,124 @@
   }
 
   .van-marker-circle {
-    box-shadow:0 5px 17px rgba(217,0,0,.32);
+    box-shadow:none;
   }
+}
+
+/* Mobile readability, compact status and short-screen behavior. */
+@media (max-width: 767px) {
+  #brand small { font-size:10px; color:#666; }
+  #live-badge { padding:8px 10px; font-size:11px; }
+  #next-label, #next-direction { font-size:11px; }
+  #next-meta { font-size:12px; }
+  #route-status-banner { font-size:11px; }
+  #nearest-stop-label, #nearest-stop-distance { font-size:11px; }
+  #nearest-stop-van-eta { font-size:12px; }
+  #walk-to-stop { min-height:44px; font-size:12px; }
+  .map-control-label { font-size:11px; }
+  #follow-indicator { font-size:11px; }
+
+  #next-card:not(.expanded) #van-message-label,
+  #next-card:not(.expanded) .status-card-extra {
+    display:none !important;
+  }
+
+  #next-card:not(.expanded) {
+    padding-top:10px;
+    padding-bottom:10px;
+  }
+}
+
+@media (max-width: 767px) and (max-height: 680px) {
+  #header { min-height:54px; padding-top:calc(5px + env(safe-area-inset-top)); }
+  #brand small { display:none; }
+  #next-card { top:calc(62px + env(safe-area-inset-top)); }
+  #van-movement-status { font-size:16px; }
+  #nearest-stop-card { display:none !important; }
+}
+
+@media (max-width: 767px) and (orientation: landscape) {
+  #header { min-height:50px; padding-top:calc(4px + env(safe-area-inset-top)); }
+  #brand small { display:none; }
+  #next-card { top:calc(58px + env(safe-area-inset-top)); left:10px; right:auto; width:min(360px,48vw); }
+  #nearest-stop-card { display:none !important; }
+  #map-controls { left:auto; width:min(410px,58vw); }
+}
+
+@media (max-width: 767px) {
+  #brand .brand-logo { width: 100px; height: 40px; }
+}
+
+@media (max-width: 380px), (max-width: 767px) and (max-height: 680px) {
+  #brand .brand-logo { width: 88px; height: 36px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior:auto !important;
+    animation-duration:0.01ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:0.01ms !important;
+  }
+}
+
+/* Embedded and short desktop layouts prioritize the map and live vehicle. */
+.embed-mode #map-controls {
+  width:min(440px, calc(100% - 16px));
+}
+
+.embed-mode #nearest-stop-card,
+.embed-mode #follow-indicator {
+  display:none !important;
+}
+
+@media (min-width: 768px) and (max-height: 600px) {
+  #header {
+    min-height:56px;
+    padding:0 14px;
+  }
+  #brand .brand-logo { width:112px; height:46px; }
+  #brand small { display:none; }
+  #next-card {
+    top:66px;
+    right:12px;
+    width:320px;
+    padding:11px 13px;
+    border-radius:16px;
+  }
+  #next-card:not(.expanded) #van-message-label,
+  #next-card:not(.expanded) .status-card-extra { display:none !important; }
+  #van-movement-status { font-size:17px; }
+  #next-destination-row { margin-top:7px; padding-top:7px; }
+  #next-meta { margin-top:7px; }
+  #nearest-stop-card { display:none !important; }
+  #map-controls {
+    width:min(400px, calc(100% - 20px));
+    bottom:10px;
+    padding:5px;
+  }
+  .map-control-btn { min-height:52px; padding:4px 2px; }
+  .map-control-icon { width:30px; height:30px; }
+  #follow-indicator { bottom:78px; }
+  .leaflet-control-zoom { margin-top:64px !important; }
+  #stops-panel { top:64px; height:calc(100vh - 76px); }
+}
+
+@media (min-width: 768px) and (max-height: 430px) {
+  #next-card { width:285px; }
+  #next-card:not(.expanded) #next-destination-row,
+  #next-card:not(.expanded) #next-meta { display:none !important; }
+  .map-control-label { display:none; }
+  .map-control-btn { min-height:44px; }
+  #map-controls { width:min(330px, calc(100% - 20px)); }
+  #follow-indicator { display:none !important; }
+}
+
+@media (max-width: 767px) and (max-height: 520px) {
+  #next-card:not(.expanded) #next-destination-row,
+  #next-card:not(.expanded) #next-meta { display:none !important; }
+  .map-control-label { display:none; }
+  .map-control-btn { min-height:46px; }
+  #map-controls { border-radius:16px; }
+  #follow-indicator { display:none !important; }
 }

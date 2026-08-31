@@ -75,6 +75,48 @@
             font-weight: bold;
         }
 
+        .poi-sticker-editor {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .poi-sticker-preview {
+            width: 62px;
+            height: 62px;
+            flex: 0 0 62px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border: 1px dashed #c9c9c9;
+            border-radius: 12px;
+            background: #f7f7f7;
+            color: #888;
+            font-size: 9px;
+            text-align: center;
+        }
+
+        .poi-sticker-preview img {
+            width: 54px;
+            height: 54px;
+            object-fit: contain;
+        }
+
+        .poi-sticker-actions {
+            display: grid;
+            gap: 6px;
+        }
+
+        .poi-sticker-actions button { padding: 7px 10px; }
+
+        .poi-sticker-help {
+            margin-top: 6px;
+            color: #777;
+            font-size: 9px;
+            line-height: 1.4;
+        }
+
 
         .switch-row {
 

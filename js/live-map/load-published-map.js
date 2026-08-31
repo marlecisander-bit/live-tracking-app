@@ -7,12 +7,7 @@ async function loadPublishedMap(
 ) {
 
 
-    const {
-        data,
-        error
-    } =
-
-        await supabaseClient
+    var mapQuery = supabaseClient
 
         .from(
             'map_versions'
@@ -27,7 +22,9 @@ async function loadPublishedMap(
             'published'
         )
 
-        .order(
+        ;
+    if (window.PROJECT_ID) mapQuery = mapQuery.eq('project_id', window.PROJECT_ID);
+    const { data, error } = await mapQuery.order(
             'published_at',
             {
                 ascending: false,
@@ -264,7 +261,7 @@ function renderPublishedMap(data) {
 
                                 {
                                     icon:
-                                        createPOIIcon()
+                                        createPOIIcon(p)
                                 }
 
                             );

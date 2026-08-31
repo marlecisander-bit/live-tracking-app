@@ -1,18 +1,75 @@
 /* ============================================================
    BACKEND VEHICLE STOP STATE
    The public Live Map reads the authoritative sequence state
-   produced by stop-detector v2.1.
+   produced by stop-detector v2.5.
 ============================================================ */
 
-async function loadVehicleStopState() {
+async function refreshStopDetector() {
+
+    var now = Date.now();
+
+    if (
+        stopDetectorRequestInFlight
+        || now - lastStopDetectorRequestAt < 15000
+    ) {
+
+        return;
+
+    }
+
+    stopDetectorRequestInFlight = true;
+    lastStopDetectorRequestAt = now;
 
     try {
 
-        const {
-            data,
+        var result =
+            await supabaseClient.functions.invoke(
+                'stop-detector',
+                {
+                    body: {
+                        source: 'public-live-map',
+                        project_id: window.PROJECT_ID,
+                        vehicle_id: VEHICLE_ID
+                    }
+                }
+            );
+
+        if (result.error) {
+
+            console.warn(
+                'stop-detector refresh failed:',
+                result.error
+            );
+
+        }
+
+    }
+    catch (error) {
+
+        console.warn(
+            'Unable to refresh stop-detector:',
             error
-        } =
-            await supabaseClient
+        );
+
+    }
+    finally {
+
+        stopDetectorRequestInFlight = false;
+
+    }
+
+}
+
+async function loadVehicleStopState() {
+
+    if (vehicleStopStateRequestInFlight || document.hidden) return;
+    vehicleStopStateRequestInFlight = true;
+
+    try {
+
+        await refreshStopDetector();
+
+        var stateQuery = supabaseClient
             .from(
                 'vehicle_stop_state'
             )
@@ -25,8 +82,9 @@ async function loadVehicleStopState() {
             .eq(
                 'vehicle_id',
                 VEHICLE_ID
-            )
-            .maybeSingle();
+            );
+        if (window.PROJECT_ID) stateQuery = stateQuery.eq('project_id', window.PROJECT_ID);
+        const { data, error } = await stateQuery.maybeSingle();
 
 
         if (error) {
@@ -46,6 +104,9 @@ async function loadVehicleStopState() {
 
         vehicleStopStateLoaded =
             true;
+
+
+        updateRouteCycleResetState();
 
 
         /*
@@ -75,7 +136,141 @@ async function loadVehicleStopState() {
         );
 
     }
+    finally {
 
+        vehicleStopStateRequestInFlight = false;
+
+    }
+
+}
+
+
+/* ============================================================
+   ROUTE CYCLE RESET
+   Stop 1 is the route origin. Once it is detected, keep the
+   frontend on the new 1 -> 2 cycle until Stop 2 is reached.
+   This also shields the UI from a stale ETA row from the prior
+   cycle (for example, one still pointing to Stop 3).
+============================================================ */
+
+function stopNumberEquals(value, expected) {
+
+    return String(value ?? '').trim() === String(expected);
+
+}
+
+
+function updateRouteCycleResetState() {
+
+    if (!vehicleStopState) {
+        return;
+    }
+
+
+    if (stopNumberEquals(vehicleStopState.current_stop_number, 1)) {
+        routeCycleResetActive = true;
+        return;
+    }
+
+
+    if (vanWasAtRouteOrigin) {
+        routeCycleResetActive = true;
+        return;
+    }
+
+
+    if (
+        vehicleStopState.current_stop_number !== null
+        &&
+        vehicleStopState.current_stop_number !== undefined
+        &&
+        String(vehicleStopState.current_stop_number).trim() !== ''
+    ) {
+        routeCycleResetActive = false;
+        return;
+    }
+
+
+    if (stopNumberEquals(vehicleStopState.last_completed_stop_number, 1)) {
+        routeCycleResetActive = true;
+        return;
+    }
+
+
+    if (
+        vehicleStopState.last_completed_stop_number !== null
+        &&
+        vehicleStopState.last_completed_stop_number !== undefined
+        &&
+        String(vehicleStopState.last_completed_stop_number).trim() !== ''
+    ) {
+        routeCycleResetActive = false;
+    }
+}
+
+
+function updateRouteCycleResetFromVanPosition() {
+
+    if (!vanPosition) {
+        return;
+    }
+
+
+    var firstStop = findStopRecordByNumber(1);
+    var firstStopPosition =
+        firstStop
+        &&
+        firstStop.layer
+        &&
+        typeof firstStop.layer.getLatLng === 'function'
+        ? firstStop.layer.getLatLng()
+        : null;
+
+
+    if (!firstStopPosition) {
+        return;
+    }
+
+
+    var isAtRouteOrigin =
+        vanPosition.distanceTo(firstStopPosition) <= 120;
+
+
+    if (isAtRouteOrigin && !vanWasAtRouteOrigin) {
+        routeCycleResetActive = true;
+    }
+
+
+    vanWasAtRouteOrigin = isAtRouteOrigin;
+}
+
+
+function getFirstCycleDestinationNumber() {
+
+    return getFollowingStopNumber(1) || '2';
+}
+
+
+function getFollowingStopNumber(currentStopNumber) {
+
+    var sortedStops =
+        stopRecords
+        .slice()
+        .sort(function(a, b) {
+            return Number(a.feature.properties.stopNumber) - Number(b.feature.properties.stopNumber);
+        });
+
+
+    for (var index = 0; index < sortedStops.length; index++) {
+        var properties = sortedStops[index].feature.properties || {};
+        if (stopNumberEquals(properties.stopNumber, currentStopNumber)) {
+            var followingIndex = (index + 1) % sortedStops.length;
+            return String(sortedStops[followingIndex].feature.properties.stopNumber);
+        }
+    }
+
+
+    return null;
 }
 
 
@@ -84,6 +279,26 @@ async function loadVehicleStopState() {
 ============================================================ */
 
 function getExpectedNextStopNumber() {
+
+    /* A confirmed physical stop always determines its sequence successor. */
+    if (
+        vehicleStopState
+        &&
+        vehicleStopState.current_stop_number !== null
+        &&
+        vehicleStopState.current_stop_number !== undefined
+        &&
+        String(vehicleStopState.current_stop_number).trim() !== ''
+    ) {
+        var afterCurrentStop = getFollowingStopNumber(vehicleStopState.current_stop_number);
+        if (afterCurrentStop) return afterCurrentStop;
+    }
+
+
+    /* Stop 1 must always restart the operational sequence toward Stop 2. */
+    if (routeCycleResetActive) {
+        return getFirstCycleDestinationNumber();
+    }
 
     /*
        ETA state has first priority for tourist-facing NEXT STOP.
@@ -128,9 +343,15 @@ function getExpectedNextStopNumber() {
         ).trim() !==
         ''
     ) {
-        return String(
+        var stopStateExpected = String(
             vehicleStopState.expected_next_stop_number
         ).trim();
+
+        if (stopNumberEquals(stopStateExpected, vehicleStopState.current_stop_number)) {
+            return getFollowingStopNumber(vehicleStopState.current_stop_number) || stopStateExpected;
+        }
+
+        return stopStateExpected;
     }
 
 
@@ -432,10 +653,10 @@ function findBackendExpectedLeg(
    SYNCHRONIZE ACTIVE ROUTE WITH BACKEND EXPECTED STOP
 ============================================================ */
 
-function syncRouteContextWithBackendState() {
+function syncRouteContextWithBackendState(expectedStopNumber) {
 
-    var expectedStopNumber =
-        getExpectedNextStopNumber();
+    expectedStopNumber =
+        expectedStopNumber || getExpectedNextStopNumber();
 
 
     if (!expectedStopNumber) {

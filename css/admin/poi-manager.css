@@ -126,6 +126,13 @@
             background: #fafafa;
         }
 
+        .poi-manager-empty {
+            padding: 18px;
+            color: #888;
+            font-size: 11px;
+            text-align: center;
+        }
+
         .poi-import-item {
             display: grid;
             grid-template-columns: auto 1fr auto;

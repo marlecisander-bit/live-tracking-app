@@ -27,7 +27,10 @@ function subscribeToPublishedChanges() {
                         'public',
 
                     table:
-                        'map_versions'
+                        'map_versions',
+
+                    filter:
+                        'project_id=eq.' + window.PROJECT_ID
 
                 },
 
@@ -74,6 +77,8 @@ function startPublishedMapPolling() {
     setInterval(
 
         function() {
+
+            if (document.hidden) return;
 
 
             loadPublishedMap(

@@ -323,3 +323,8 @@
         #publish-bar {
             display: none !important;
         }
+
+        @media (max-width: 700px) {
+            #brand .brand-logo { width: 108px; height: 44px; }
+            .login-brand-mark { width: 176px; height: 112px; }
+        }

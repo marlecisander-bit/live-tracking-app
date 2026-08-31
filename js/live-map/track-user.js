@@ -33,7 +33,7 @@ function startUserLocation() {
     }
 
 
-    navigator
+    watchID = navigator
         .geolocation
         .watchPosition(
 
@@ -187,6 +187,12 @@ function updateUserPosition(position) {
 
 
 function userLocationError(error) {
+
+    if (watchID !== null) {
+        navigator.geolocation.clearWatch(watchID);
+        watchID = null;
+    }
+    userLocationStarted = false;
 
 
     var message =

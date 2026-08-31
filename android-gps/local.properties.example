@@ -1,0 +1,11 @@
+# Android Studio adds sdk.dir automatically.
+sdk.dir=C\:\\Users\\YOUR_NAME\\AppData\\Local\\Android\\Sdk
+
+# Deployed Supabase Edge Function URL (not the project URL).
+gps.endpoint=https://YOUR_PROJECT.supabase.co/functions/v1/gps-ingest
+
+# A long, random, revocable token. Set the same value as GPS_DEVICE_TOKEN
+# in Supabase Edge Function secrets. Never commit the real value.
+gps.deviceToken=REPLACE_WITH_A_RANDOM_64_CHARACTER_TOKEN
+gps.vehicleId=sightseeing-shkodra-van-1
+gps.deviceId=SS_PIXEL_9A_01

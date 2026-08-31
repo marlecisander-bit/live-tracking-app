@@ -68,7 +68,7 @@ function getEffectiveSpeed() {
         useful.length < 3
     ) {
 
-        return 10;
+        return DEFAULT_SERVICE_SPEED_KMH;
 
     }
 
@@ -99,6 +99,80 @@ function getEffectiveSpeed() {
             average
         )
     );
+
+}
+
+
+
+function getArrivalPlanningSpeed() {
+
+    var etaState =
+        typeof getFreshVehicleEtaState === 'function'
+            ? getFreshVehicleEtaState()
+            : null;
+
+
+    if (etaState) {
+
+        var remainingKm =
+            Number(etaState.remaining_distance_m) /
+            1000;
+
+
+        var etaMinutes =
+            Number(etaState.eta_minutes);
+
+
+        if (
+            Number.isFinite(remainingKm)
+            &&
+            remainingKm > 0.05
+            &&
+            Number.isFinite(etaMinutes)
+            &&
+            etaMinutes > 0.25
+        ) {
+
+            var routePaceSpeed =
+                remainingKm /
+                (etaMinutes / 60);
+
+
+            if (
+                Number.isFinite(routePaceSpeed)
+                &&
+                routePaceSpeed >= 8
+                &&
+                routePaceSpeed <= 35
+            ) {
+
+                return routePaceSpeed;
+
+            }
+
+        }
+
+
+        var estimatedSpeed =
+            Number(etaState.estimated_speed_kmh);
+
+
+        if (
+            Number.isFinite(estimatedSpeed)
+            &&
+            estimatedSpeed >= 8
+            &&
+            estimatedSpeed <= 35
+        ) {
+
+            return estimatedSpeed;
+
+        }
+
+    }
+
+
+    return getEffectiveSpeed();
 
 }
 

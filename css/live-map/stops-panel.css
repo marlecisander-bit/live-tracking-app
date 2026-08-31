@@ -12,6 +12,9 @@
 
             background:
                 rgba(0,0,0,0.25);
+
+            border: 0;
+            padding: 0;
         }
 
 
@@ -28,6 +31,7 @@
             bottom: 0;
 
             height: 72vh;
+            height: 72dvh;
 
             z-index: 5000;
 
@@ -103,8 +107,8 @@
 
 
         #close-stops {
-            width: 36px;
-            height: 36px;
+            width: 44px;
+            height: 44px;
 
             border: 0;
             border-radius: 50%;
@@ -140,6 +144,16 @@
                 1px solid #eee;
 
             cursor: pointer;
+
+            width: 100%;
+            min-height: 58px;
+            border-left: 0;
+            border-right: 0;
+            border-top: 0;
+            background: #fff;
+            text-align: left;
+            color: inherit;
+            font: inherit;
         }
 
 

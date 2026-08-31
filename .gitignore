@@ -3,3 +3,13 @@ Thumbs.db
 .vscode/
 .idea/
 *.log
+
+# Android GPS sender local/build files
+android-gps/local.properties
+android-gps/.gradle/
+android-gps/build/
+android-gps/app/build/
+android-gps/captures/
+android-gps/.local-tooling/
+android-gps/*.jks
+android-gps/*.keystore
