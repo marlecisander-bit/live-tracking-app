@@ -1,0 +1,20 @@
+[build]
+  publish = "."
+
+# This application uses stable HTML, CSS, and JavaScript filenames. Require
+# browsers to revalidate them so a newly published map is not hidden by an old
+# mobile cache after Netlify finishes a deployment.
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "no-cache, must-revalidate"
+
+[[headers]]
+  for = "/js/*"
+  [headers.values]
+    Cache-Control = "no-cache, must-revalidate"
+
+[[headers]]
+  for = "/css/*"
+  [headers.values]
+    Cache-Control = "no-cache, must-revalidate"
