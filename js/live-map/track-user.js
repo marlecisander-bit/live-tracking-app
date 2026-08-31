@@ -274,6 +274,18 @@ function updateNearestStopCard() {
             'nearest-stop-card'
         );
 
+    var findMeButton =
+        document.getElementById(
+            'btn-find-me'
+        );
+
+    /* Location updates continue in the background. Only let them display this
+       card while Find Me is the visitor's active map mode. */
+    if (!findMeButton || !findMeButton.classList.contains('active')) {
+        card.classList.remove('visible');
+        return;
+    }
+
     if (
         !userPosition
         ||
@@ -455,6 +467,12 @@ function updateNearestStopCard() {
     card.classList.add(
         'visible'
     );
+}
+
+
+function hideNearestStopCard() {
+    var card = document.getElementById('nearest-stop-card');
+    if (card) card.classList.remove('visible');
 }
 
 

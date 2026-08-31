@@ -69,11 +69,15 @@ function handleFindMe() {
 
     findUser();
 
+    updateNearestStopCard();
+
 }
 
 
 
 function handleFindVan() {
+
+    hideNearestStopCard();
 
 
     setActiveControl(
@@ -96,6 +100,8 @@ function handleFindVan() {
 
 function handleRoute() {
 
+    hideNearestStopCard();
+
 
     followVan =
         false;
@@ -116,6 +122,8 @@ function handleRoute() {
 
 
 function handleStops() {
+
+    hideNearestStopCard();
 
 
     followVan =
