@@ -88,7 +88,21 @@ document.addEventListener('visibilitychange', function() {
         loadVehicleStopState();
         loadVehicleEtaState();
         updateGPSStatus();
+        window.setTimeout(function() {
+            map.invalidateSize({ pan: false, debounceMoveend: true });
+        }, 100);
     }
+});
+
+/* iOS may restore this page from its back-forward cache after handing off to
+   Google Maps. Redraw Leaflet once the restored viewport is visible again. */
+window.addEventListener('pageshow', function() {
+    window.requestAnimationFrame(function() {
+        map.invalidateSize({ pan: false, debounceMoveend: true });
+    });
+    window.setTimeout(function() {
+        map.invalidateSize({ pan: false, debounceMoveend: true });
+    }, 300);
 });
 
 /* Keep Leaflet correctly sized when an iframe or website section is resized. */

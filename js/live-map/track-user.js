@@ -501,11 +501,9 @@ function walkToNearestStop() {
             );
     }
 
-    window.open(
-        url,
-        '_blank',
-        'noopener'
-    );
+    /* Use the current tab. On iOS, opening Google Maps in a new tab can leave
+       a blank intermediary tab behind when the native Maps app launches. */
+    window.location.assign(url);
 }
 
 

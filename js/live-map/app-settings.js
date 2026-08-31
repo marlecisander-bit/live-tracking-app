@@ -32,6 +32,10 @@ if (new URLSearchParams(window.location.search).get('embed') === '1') {
     updateViewportHeight();
     window.addEventListener('resize', updateViewportHeight, { passive: true });
     window.addEventListener('orientationchange', updateViewportHeight, { passive: true });
+    window.addEventListener('pageshow', updateViewportHeight, { passive: true });
+    document.addEventListener('visibilitychange', function() {
+        if (!document.hidden) updateViewportHeight();
+    });
     if (window.visualViewport) {
         window.visualViewport.addEventListener('resize', updateViewportHeight, { passive: true });
     }
