@@ -7,6 +7,36 @@ if (new URLSearchParams(window.location.search).get('embed') === '1') {
     document.documentElement.classList.add('embed-mode');
 }
 
+/* iOS browsers can report a stale percentage height while their toolbars are
+   visible. Keep the map pinned to the current visual viewport instead. */
+(function keepLiveMapAtViewportHeight() {
+    var resizeFrame = null;
+
+    function updateViewportHeight() {
+        if (resizeFrame) window.cancelAnimationFrame(resizeFrame);
+        resizeFrame = window.requestAnimationFrame(function() {
+            var viewport = window.visualViewport;
+            var height = viewport && viewport.height
+                ? viewport.height
+                : window.innerHeight;
+
+            if (height > 0) {
+                document.documentElement.style.setProperty(
+                    '--live-viewport-height',
+                    Math.round(height) + 'px'
+                );
+            }
+        });
+    }
+
+    updateViewportHeight();
+    window.addEventListener('resize', updateViewportHeight, { passive: true });
+    window.addEventListener('orientationchange', updateViewportHeight, { passive: true });
+    if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', updateViewportHeight, { passive: true });
+    }
+})();
+
 var VEHICLE_ID = window.appConfig.vehicleId;
 var SCORPION_TOKEN = window.appConfig.scorpionTrackingToken;
 var VAN_FOLLOW_ZOOM = window.appConfig.vanFollowZoom;
