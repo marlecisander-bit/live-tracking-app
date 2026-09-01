@@ -113,6 +113,9 @@ function resolveVehicleOperationalStatus(nextArrival, followingArrival) {
     else if (previousStop && nextStop) {
         state = 'en_route';
     }
+    else if (!backendStateApplies && nextStop && !isVanGPSStale()) {
+        state = 'en_route';
+    }
 
     return {
         state: state,
@@ -156,8 +159,10 @@ function renderVehicleOperationalStatus(status) {
     }
     else if (status.state === 'en_route') {
         stateLabel.innerText = 'EN ROUTE';
-        messageLabel.innerText = 'Van departed from';
-        mainMessage.innerText = formatOperationalStop(status.previousStop);
+        messageLabel.innerText = status.previousStop ? 'Van departed from' : 'Live vehicle';
+        mainMessage.innerText = status.previousStop
+            ? formatOperationalStop(status.previousStop)
+            : 'On the way';
         destinationLabel.innerText = 'Going to';
     }
     else {

@@ -92,8 +92,11 @@ function getEffectiveSpeed() {
         useful.length;
 
 
+    /* A few low-speed readings after leaving a stop must not turn into the
+       assumed pace for the whole remaining route. Use the configured tour
+       service speed as the conservative planning floor. */
     return Math.max(
-        8,
+        DEFAULT_SERVICE_SPEED_KMH,
         Math.min(
             35,
             average
