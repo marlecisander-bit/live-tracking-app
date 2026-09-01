@@ -15,7 +15,7 @@ window.appConfig = {
     projectGpsSource: null,
     pixelGpsFreshAfterMs: 30000,
     vanFollowZoom: 16,
-    gpsUpdateInterval: 2000,
+    gpsUpdateInterval: 1000,
     vehicleStateUpdateInterval: 5000,
     vehicleEtaUpdateInterval: 5000,
     publishedMapCheckInterval: 30000,

@@ -112,6 +112,12 @@ var firstMapLoad =
 var vanMarker =
     null;
 
+var vanMarkerAnimationFrame =
+    null;
+
+var lastVanMarkerTargetAt =
+    null;
+
 
 var vanPosition =
     null;

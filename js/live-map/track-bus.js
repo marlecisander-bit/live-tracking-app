@@ -242,6 +242,62 @@ function getTrackerRecordedAt(data) {
    UPDATE VAN
 ============================================================ */
 
+function moveVanMarkerSmoothly(targetPosition, snapImmediately) {
+    var now = Date.now();
+    var elapsedSinceTarget = lastVanMarkerTargetAt === null
+        ? GPS_UPDATE_INTERVAL
+        : now - lastVanMarkerTargetAt;
+    lastVanMarkerTargetAt = now;
+
+    if (vanMarkerAnimationFrame !== null) {
+        window.cancelAnimationFrame(vanMarkerAnimationFrame);
+        vanMarkerAnimationFrame = null;
+    }
+
+    var startPosition = vanMarker.getLatLng();
+    var movementMeters = startPosition.distanceTo(targetPosition);
+    var reducedMotion = window.matchMedia
+        && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (
+        snapImmediately
+        || reducedMotion
+        || document.hidden
+        || movementMeters < 1
+        || movementMeters > 1000
+    ) {
+        vanMarker.setLatLng(targetPosition);
+        return 0;
+    }
+
+    /* Finish shortly before the next expected poll. This keeps movement
+       continuous while ensuring the icon never invents a position beyond
+       the newest coordinate supplied by the tracker. */
+    var duration = Math.max(
+        250,
+        Math.min(2000, elapsedSinceTarget * 0.9)
+    );
+    var startedAt = performance.now();
+
+    function animateFrame(frameTime) {
+        var progress = Math.min(1, (frameTime - startedAt) / duration);
+        vanMarker.setLatLng(L.latLng(
+            startPosition.lat + (targetPosition.lat - startPosition.lat) * progress,
+            startPosition.lng + (targetPosition.lng - startPosition.lng) * progress
+        ));
+
+        if (progress < 1) {
+            vanMarkerAnimationFrame = window.requestAnimationFrame(animateFrame);
+        }
+        else {
+            vanMarkerAnimationFrame = null;
+        }
+    }
+
+    vanMarkerAnimationFrame = window.requestAnimationFrame(animateFrame);
+    return duration;
+}
+
 function updateVanMarker(data, gpsSourceName) {
 
     var previousVanPosition = vanPosition;
@@ -307,9 +363,12 @@ function updateVanMarker(data, gpsSourceName) {
         getTrackerRecordedAt(data) || Date.now();
 
     var nextGpsSource = gpsSourceName || 'GPS';
+    var gpsSourceChanged = Boolean(
+        activeVanGpsSource && activeVanGpsSource !== nextGpsSource
+    );
 
     /* Do not average speeds collected by two different trackers. */
-    if (activeVanGpsSource && activeVanGpsSource !== nextGpsSource) {
+    if (gpsSourceChanged) {
         speedHistory.length = 0;
     }
 
@@ -359,10 +418,10 @@ function updateVanMarker(data, gpsSourceName) {
     else {
 
 
-        vanMarker
-            .setLatLng(
-                vanPosition
-            );
+        var markerAnimationDuration = moveVanMarkerSmoothly(
+            vanPosition,
+            gpsSourceChanged
+        );
 
 
         if (
@@ -388,7 +447,12 @@ function updateVanMarker(data, gpsSourceName) {
         if (!previousVanPosition || map.getZoom() !== VAN_FOLLOW_ZOOM) {
             map.setView(vanPosition, VAN_FOLLOW_ZOOM, { animate: false });
         } else if (movementMeters >= 20) {
-            map.panTo(vanPosition, { animate: true, duration: 0.35 });
+            map.panTo(vanPosition, {
+                animate: true,
+                duration: markerAnimationDuration > 0
+                    ? markerAnimationDuration / 1000
+                    : 0.35
+            });
         }
 
     }
