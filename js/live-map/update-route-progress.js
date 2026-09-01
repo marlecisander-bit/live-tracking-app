@@ -30,7 +30,7 @@ function formatOperationalStop(stop) {
    priority. ARRIVING is allowed only for the authoritative next
    stop and only inside the 100 m physical GPS radius.
 */
-function resolveVehicleOperationalStatus(nextArrival, followingArrival) {
+function resolveVehicleOperationalStatus(nextArrival, followingArrival, currentLeg) {
 
     var backendStateApplies = backendVehicleStateMatchesActiveGps();
     var etaState = getFreshVehicleEtaState();
@@ -59,11 +59,26 @@ function resolveVehicleOperationalStatus(nextArrival, followingArrival) {
         nextProperties.name || (etaState && etaState.next_stop_name)
     );
     var physicalDistanceToNextKm = null;
+    var departureStop = currentLeg && currentLeg.from
+        ? operationalStopDetails(
+            currentLeg.from.feature.properties.stopNumber,
+            currentLeg.from.feature.properties.name
+        )
+        : null;
+    var physicalDistanceToDepartureKm = null;
 
     if (vanPosition && nextArrival && nextArrival.stop && nextArrival.stop.feature) {
         physicalDistanceToNextKm = turf.distance(
             turf.point([vanPosition.lng, vanPosition.lat]),
             turf.point(nextArrival.stop.feature.geometry.coordinates),
+            { units: 'kilometers' }
+        );
+    }
+
+    if (vanPosition && currentLeg && currentLeg.from && currentLeg.from.feature) {
+        physicalDistanceToDepartureKm = turf.distance(
+            turf.point([vanPosition.lng, vanPosition.lat]),
+            turf.point(currentLeg.from.feature.geometry.coordinates),
             { units: 'kilometers' }
         );
     }
@@ -77,11 +92,22 @@ function resolveVehicleOperationalStatus(nextArrival, followingArrival) {
         && physicalDistanceToNextKm !== null
         && physicalDistanceToNextKm <= STOP_ARRIVAL_RADIUS_KM
         && Number(vanSpeed) <= 3;
+    var localGpsAtDepartureStop =
+        !backendStateApplies
+        && !isVanGPSStale()
+        && departureStop
+        && physicalDistanceToDepartureKm !== null
+        && physicalDistanceToDepartureKm <= STOP_ARRIVAL_RADIUS_KM
+        && Number(vanSpeed) <= 3;
 
     /* Scorpion positions do not have a backend stop-state row. When that
        tracker is stationary inside the configured stop radius, its live GPS
        position is authoritative for the public status card. */
-    if (localGpsAtStop) {
+    if (localGpsAtDepartureStop) {
+        currentStop = departureStop;
+        state = 'parked';
+    }
+    else if (localGpsAtStop) {
         currentStop = nextStop;
         state = 'parked';
 
@@ -666,7 +692,7 @@ function updateSmartRouteInformation() {
         : null;
 
     var operationalStatus =
-        resolveVehicleOperationalStatus(next, followingArrival);
+        resolveVehicleOperationalStatus(next, followingArrival, currentLeg);
 
 
     if (operationalStatus.state === 'arriving') {
