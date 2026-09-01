@@ -35,12 +35,20 @@ function resolveVehicleOperationalStatus(nextArrival) {
     var backendStateApplies = backendVehicleStateMatchesActiveGps();
     var etaState = getFreshVehicleEtaState();
     var currentStop = operationalStopDetails(
-        backendStateApplies && vehicleStopState && vehicleStopState.current_stop_number,
-        backendStateApplies && vehicleStopState && vehicleStopState.current_stop_name
+        backendStateApplies && vehicleStopState
+            ? vehicleStopState.current_stop_number
+            : null,
+        backendStateApplies && vehicleStopState
+            ? vehicleStopState.current_stop_name
+            : null
     );
     var previousStop = operationalStopDetails(
-        backendStateApplies && vehicleStopState && vehicleStopState.last_completed_stop_number,
-        etaState && etaState.from_stop_name
+        backendStateApplies && vehicleStopState
+            ? vehicleStopState.last_completed_stop_number
+            : null,
+        backendStateApplies && etaState
+            ? etaState.from_stop_name
+            : null
     );
     var nextProperties =
         nextArrival && nextArrival.stop && nextArrival.stop.feature
