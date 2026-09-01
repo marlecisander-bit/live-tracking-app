@@ -160,7 +160,7 @@ function buildContextSequence(
 
     configured.forEach(
 
-        function(stopId) {
+        function(stopId, sequenceIndex) {
 
             var base =
                 stopById[stopId];
@@ -173,6 +173,19 @@ function buildContextSequence(
 
             var location =
                 context.stopLocations[stopId];
+
+            /* A closed route commonly repeats Stop 1 at the end of its stop
+               order. The same physical point exists at both ends of the
+               LineString, but nearestPointOnLine returns its first occurrence.
+               Assign the repeated terminal stop to the end of the route so
+               the final leg measures only the return section. */
+            if (
+                sequenceIndex === configured.length - 1
+                && sequenceIndex > 0
+                && String(stopId) === String(configured[0])
+            ) {
+                location = context.lengthKm;
+            }
 
 
             if (!Number.isFinite(location)) {

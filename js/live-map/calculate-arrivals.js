@@ -450,6 +450,22 @@ function applyBackendEtaToArrival(
             etaState.eta_minutes
         );
 
+    var localDistanceKm = Number(arrival.distanceKm);
+    var backendDistanceKm = remainingMeters / 1000;
+    var backendDistanceMatchesRoute =
+        !Number.isFinite(localDistanceKm)
+        || !Number.isFinite(backendDistanceKm)
+        || Math.abs(backendDistanceKm - localDistanceKm)
+            <= Math.max(1, localDistanceKm * 0.35);
+
+    /* Backend ETA rows can briefly belong to an older route interpretation
+       (especially where a closed route repeats its first stop). Never replace
+       the current map's route distance and ETA with a materially different
+       backend calculation. */
+    if (!backendDistanceMatchesRoute) {
+        return arrival;
+    }
+
     if (Number.isFinite(remainingMeters)) {
         arrival.distanceKm =
             Math.max(
