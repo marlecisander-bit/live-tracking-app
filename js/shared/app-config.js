@@ -14,7 +14,7 @@ window.appConfig = {
     defaultGpsSource: 'scorpion',
     projectGpsSource: null,
     pixelGpsFreshAfterMs: 30000,
-    vanFollowZoom: 16,
+    vanFollowZoom: 17,
     gpsUpdateInterval: 1000,
     vehicleStateUpdateInterval: 5000,
     vehicleEtaUpdateInterval: 5000,
