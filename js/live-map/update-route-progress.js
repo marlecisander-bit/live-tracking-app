@@ -30,7 +30,7 @@ function formatOperationalStop(stop) {
    priority. ARRIVING is allowed only for the authoritative next
    stop and only inside the 100 m physical GPS radius.
 */
-function resolveVehicleOperationalStatus(nextArrival) {
+function resolveVehicleOperationalStatus(nextArrival, followingArrival) {
 
     var backendStateApplies = backendVehicleStateMatchesActiveGps();
     var etaState = getFreshVehicleEtaState();
@@ -70,12 +70,35 @@ function resolveVehicleOperationalStatus(nextArrival) {
 
     var state = 'unknown';
     var stopStateReady = backendStateApplies && vehicleStopStateLoaded && vehicleStopState;
+    var localGpsAtStop =
+        !backendStateApplies
+        && !isVanGPSStale()
+        && nextStop
+        && physicalDistanceToNextKm !== null
+        && physicalDistanceToNextKm <= STOP_ARRIVAL_RADIUS_KM
+        && Number(vanSpeed) <= 3;
 
-    if (currentStop) {
+    /* Scorpion positions do not have a backend stop-state row. When that
+       tracker is stationary inside the configured stop radius, its live GPS
+       position is authoritative for the public status card. */
+    if (localGpsAtStop) {
+        currentStop = nextStop;
+        state = 'parked';
+
+        if (followingArrival && followingArrival.stop && followingArrival.stop.feature) {
+            var followingProperties = followingArrival.stop.feature.properties || {};
+            nextStop = operationalStopDetails(
+                followingProperties.stopNumber,
+                followingProperties.name
+            );
+        }
+    }
+
+    else if (currentStop) {
         state = 'parked';
     }
     else if (
-        stopStateReady
+        (stopStateReady || !backendStateApplies)
         &&
         !isVanGPSStale()
         &&
@@ -97,8 +120,12 @@ function resolveVehicleOperationalStatus(nextArrival) {
         previousStop: previousStop,
         nextStop: nextStop,
         physicalDistanceToNextKm: physicalDistanceToNextKm,
-        etaMinutes: nextArrival ? nextArrival.etaMinutes : null,
-        remainingDistanceKm: nextArrival ? nextArrival.distanceKm : null
+        etaMinutes: localGpsAtStop && followingArrival
+            ? followingArrival.etaMinutes
+            : (nextArrival ? nextArrival.etaMinutes : null),
+        remainingDistanceKm: localGpsAtStop && followingArrival
+            ? followingArrival.distanceKm
+            : (nextArrival ? nextArrival.distanceKm : null)
     };
 }
 
@@ -591,8 +618,20 @@ function updateSmartRouteInformation() {
     );
 
 
+    var nextArrivalIndex = arrivals.indexOf(next);
+    if (nextArrivalIndex < 0) {
+        nextArrivalIndex = arrivals.findIndex(function(arrival) {
+            return arrival && arrival.sequenceIndex === next.sequenceIndex;
+        });
+    }
+
+    var followingArrival =
+        nextArrivalIndex >= 0 && nextArrivalIndex + 1 < arrivals.length
+        ? arrivals[nextArrivalIndex + 1]
+        : null;
+
     var operationalStatus =
-        resolveVehicleOperationalStatus(next);
+        resolveVehicleOperationalStatus(next, followingArrival);
 
 
     if (operationalStatus.state === 'arriving') {
