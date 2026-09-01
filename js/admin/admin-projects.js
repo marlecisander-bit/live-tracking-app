@@ -64,13 +64,13 @@
         projects = result.data || [];
 
         if (projects.length) {
-            const sourceResult = await client.from('projects')
-                .select('id,gps_source')
-                .in('id', projects.map(function(project) { return project.id; }));
+            const sourceResult = await client.from('live_map_settings')
+                .select('project_slug,gps_source')
+                .in('project_slug', projects.map(function(project) { return project.slug; }));
             if (!sourceResult.error) {
                 const sources = {};
-                (sourceResult.data || []).forEach(function(row) { sources[row.id] = row.gps_source; });
-                projects.forEach(function(project) { project.gps_source = sources[project.id] || null; });
+                (sourceResult.data || []).forEach(function(row) { sources[row.project_slug] = row.gps_source; });
+                projects.forEach(function(project) { project.gps_source = sources[project.slug] || null; });
             }
         }
         if (!projects.length) {

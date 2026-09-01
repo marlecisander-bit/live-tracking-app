@@ -1,16 +1,39 @@
--- Keep the selected tracker consistent across the admin page and every public
--- live-map device. Browser localStorage remains only a legacy/admin fallback.
-alter table public.projects
-  add column if not exists gps_source text not null default 'automatic';
+-- Shared public-map preferences. This table is intentionally independent of
+-- the optional multi-tenant `projects` schema so legacy installations work.
+create table if not exists public.live_map_settings (
+  project_slug text primary key,
+  gps_source text not null default 'automatic'
+    check (gps_source in ('automatic', 'pixel', 'scorpion')),
+  updated_at timestamptz not null default now(),
+  updated_by uuid references auth.users(id) on delete set null
+);
 
-alter table public.projects
-  drop constraint if exists projects_gps_source_check;
+alter table public.live_map_settings enable row level security;
 
-alter table public.projects
-  add constraint projects_gps_source_check
-  check (gps_source in ('automatic', 'pixel', 'scorpion'));
+drop policy if exists "Public reads live map settings" on public.live_map_settings;
+create policy "Public reads live map settings"
+  on public.live_map_settings for select
+  to anon, authenticated
+  using (true);
 
--- Preserve the operator's current selection for the production tour.
-update public.projects
-set gps_source = 'scorpion'
-where slug = 'sightseeing-shkodra';
+drop policy if exists "Authenticated users create live map settings" on public.live_map_settings;
+create policy "Authenticated users create live map settings"
+  on public.live_map_settings for insert
+  to authenticated
+  with check (auth.uid() is not null);
+
+drop policy if exists "Authenticated users update live map settings" on public.live_map_settings;
+create policy "Authenticated users update live map settings"
+  on public.live_map_settings for update
+  to authenticated
+  using (true)
+  with check (auth.uid() is not null);
+
+grant select on public.live_map_settings to anon, authenticated;
+grant insert, update on public.live_map_settings to authenticated;
+
+insert into public.live_map_settings(project_slug, gps_source)
+values ('sightseeing-shkodra', 'scorpion')
+on conflict (project_slug) do update
+set gps_source = excluded.gps_source,
+    updated_at = now();

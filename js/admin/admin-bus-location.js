@@ -195,14 +195,19 @@
             requestInFlight = false;
             const project = window.app.projects && window.app.projects.current();
             const source = event && event.detail;
-            if (project && !project._legacy && ['automatic', 'pixel', 'scorpion'].indexOf(source) >= 0) {
-                const result = await window.app.supabase.getClient().from('projects')
-                    .update({ gps_source: source })
-                    .eq('id', project.id);
+            if (project && ['automatic', 'pixel', 'scorpion'].indexOf(source) >= 0) {
+                const user = window.app.state && window.app.state.currentUser;
+                const result = await window.app.supabase.getClient().from('live_map_settings')
+                    .upsert({
+                        project_slug: project.slug,
+                        gps_source: source,
+                        updated_at: new Date().toISOString(),
+                        updated_by: user && user.id ? user.id : null
+                    }, { onConflict: 'project_slug' });
                 if (!result.error) {
                     project.gps_source = source;
                     window.appConfig.projectGpsSource = source;
-                } else if (String(result.error.message || '').indexOf('gps_source') < 0) {
+                } else if (String(result.error.message || '').indexOf('live_map_settings') < 0) {
                     console.warn('Unable to save shared GPS source:', result.error);
                 }
             }

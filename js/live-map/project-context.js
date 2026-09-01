@@ -12,10 +12,10 @@
             : result.data;
         if (!project) throw new Error('Public project not found: ' + requestedSlug);
 
-        if (project.id) {
-            const sourceResult = await supabaseClient.from('projects')
+        {
+            const sourceResult = await supabaseClient.from('live_map_settings')
                 .select('gps_source')
-                .eq('id', project.id)
+                .eq('project_slug', project.slug)
                 .maybeSingle();
             if (!sourceResult.error && sourceResult.data) {
                 project.gps_source = sourceResult.data.gps_source;
