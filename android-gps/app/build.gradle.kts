@@ -21,8 +21,14 @@ fun localValue(name: String, fallback: String = ""): String =
 val configuredBuildRoot = System.getenv("SIGHTSEEING_GPS_BUILD_DIR")
 val localAppData = System.getenv("LOCALAPPDATA")
 when {
-    !configuredBuildRoot.isNullOrBlank() -> layout.buildDirectory.set(file("$configuredBuildRoot/app"))
-    !localAppData.isNullOrBlank() -> layout.buildDirectory.set(file("$localAppData/SightseeingShkodraGps/build/app"))
+    // On Windows, always keep disposable Gradle output outside OneDrive.
+    // OneDrive can lock resource-merger files and make otherwise valid builds
+    // fail during cleanup, even when a stale environment override is present.
+    System.getProperty("os.name").startsWith("Windows", ignoreCase = true) &&
+        !localAppData.isNullOrBlank() ->
+        layout.buildDirectory.set(file("$localAppData/SightseeingShkodraGps/build/app"))
+    !configuredBuildRoot.isNullOrBlank() ->
+        layout.buildDirectory.set(file("$configuredBuildRoot/app"))
 }
 
 android {
