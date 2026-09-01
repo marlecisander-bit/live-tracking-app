@@ -7,6 +7,21 @@
     }
 
     function get() {
+        var urlValue = null;
+        try { urlValue = new URLSearchParams(window.location.search).get('gps'); }
+        catch (error) {}
+        if (ALLOWED.indexOf(urlValue) >= 0) return urlValue;
+
+        if (ALLOWED.indexOf(window.appConfig.projectGpsSource) >= 0) {
+            return window.appConfig.projectGpsSource;
+        }
+
+        /* Public source selection is shared project configuration, never a
+           preference left in localStorage by this particular phone. */
+        if (/\/live-map\.html$/i.test(window.location.pathname)) {
+            return normalize(window.appConfig.defaultGpsSource);
+        }
+
         try { return normalize(window.localStorage.getItem(STORAGE_KEY)); }
         catch (error) { return normalize(null); }
     }

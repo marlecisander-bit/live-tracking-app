@@ -11,9 +11,21 @@
                 default_vehicle_id: 'sightseeing-shkodra-van-1', is_public: true, _legacy: true }
             : result.data;
         if (!project) throw new Error('Public project not found: ' + requestedSlug);
+
+        if (project.id) {
+            const sourceResult = await supabaseClient.from('projects')
+                .select('gps_source')
+                .eq('id', project.id)
+                .maybeSingle();
+            if (!sourceResult.error && sourceResult.data) {
+                project.gps_source = sourceResult.data.gps_source;
+            }
+        }
+
         window.appConfig.projectId = project.id;
         window.appConfig.projectSlug = project.slug;
         window.appConfig.vehicleId = project.default_vehicle_id || '';
+        window.appConfig.projectGpsSource = project.gps_source || null;
         window.PROJECT_ID = project.id;
         window.VEHICLE_ID = window.appConfig.vehicleId;
         document.title = project.name + ' - Live Map';

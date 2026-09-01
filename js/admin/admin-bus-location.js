@@ -191,8 +191,21 @@
             }
         });
         if (window.gpsSource) window.gpsSource.bind(document.getElementById('admin-gps-source'));
-        document.addEventListener('gpssourcechange', function() {
+        document.addEventListener('gpssourcechange', async function(event) {
             requestInFlight = false;
+            const project = window.app.projects && window.app.projects.current();
+            const source = event && event.detail;
+            if (project && !project._legacy && ['automatic', 'pixel', 'scorpion'].indexOf(source) >= 0) {
+                const result = await window.app.supabase.getClient().from('projects')
+                    .update({ gps_source: source })
+                    .eq('id', project.id);
+                if (!result.error) {
+                    project.gps_source = source;
+                    window.appConfig.projectGpsSource = source;
+                } else if (String(result.error.message || '').indexOf('gps_source') < 0) {
+                    console.warn('Unable to save shared GPS source:', result.error);
+                }
+            }
             refreshBusLocation();
         });
         document.addEventListener('projectchange', function() {

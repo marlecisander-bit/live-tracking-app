@@ -12,9 +12,12 @@
         window.appConfig.projectId = project._legacy ? null : project.id;
         window.appConfig.projectSlug = project.slug;
         window.appConfig.vehicleId = project.default_vehicle_id || '';
+        window.appConfig.projectGpsSource = project.gps_source || null;
         localStorage.setItem(STORAGE_KEY, project.id);
         const select = document.getElementById('admin-project-select');
         if (select) select.value = project.id;
+        const sourceSelect = document.getElementById('admin-gps-source');
+        if (sourceSelect && project.gps_source) sourceSelect.value = project.gps_source;
         applyPermissions(project._role);
         document.dispatchEvent(new CustomEvent('projectchange', { detail: project }));
     }
@@ -45,7 +48,8 @@
     }
 
     async function loadProjects() {
-        const result = await window.app.supabase.getClient().from('projects')
+        const client = window.app.supabase.getClient();
+        const result = await client.from('projects')
             .select('id,organization_id,name,slug,default_vehicle_id,is_public,created_at')
             .order('created_at', { ascending: true });
         if (result.error) {
@@ -58,6 +62,17 @@
             return projects[0];
         }
         projects = result.data || [];
+
+        if (projects.length) {
+            const sourceResult = await client.from('projects')
+                .select('id,gps_source')
+                .in('id', projects.map(function(project) { return project.id; }));
+            if (!sourceResult.error) {
+                const sources = {};
+                (sourceResult.data || []).forEach(function(row) { sources[row.id] = row.gps_source; });
+                projects.forEach(function(project) { project.gps_source = sources[project.id] || null; });
+            }
+        }
         if (!projects.length) {
             const workspaceName = window.prompt('Create your organization or workspace');
             if (workspaceName && workspaceName.trim()) {
