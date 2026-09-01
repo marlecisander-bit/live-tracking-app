@@ -394,7 +394,8 @@ function locationWithinLeg(
 
 
 function detectCurrentOperationalLeg(
-    vanLocationKm
+    vanLocationKm,
+    vanPoint
 ) {
 
 
@@ -425,20 +426,19 @@ function detectCurrentOperationalLeg(
 
         function(leg) {
 
+            var legProjection = vanPoint
+                ? projectVanPointOntoLeg(vanPoint, leg)
+                : null;
+            var positionMatch = legProjection
+                ? legProjection.distanceKm <= OFF_ROUTE_WARNING_KM
+                : locationWithinLeg(vanLocationKm, leg);
+            var score = legProjection
+                ? legProjection.distanceKm * 1000
+                : (positionMatch ? 0 : 500);
 
-            var positionMatch =
-                locationWithinLeg(
-                    vanLocationKm,
-                    leg
-                );
-
-
-            var score =
-                positionMatch
-                ?
-                0
-                :
-                500;
+            if (!positionMatch) {
+                score += 500;
+            }
 
 
             if (
@@ -448,8 +448,9 @@ function detectCurrentOperationalLeg(
             ) {
 
 
-                var expected =
-                    routeBearing;
+                var expected = legProjection
+                    ? getRouteBearingAt(legProjection.locationKm)
+                    : routeBearing;
 
 
                 if (
@@ -465,11 +466,13 @@ function detectCurrentOperationalLeg(
                 }
 
 
-                score +=
-                    angleDifference(
-                        vanHeading,
-                        expected
-                    );
+                if (expected !== null) {
+                    score +=
+                        angleDifference(
+                            vanHeading,
+                            expected
+                        );
+                }
 
             }
 
@@ -520,6 +523,44 @@ function detectCurrentOperationalLeg(
 
     return best;
 
+}
+
+
+/* Project a GPS point onto one specific operational leg. This disambiguates
+   roads used in both directions, where a whole-route nearest-point search can
+   otherwise return the outbound occurrence while the van is returning. */
+function projectVanPointOntoLeg(vanPoint, leg) {
+    if (!activeRouteFeature || !vanPoint || !leg) {
+        return null;
+    }
+
+    var startKm = Math.min(leg.from.locationKm, leg.to.locationKm);
+    var endKm = Math.max(leg.from.locationKm, leg.to.locationKm);
+
+    if (!Number.isFinite(startKm) || !Number.isFinite(endKm) || endKm <= startKm) {
+        return null;
+    }
+
+    var legLine = turf.lineSliceAlong(
+        activeRouteFeature,
+        startKm,
+        endKm,
+        { units: 'kilometers' }
+    );
+    var snapped = turf.nearestPointOnLine(
+        legLine,
+        vanPoint,
+        { units: 'kilometers' }
+    );
+
+    return {
+        locationKm: startKm + Number(snapped.properties.location),
+        distanceKm: turf.distance(
+            vanPoint,
+            snapped,
+            { units: 'kilometers' }
+        )
+    };
 }
 
 

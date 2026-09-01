@@ -91,6 +91,11 @@ function resolveVehicleOperationalStatus(nextArrival, followingArrival) {
                 followingProperties.stopNumber,
                 followingProperties.name
             );
+            currentOperationalLegIndex = followingArrival.sequenceIndex - 1;
+        }
+        else if (operationalLegs.length > 0) {
+            /* The terminal Stop 1 also begins the next circuit. */
+            currentOperationalLegIndex = 0;
         }
     }
 
@@ -380,6 +385,25 @@ function updateSmartRouteInformation() {
     var currentLeg =
         null;
 
+    /* Scorpion has no backend sequence row. Retain the locally confirmed leg
+       across route sections whose outbound and return geometries overlap. */
+    if (
+        !backendLegMatch
+        && currentOperationalLegIndex !== null
+        && operationalLegs[currentOperationalLegIndex]
+    ) {
+        var retainedLeg = operationalLegs[currentOperationalLegIndex];
+        var retainedProjection = projectVanPointOntoLeg(vanPoint, retainedLeg);
+
+        if (
+            retainedProjection
+            && retainedProjection.distanceKm <= OFF_ROUTE_WARNING_KM
+        ) {
+            currentLeg = retainedLeg;
+            vanLocationKm = retainedProjection.locationKm;
+        }
+    }
+
 
     /*
        Backend leg has first priority.
@@ -411,8 +435,14 @@ function updateSmartRouteInformation() {
 
         currentLeg =
             detectCurrentOperationalLeg(
-                vanLocationKm
+                vanLocationKm,
+                vanPoint
             );
+
+        var detectedProjection = projectVanPointOntoLeg(vanPoint, currentLeg);
+        if (detectedProjection) {
+            vanLocationKm = detectedProjection.locationKm;
+        }
 
     }
 
