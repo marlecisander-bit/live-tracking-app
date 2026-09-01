@@ -138,6 +138,13 @@ var activeVanGpsSource =
     null;
 
 
+/* Backend stop and ETA rows are produced from the Pixel position stored in
+   vehicle_positions. Never combine those rows with Scorpion coordinates. */
+function backendVehicleStateMatchesActiveGps() {
+    return !activeVanGpsSource || activeVanGpsSource === 'Google Pixel';
+}
+
+
 var userMarker =
     null;
 

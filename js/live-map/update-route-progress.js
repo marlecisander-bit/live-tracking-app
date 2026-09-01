@@ -32,13 +32,14 @@ function formatOperationalStop(stop) {
 */
 function resolveVehicleOperationalStatus(nextArrival) {
 
+    var backendStateApplies = backendVehicleStateMatchesActiveGps();
     var etaState = getFreshVehicleEtaState();
     var currentStop = operationalStopDetails(
-        vehicleStopState && vehicleStopState.current_stop_number,
-        vehicleStopState && vehicleStopState.current_stop_name
+        backendStateApplies && vehicleStopState && vehicleStopState.current_stop_number,
+        backendStateApplies && vehicleStopState && vehicleStopState.current_stop_name
     );
     var previousStop = operationalStopDetails(
-        vehicleStopState && vehicleStopState.last_completed_stop_number,
+        backendStateApplies && vehicleStopState && vehicleStopState.last_completed_stop_number,
         etaState && etaState.from_stop_name
     );
     var nextProperties =
@@ -60,7 +61,7 @@ function resolveVehicleOperationalStatus(nextArrival) {
     }
 
     var state = 'unknown';
-    var stopStateReady = vehicleStopStateLoaded && vehicleStopState;
+    var stopStateReady = backendStateApplies && vehicleStopStateLoaded && vehicleStopState;
 
     if (currentStop) {
         state = 'parked';

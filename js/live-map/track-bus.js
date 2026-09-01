@@ -306,7 +306,14 @@ function updateVanMarker(data, gpsSourceName) {
     lastVanGPSReceivedAt =
         getTrackerRecordedAt(data) || Date.now();
 
-    activeVanGpsSource = gpsSourceName || 'GPS';
+    var nextGpsSource = gpsSourceName || 'GPS';
+
+    /* Do not average speeds collected by two different trackers. */
+    if (activeVanGpsSource && activeVanGpsSource !== nextGpsSource) {
+        speedHistory.length = 0;
+    }
+
+    activeVanGpsSource = nextGpsSource;
 
 
     recordSpeed(

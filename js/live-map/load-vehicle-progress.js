@@ -162,7 +162,7 @@ function stopNumberEquals(value, expected) {
 
 function updateRouteCycleResetState() {
 
-    if (!vehicleStopState) {
+    if (!backendVehicleStateMatchesActiveGps() || !vehicleStopState) {
         return;
     }
 
@@ -279,6 +279,12 @@ function getFollowingStopNumber(currentStopNumber) {
 ============================================================ */
 
 function getExpectedNextStopNumber() {
+
+    /* Scorpion positions are not written to the backend operational tables.
+       Let geometry choose the current leg instead of using stale Pixel state. */
+    if (!backendVehicleStateMatchesActiveGps()) {
+        return null;
+    }
 
     /* A confirmed physical stop always determines its sequence successor. */
     if (

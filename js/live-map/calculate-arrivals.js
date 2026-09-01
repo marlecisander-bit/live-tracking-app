@@ -288,7 +288,7 @@ function isVehicleEtaFresh() {
 
 function getFreshVehicleEtaState() {
 
-    return isVehicleEtaFresh()
+    return backendVehicleStateMatchesActiveGps() && isVehicleEtaFresh()
         ?
         vehicleEtaState
         :
