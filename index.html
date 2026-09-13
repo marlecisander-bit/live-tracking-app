@@ -1184,10 +1184,10 @@
 
             <div class="analytics-heading">
 
-                <h2>Operations Analytics</h2>
+                <h2>Business overview</h2>
 
                 <p>
-                    Vehicle performance, stops and route segments from Supabase history.
+                    Your tours, vehicle activity and the information that needs attention.
                 </p>
 
             </div>
@@ -1211,7 +1211,7 @@
                 </button>
 
                 <select
-                    id="analytics-range"
+                    id="analytics-range" aria-label="Report period"
                         data-action="loadAnalyticsDashboard" data-event="change">
 
                     <option value="today">Today</option>
@@ -1236,7 +1236,9 @@
         </div>
 
 
-        <div id="analytics-message"></div>
+        <div id="analytics-message" role="status" aria-live="polite"></div>
+        <p id="analytics-vehicle"></p>
+        <h3>Right now</h3>
 
 
         <div class="analytics-status-row">
@@ -1252,7 +1254,7 @@
                             id="analytics-live-dot">
                         </span>
 
-                        Latest Vehicle Position
+                        Vehicle location
 
                     </div>
 
@@ -1280,7 +1282,7 @@
             <div class="analytics-card">
 
                 <div class="analytics-kpi-label">
-                    GPS Quality
+                    Vehicle tracking
                 </div>
 
                 <div
@@ -1300,59 +1302,21 @@
         </div>
 
 
+        <div id="analytics-attention" role="status"></div>
+        <div class="analytics-report-heading"><div><h3>Period report</h3><p id="analytics-period"></p></div><button class="btn-light" type="button" id="analytics-export-button" data-action="exportAnalytics" disabled>Export report</button></div>
         <div class="analytics-kpi-grid">
-
-            <div class="analytics-card">
-                <div class="analytics-kpi-label">Distance</div>
-                <div class="analytics-kpi-value" id="analytics-distance">--</div>
-                <div class="analytics-kpi-sub">GPS-derived route distance</div>
-            </div>
-
-            <div class="analytics-card">
-                <div class="analytics-kpi-label">Average Speed</div>
-                <div class="analytics-kpi-value" id="analytics-avg-speed">--</div>
-                <div class="analytics-kpi-sub">Moving readings above 2 km/h</div>
-            </div>
-
-            <div class="analytics-card">
-                <div class="analytics-kpi-label">Max Speed</div>
-                <div class="analytics-kpi-value" id="analytics-max-speed">--</div>
-                <div class="analytics-kpi-sub">Highest valid GPS speed</div>
-            </div>
-
-            <div class="analytics-card">
-                <div class="analytics-kpi-label">Operating Span</div>
-                <div class="analytics-kpi-value" id="analytics-operating-time">--</div>
-                <div class="analytics-kpi-sub">First to latest recorded GPS point</div>
-            </div>
-
-            <div class="analytics-card">
-                <div class="analytics-kpi-label">GPS Records</div>
-                <div class="analytics-kpi-value" id="analytics-gps-records">--</div>
-                <div class="analytics-kpi-sub">Stored vehicle positions</div>
-            </div>
-
-            <div class="analytics-card">
-                <div class="analytics-kpi-label">Arrivals</div>
-                <div class="analytics-kpi-value" id="analytics-arrivals">--</div>
-                <div class="analytics-kpi-sub">Confirmed stop arrivals</div>
-            </div>
-
-            <div class="analytics-card">
-                <div class="analytics-kpi-label">Departures</div>
-                <div class="analytics-kpi-value" id="analytics-departures">--</div>
-                <div class="analytics-kpi-sub">Confirmed stop departures</div>
-            </div>
-
-            <div class="analytics-card">
-                <div class="analytics-kpi-label">Avg Dwell Time</div>
-                <div class="analytics-kpi-value" id="analytics-dwell">--</div>
-                <div class="analytics-kpi-sub">Average stop time from departures</div>
-            </div>
-
+        <div class="analytics-card"><div class="analytics-kpi-label">Tours confirmed</div><div class="analytics-kpi-value" id="analytics-tours">—</div><div class="analytics-kpi-sub">Complete loops with all stops visited in order</div></div>
+        <div class="analytics-card"><div class="analytics-kpi-label">Average tour duration</div><div class="analytics-kpi-value" id="analytics-tour-time">—</div><div class="analytics-kpi-sub">From starting-point departure to return</div></div>
+        <div class="analytics-card"><div class="analytics-kpi-label">Estimated driving time</div><div class="analytics-kpi-value" id="analytics-driving">—</div><div class="analytics-kpi-sub"><span id="analytics-stationary">Stationary: —</span></div></div>
+        <div class="analytics-card"><div class="analytics-kpi-label">Distance travelled</div><div class="analytics-kpi-value" id="analytics-distance">—</div><div class="analytics-kpi-sub">Estimated from available vehicle locations</div></div>
         </div>
-
-
+        <p class="analytics-method">Tours are confirmed from stop 1 through every active numbered stop and back to stop 1, using the current published map. Only tours starting after its publication and within this period are counted. Missing visits can reduce the count. Stationary time includes sightseeing stops and breaks; gaps over 15 minutes are excluded.</p>
+        <details class="analytics-details"><summary>Tracking details</summary><div class="analytics-kpi-grid">
+        <div class="analytics-card"><div class="analytics-kpi-label">Average moving speed</div><div class="analytics-kpi-value" id="analytics-avg-speed">—</div><div class="analytics-kpi-sub">Average of recorded speeds above 2 km/h</div></div>
+        <div class="analytics-card"><div class="analytics-kpi-label">Highest recorded speed</div><div class="analytics-kpi-value" id="analytics-max-speed">—</div><div class="analytics-kpi-sub">From available vehicle locations</div></div>
+        <div class="analytics-card"><div class="analytics-kpi-label">Average time at a stop</div><div class="analytics-kpi-value" id="analytics-dwell">—</div><div class="analytics-kpi-sub">Completed visits with a known duration</div></div>
+        <div class="analytics-card"><div class="analytics-kpi-label">Location readings</div><div class="analytics-kpi-value" id="analytics-gps-records">—</div><div class="analytics-kpi-sub">Available readings in this period</div></div>
+        </div></details>
         <div class="analytics-content-grid">
 
             <div class="analytics-panel">
@@ -1360,9 +1324,9 @@
                 <div class="analytics-panel-header">
 
                     <div>
-                        <div class="analytics-panel-title">Route Performance</div>
+                        <div class="analytics-panel-title">Travel between stops</div>
                         <div class="analytics-panel-subtitle">
-                            Aggregated from segment_runs
+                            Average of recorded departure-to-arrival journeys
                         </div>
                     </div>
 
@@ -1377,11 +1341,9 @@
                     <table class="analytics-table">
                         <thead>
                             <tr>
-                                <th>Segment</th>
-                                <th>Runs</th>
-                                <th>Avg Time</th>
-                                <th>Avg Speed</th>
-                                <th>Stopped</th>
+                                <th>Connection</th>
+                                <th>Journeys</th>
+                                <th>Average time</th>
                             </tr>
                         </thead>
                         <tbody id="analytics-segment-body"></tbody>
@@ -1403,9 +1365,9 @@
                 <div class="analytics-panel-header">
 
                     <div>
-                        <div class="analytics-panel-title">Recent Stop Events</div>
+                        <div class="analytics-panel-title">Recent stop visits</div>
                         <div class="analytics-panel-subtitle">
-                            Latest confirmed arrivals and departures
+                            Latest 50 visits · Missing times mean no event was recorded
                         </div>
                     </div>
 
@@ -1417,8 +1379,8 @@
                         <thead>
                             <tr>
                                 <th>Stop</th>
-                                <th>Event</th>
-                                <th>Time</th>
+                                <th>Arrived</th>
+                                <th>Left</th><th>Time at stop</th>
                             </tr>
                         </thead>
                         <tbody id="analytics-events-body"></tbody>
@@ -1526,6 +1488,7 @@
 <script src="js/admin/admin-map-data.js"></script>
 <script src="js/admin/admin-editing-and-dialogs.js"></script>
 <script src="js/admin/admin-publishing-and-export.js"></script>
+<script src="js/admin/analytics-model.js"></script>
 <script src="js/admin/admin-poi-and-analytics.js"></script>
 <script src="js/admin/admin-bus-location.js"></script>
 

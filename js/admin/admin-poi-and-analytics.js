@@ -68,165 +68,149 @@
         if (element) element.textContent = value;
     }
 
-    function firstValue(record, names) {
-        if (!record) return null;
-        for (let index = 0; index < names.length; index += 1) {
-            const value = record[names[index]];
-            if (value !== undefined && value !== null && value !== '') return value;
+    let analyticsRequest = 0;
+    let analyticsReport = null;
+    const model = window.analyticsModel;
+
+    async function readHistory(client, table, timeColumn, projectId, vehicleId, from, until) {
+        const rows = [];
+        for (let page = 0; page < 100; page++) {
+            let query = client.from(table).select('*').eq('project_id', projectId).eq('vehicle_id', vehicleId)
+                .lte(timeColumn, until.toISOString()).order(timeColumn, { ascending: true }).order('id', { ascending: true });
+            if (from) query = query.gte(timeColumn, from.toISOString());
+            const result = await query.range(page * 1000, page * 1000 + 999);
+            if (result.error) return { data: [], error: result.error };
+            rows.push(...(result.data || []));
+            if (!result.data || result.data.length < 1000) return { data: rows };
         }
-        return null;
+        return { data: [], error: new Error('This period is too large. Choose a shorter period.') };
     }
-
-    function recordDate(record) {
-        const value = firstValue(record, [
-            'source_recorded_at', 'received_at',
-            'created_at', 'recorded_at', 'captured_at', 'timestamp',
-            'gps_timestamp', 'gps_time', 'gps_recorded_at', 'recorded_time',
-            'position_timestamp', 'position_time', 'event_time', 'event_at', 'occurred_at',
-            'started_at', 'ended_at', 'updated_at', 'calculated_at'
-        ]);
-        const date = value ? new Date(value) : null;
-        return date && !Number.isNaN(date.getTime()) ? date : null;
+    function addRow(body, values) {
+        const row = document.createElement('tr');
+        values.forEach(value => { const cell = document.createElement('td'); cell.textContent = value; row.appendChild(cell); });
+        body.appendChild(row);
     }
-
-    function belongsToVehicle(record, vehicleId) {
-        const recordVehicleId = firstValue(record, ['vehicle_id', 'vehicleId', 'device_id']);
-        return !vehicleId || recordVehicleId == null || String(recordVehicleId) === String(vehicleId);
-    }
-
-    function filterAndSortByRange(records, range, fromDate, vehicleId) {
-        return (records || []).filter(function(record) {
-            const date = recordDate(record);
-            if (!belongsToVehicle(record, vehicleId)) return false;
-            return range === 'all' || (date && date >= fromDate);
-        }).sort(function(a, b) {
-            const aDate = recordDate(a), bDate = recordDate(b);
-            return (bDate ? bDate.getTime() : 0) - (aDate ? aDate.getTime() : 0);
-        });
-    }
-
-    function coordinates(record) {
-        const rawLat = firstValue(record, ['latitude', 'lat']);
-        const rawLng = firstValue(record, ['longitude', 'lng', 'lon']);
-        if (rawLat == null || rawLng == null) return null;
-        const lat = Number(rawLat), lng = Number(rawLng);
-        if (!Number.isFinite(lat) || !Number.isFinite(lng) || Math.abs(lat) > 90 || Math.abs(lng) > 180) return null;
-        return { lat: lat, lng: lng };
-    }
-
-    function distanceBetween(a, b) {
-        const first = coordinates(a), second = coordinates(b);
-        if (!first || !second) return 0;
-        const lat1 = first.lat, lng1 = first.lng, lat2 = second.lat, lng2 = second.lng;
-        const radians = Math.PI / 180;
-        const dLat = (lat2 - lat1) * radians;
-        const dLng = (lng2 - lng1) * radians;
-        const value = Math.sin(dLat / 2) ** 2 + Math.cos(lat1 * radians) * Math.cos(lat2 * radians) * Math.sin(dLng / 2) ** 2;
-        return 6371 * 2 * Math.atan2(Math.sqrt(value), Math.sqrt(1 - value));
-    }
-
     async function loadAnalytics() {
         document.body.classList.add('analytics-mode');
-        analyticsText('analytics-message', 'Loading analytics data...');
-        const client = window.app.supabase.getClient();
-        const range = document.getElementById('analytics-range').value;
-        const fromDate = new Date();
-        if (range === 'today') fromDate.setHours(0, 0, 0, 0);
-        if (range === '7d') fromDate.setDate(fromDate.getDate() - 7);
-        if (range === '30d') fromDate.setDate(fromDate.getDate() - 30);
-
-        const vehicleId = window.appConfig && window.appConfig.vehicleId;
-        const results = await Promise.all([
-            client.from('gps_history').select('*').eq('project_id', window.appConfig.projectId).eq('vehicle_id', vehicleId).order('received_at', { ascending: false }).limit(1000),
-            client.from('stop_events').select('*').eq('project_id', window.appConfig.projectId).eq('vehicle_id', vehicleId).order('event_at', { ascending: false }).limit(1000),
-            client.from('segment_runs').select('*').eq('project_id', window.appConfig.projectId).limit(1000),
-            client.from('vehicle_eta_state').select('*').eq('project_id', window.appConfig.projectId).eq('vehicle_id', vehicleId).maybeSingle(),
-            client.from('vehicle_stop_state').select('*').eq('project_id', window.appConfig.projectId).eq('vehicle_id', vehicleId).maybeSingle()
-        ]);
-        const positions = filterAndSortByRange(results[0].data, range, fromDate, vehicleId)
-            .filter(function(position) { return recordDate(position) && coordinates(position); });
-        const events = filterAndSortByRange(results[1].data, range, fromDate, vehicleId);
-        const segments = filterAndSortByRange(results[2].data, range, fromDate, vehicleId);
-        const etaState = results[3].data || null;
-        const stopState = results[4].data || null;
-        analyticsText('analytics-gps-records', String(positions.length));
-        const arrivals = events.filter(function(event) { return String(firstValue(event, ['event_type', 'type', 'event']) || '').toLowerCase().includes('arriv'); });
-        const departures = events.filter(function(event) { return String(firstValue(event, ['event_type', 'type', 'event']) || '').toLowerCase().includes('depart'); });
-        analyticsText('analytics-arrivals', String(arrivals.length));
-        analyticsText('analytics-departures', String(departures.length));
-
-        const speeds = positions.map(function(position) { return Number(firstValue(position, ['speed_kmh', 'speed', 'velocity'])); }).filter(function(speed) {
-            return Number.isFinite(speed) && speed >= 0 && speed <= 120;
-        });
-        const moving = speeds.filter(function(speed) { return speed > 2; });
-        const currentSpeed = Number(firstValue(etaState, ['live_speed_kmh', 'estimated_speed_kmh']));
-        analyticsText('analytics-current-speed', Number.isFinite(currentSpeed) ? currentSpeed.toFixed(0) : (speeds.length ? speeds[0].toFixed(0) : '--'));
-        analyticsText('analytics-avg-speed', moving.length ? (moving.reduce(function(a,b) { return a+b; },0) / moving.length).toFixed(1) + ' km/h' : '--');
-        analyticsText('analytics-max-speed', speeds.length ? Math.max.apply(null, speeds).toFixed(1) + ' km/h' : '--');
-        analyticsText('analytics-gps-health', etaState || stopState || positions.length ? 'Connected' : 'No data');
-        analyticsText('analytics-gps-health-sub', etaState && etaState.calculated_at ? 'Last update ' + new Date(etaState.calculated_at).toLocaleString() : 'Waiting for a live update');
-
-        let distance = 0;
-        const chronologicalPositions = positions.slice().reverse();
-        for (let index = 1; index < chronologicalPositions.length; index += 1) {
-            const previous = chronologicalPositions[index - 1], current = chronologicalPositions[index];
-            const elapsedHours = (recordDate(current) - recordDate(previous)) / 3600000;
-            const legDistance = distanceBetween(previous, current);
-            const impliedSpeed = elapsedHours > 0 ? legDistance / elapsedHours : Infinity;
-            // A long telemetry gap or an impossible jump must not become travelled distance.
-            if (elapsedHours > 0 && elapsedHours <= 0.25 && impliedSpeed <= 120) distance += legDistance;
+        const request = ++analyticsRequest;
+        analyticsReport = null;
+        document.getElementById('analytics-export-button').disabled = true;
+        const refresh = document.getElementById('analytics-refresh-button');
+        refresh.disabled = true;
+        analyticsText('analytics-message', 'Loading your report…');
+        document.getElementById('analytics-view').setAttribute('aria-busy', 'true');
+        try {
+            const client = window.app.supabase.getClient();
+            const config = window.appConfig || {};
+            const projectId = config.projectId, vehicleId = config.vehicleId;
+            if (!projectId || !vehicleId) throw new Error('Choose a project with a vehicle to view its report.');
+            const range = document.getElementById('analytics-range').value;
+            const until = new Date(), from = new Date(until);
+            from.setHours(0, 0, 0, 0);
+            if (range === '7d') from.setDate(from.getDate() - 6);
+            if (range === '30d') from.setDate(from.getDate() - 29);
+            const periodStart = range === 'all' ? null : from;
+            const period = (periodStart ? periodStart.toLocaleDateString() : 'All recorded history') + ' – ' + until.toLocaleString();
+            analyticsText('analytics-period', period + ' · ' + Intl.DateTimeFormat().resolvedOptions().timeZone + ' (your local time)');
+            analyticsText('analytics-vehicle', 'Vehicle: ' + vehicleId);
+            const results = await Promise.all([
+                readHistory(client, 'gps_history', 'received_at', projectId, vehicleId, periodStart, until),
+                readHistory(client, 'stop_events', 'event_at', projectId, vehicleId, periodStart, until),
+                client.from('gps_history').select('*').eq('project_id', projectId).eq('vehicle_id', vehicleId).order('received_at', { ascending: false }).limit(1).maybeSingle(),
+                client.from('vehicle_eta_state').select('*').eq('project_id', projectId).eq('vehicle_id', vehicleId).maybeSingle(),
+                client.from('vehicle_stop_state').select('*').eq('project_id', projectId).eq('vehicle_id', vehicleId).maybeSingle(),
+                client.from('map_versions').select('map_data,published_at').eq('project_id', projectId).eq('status', 'published').order('published_at', { ascending: false, nullsFirst: false }).limit(1).maybeSingle()
+            ]);
+            if (request !== analyticsRequest || projectId !== window.appConfig.projectId || vehicleId !== window.appConfig.vehicleId) return;
+            const gps = results[0].data || [], events = results[1].data || [];
+            const latest = results[2].data, eta = results[3].data, stop = results[4].data;
+            const summary = model.summarize(gps, events, results[5].data);
+            const gpsOK = !results[0].error, eventsOK = !results[1].error;
+            const latestTime = latest && model.positionTime(latest);
+            const age = latestTime == null ? null : (Date.now() - latestTime) / 1000;
+            const fresh = age != null && age >= -60 && age <= 180 && !results[2].error;
+            analyticsText('analytics-gps-health', results[2].error ? 'Tracking unavailable' : age == null ? 'No location yet' : fresh ? 'Location up to date' : 'Location out of date');
+            analyticsText('analytics-gps-health-sub', latestTime == null ? 'Waiting for a vehicle location' : 'Last location: ' + new Date(latestTime).toLocaleString());
+            document.getElementById('analytics-live-dot').classList.toggle('stale', !fresh);
+            const stopFresh = stop && model.date(stop.updated_at) != null && Math.abs(Date.now() - model.date(stop.updated_at)) <= 180000;
+            const etaFresh = eta && model.date(eta.calculated_at) != null && Math.abs(Date.now() - model.date(eta.calculated_at)) <= 180000;
+            analyticsText('analytics-live-position', !fresh ? 'Waiting for a fresh vehicle location' : stopFresh && stop.current_stop_name ? 'At ' + stop.current_stop_name : etaFresh && eta.next_stop_name ? 'Travelling to ' + eta.next_stop_name : 'Vehicle location received');
+            const etaMinutes = eta && model.number(eta.eta_minutes);
+            analyticsText('analytics-live-meta', fresh && etaFresh && eta.next_stop_name ? 'Next: ' + eta.next_stop_name + (etaMinutes != null ? ' · Estimated arrival in ' + Math.max(0, Math.round(etaMinutes)) + ' min' : '') : 'See the map for the last recorded location.');
+            const speed = latest && model.number(latest.speed_kmh);
+            analyticsText('analytics-current-speed', fresh && speed != null && speed >= 0 && speed <= 120 ? Math.round(speed) : '—');
+            analyticsText('analytics-tours', eventsOK && !results[5].error && summary.tourCount != null ? summary.tourCount : '—');
+            analyticsText('analytics-tour-time', eventsOK ? model.duration(summary.tourSeconds) : '—');
+            analyticsText('analytics-driving', gpsOK ? model.duration(summary.driving) : '—');
+            analyticsText('analytics-stationary', gpsOK ? 'Stationary: ' + model.duration(summary.stationary) : 'Vehicle history unavailable');
+            analyticsText('analytics-distance', gpsOK && summary.distance != null ? summary.distance.toFixed(1) + ' km' : '—');
+            analyticsText('analytics-dwell', eventsOK ? model.duration(summary.dwell) : '—');
+            analyticsText('analytics-gps-records', gpsOK ? summary.records : '—');
+            const speeds = gps.map(p => model.number(p.speed_kmh)).filter(s => s != null && s > 2 && s <= 120);
+            analyticsText('analytics-avg-speed', gpsOK && speeds.length ? model.mean(speeds).toFixed(1) + ' km/h' : '—');
+            analyticsText('analytics-max-speed', gpsOK && speeds.length ? Math.max(...speeds).toFixed(1) + ' km/h' : '—');
+            const warnings = [];
+            if (!fresh) warnings.push('Vehicle tracking needs attention. Check the tracker if the service is running.');
+            if (results.some(r => r.error)) warnings.push('Some information could not be loaded. Unavailable figures are shown as —. Try refreshing or choosing a shorter period.');
+            if (summary.gaps) warnings.push('There are gaps in vehicle history. Distance and driving time are estimates from available readings.');
+            if (summary.tourCount == null) warnings.push('Tour counting needs a published route with numbered stops starting at stop 1.');
+            analyticsText('analytics-attention', warnings.length ? warnings.join(' ') : 'No tracking issues detected. Schedule delays are not assessed because no timetable is configured.');
+            document.getElementById('analytics-attention').classList.toggle('has-warning', warnings.length > 0);
+            analyticsText('analytics-message', 'Report updated at ' + until.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + '. Refresh to get the latest information.');
+            const eventBody = document.getElementById('analytics-events-body'); eventBody.innerHTML = '';
+            const stamp = ms => ms == null ? 'Not recorded' : new Date(ms).toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+            summary.visits.slice(0, 50).forEach(v => addRow(eventBody, [v.name, stamp(v.arrival), stamp(v.departure), model.duration(v.seconds)]));
+            analyticsText('analytics-events-empty', eventsOK ? 'No stop visits recorded in this period.' : 'Stop history could not be loaded.');
+            document.getElementById('analytics-events-empty').hidden = summary.visits.length > 0;
+            const routeBody = document.getElementById('analytics-segment-body'); routeBody.innerHTML = '';
+            summary.routes.forEach(r => addRow(routeBody, [r.name, r.count, model.duration(r.seconds)]));
+            analyticsText('analytics-segment-count', summary.routes.length + ' connections');
+            analyticsText('analytics-segment-empty', eventsOK ? 'Travel times appear after a recorded departure and arrival at the next stop.' : 'Travel history could not be loaded.');
+            document.getElementById('analytics-segment-empty').hidden = summary.routes.length > 0;
+            analyticsReport = { vehicle: vehicleId, period, warnings, summary, gpsOK, eventsOK, toursOK: eventsOK && !results[5].error };
+            document.getElementById('analytics-export-button').disabled = false;
+        } catch (error) {
+            if (request === analyticsRequest) {
+                analyticsText('analytics-message', error.message || 'The report could not be loaded. Please refresh.');
+                document.querySelectorAll('#analytics-view .analytics-kpi-value').forEach(el => { el.textContent = '—'; });
+                analyticsText('analytics-live-position', 'Report unavailable');
+                analyticsText('analytics-live-meta', 'Please refresh to try again.');
+                analyticsText('analytics-current-speed', '—');
+                analyticsText('analytics-gps-health-sub', '');
+                analyticsText('analytics-attention', 'The report could not be loaded. Previous results have been cleared.');
+                analyticsText('analytics-stationary', 'Vehicle history unavailable');
+                document.getElementById('analytics-live-dot').classList.add('stale');
+                document.getElementById('analytics-attention').classList.add('has-warning');
+                document.getElementById('analytics-events-body').innerHTML = '';
+                document.getElementById('analytics-segment-body').innerHTML = '';
+                analyticsText('analytics-events-empty', 'Stop history could not be loaded.');
+                analyticsText('analytics-segment-empty', 'Travel history could not be loaded.');
+                document.getElementById('analytics-events-empty').hidden = false;
+                document.getElementById('analytics-segment-empty').hidden = false;
+            }
+        } finally {
+            if (request === analyticsRequest) {
+                refresh.disabled = false;
+                document.getElementById('analytics-view').setAttribute('aria-busy', 'false');
+            }
         }
-        analyticsText('analytics-distance', positions.length > 1 ? distance.toFixed(1) + ' km' : '--');
-        const datedPositions = positions.map(recordDate).filter(Boolean);
-        const operatingMs = datedPositions.length > 1 ? datedPositions[0] - datedPositions[datedPositions.length - 1] : 0;
-        analyticsText('analytics-operating-time', operatingMs > 0 ? (operatingMs / 3600000).toFixed(1) + ' h' : '--');
-        const dwellValues = departures.map(function(event) { return Number(firstValue(event, ['dwell_seconds', 'dwell_time_seconds', 'stopped_seconds'])); }).filter(Number.isFinite);
-        analyticsText('analytics-dwell', dwellValues.length ? (dwellValues.reduce(function(a, b) { return a + b; }, 0) / dwellValues.length / 60).toFixed(1) + ' min' : '--');
-
-        const stateName = firstValue(stopState, ['current_stop_name', 'candidate_stop_name', 'expected_next_stop_number']);
-        const nextName = firstValue(etaState, ['next_stop_name', 'next_stop_number']);
-        analyticsText('analytics-live-position', stateName ? 'At or near ' + stateName : (nextName ? 'Travelling to ' + nextName : 'Waiting for vehicle state'));
-        const etaMinutes = Number(firstValue(etaState, ['eta_minutes']));
-        analyticsText('analytics-live-meta', nextName ? 'Next: ' + nextName + (Number.isFinite(etaMinutes) ? ' · ETA ' + Math.max(0, Math.round(etaMinutes)) + ' min' : '') : '--');
-
-        const errors = results.filter(function(result) { return result.error; });
-        if (errors.length) console.warn('Analytics query errors:', errors.map(function(result) { return result.error; }));
-        const hasHistory = positions.length || events.length || segments.length;
-        analyticsText('analytics-message', errors.length
-            ? 'Live data is shown. Some historical analytics are not available to this account.'
-            : (hasHistory ? 'Analytics updated.' : 'Live vehicle status is connected. Historical totals will appear after GPS and stop history is recorded.'));
-
-        const eventBody = document.getElementById('analytics-events-body');
-        eventBody.innerHTML = '';
-        events.slice(0, 50).forEach(function(event) {
-            const row = document.createElement('tr');
-            const eventDate = recordDate(event);
-            [firstValue(event, ['stop_name', 'stop_id', 'stop_number']) || '--', firstValue(event, ['event_type', 'type']) || '--', eventDate ? eventDate.toLocaleString() : '--'].forEach(function(value) {
-                const cell = document.createElement('td'); cell.textContent = value; row.appendChild(cell);
-            });
-            eventBody.appendChild(row);
-        });
-        document.getElementById('analytics-events-empty').style.display = events.length ? 'none' : 'block';
-
-        const segmentBody = document.getElementById('analytics-segment-body');
-        segmentBody.innerHTML = '';
-        segments.slice(0, 50).forEach(function(segment) {
-            const row = document.createElement('tr');
-            [firstValue(segment, ['segment_name', 'segment_id']) || '--', firstValue(segment, ['run_count']) || 1, firstValue(segment, ['average_time', 'duration_seconds']) || '--', firstValue(segment, ['average_speed', 'average_speed_kmh']) || '--', firstValue(segment, ['stopped_time', 'stopped_seconds']) || '--'].forEach(function(value) {
-                const cell = document.createElement('td'); cell.textContent = value; row.appendChild(cell);
-            });
-            segmentBody.appendChild(row);
-        });
-        if (!segments.length && etaState) {
-            const row = document.createElement('tr');
-            const segmentName = (etaState.from_stop_name || etaState.from_stop_number || '--') + ' → ' + (etaState.next_stop_name || etaState.next_stop_number || '--');
-            [segmentName, 'Live', etaState.eta_minutes != null ? etaState.eta_minutes + ' min ETA' : '--', etaState.live_speed_kmh != null ? etaState.live_speed_kmh + ' km/h' : '--', '--'].forEach(function(value) {
-                const cell = document.createElement('td'); cell.textContent = value; row.appendChild(cell);
-            });
-            segmentBody.appendChild(row);
-        }
-        analyticsText('analytics-segment-count', segments.length ? segments.length + ' segments' : (etaState ? 'Live segment' : '0 segments'));
-        document.getElementById('analytics-segment-empty').style.display = segments.length || etaState ? 'none' : 'block';
+    }
+    function exportAnalytics() {
+        if (!analyticsReport) return;
+        const { vehicle, period, warnings, summary: s, gpsOK, eventsOK, toursOK } = analyticsReport;
+        const rows = [['Vehicle', vehicle], ['Period', period], ['Report timezone', Intl.DateTimeFormat().resolvedOptions().timeZone],
+            ['Notes', warnings.join(' ')], ['Tours confirmed against current published route', toursOK ? s.tourCount : 'Unavailable'],
+            ['Average tour duration', eventsOK ? model.duration(s.tourSeconds) : 'Unavailable'], ['Estimated driving time', gpsOK ? model.duration(s.driving) : 'Unavailable'],
+            ['Estimated stationary time', gpsOK ? model.duration(s.stationary) : 'Unavailable'], ['Distance (km)', gpsOK ? s.distance : 'Unavailable'], [],
+            ['Stop', 'Arrival (UTC)', 'Departure (UTC)', 'Duration'], ...s.visits.map(v => [v.name, v.arrival == null ? '' : new Date(v.arrival).toISOString(), v.departure == null ? '' : new Date(v.departure).toISOString(), model.duration(v.seconds)])];
+        const csv = rows.map(row => row.map(value => {
+            let text = value == null ? '' : String(value);
+            if (/^[=+@\-\t\r]/.test(text)) text = "'" + text;
+            return '"' + text.replace(/"/g, '""') + '"';
+        }).join(',')).join('\r\n');
+        const url = URL.createObjectURL(new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' }));
+        const link = document.createElement('a'); link.href = url; link.download = 'business-overview.csv'; link.click();
+        window.setTimeout(() => URL.revokeObjectURL(url), 1000);
     }
 
     const actions = {
@@ -284,6 +268,7 @@
             return target;
         },
         loadAnalyticsDashboard: loadAnalytics,
+        exportAnalytics: exportAnalytics,
         searchOpenStreetMapPOIs: async function() {
             const map = adminGetMap(), center = map.getCenter();
             const category = document.getElementById('poi-manager-category').value;
