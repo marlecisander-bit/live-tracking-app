@@ -6,6 +6,18 @@ This is a **reconstructed production baseline**, descended from GitHub master `5
 
 The worktree was created without checking out the old root layout. No original workspace files were deleted or moved. The parent commit retains the old GitHub tree; the reconstruction branch uses the explicit frontend/backend layout instead. This is source reconciliation in a new branch, not cleanup of the original working directory. No commit is pushed or deployed by this project.
 
+## Canonical repository and release record
+
+- Repository: https://github.com/marlecisander-bit/live-tracking-app
+- Canonical branch: `master` after the reviewed history-preserving merge of [PR #1](https://github.com/marlecisander-bit/live-tracking-app/pull/1).
+- Canonical local worktree: `/Users/aleksandermarleci/Desktop/Projects Dev/live-tracking-app-canonical` (established after successful source synchronization).
+- Initial accepted frontend publication: `6addff8cf909a17e9c8131a9` at `2026-10-25T13:15:43.291Z`, source `bdd17e34df13baec2b33a064a3623f4046d8bea0`; runtime baseline `2ef7bf1f4fad6b587c872826961245b4115f5ac0`.
+- Exact runtime artifact: [release/frontend-manifest.json](release/frontend-manifest.json), 112 files; documentation-only synchronization builds must match these same hashes.
+- Immediate prior rollback: `6adde7b56701005a9f6facc9`; the fresh verified rollback is retained outside the deploy artifact.
+- The final master source/deploy association is recorded on [PR #1](https://github.com/marlecisander-bit/live-tracking-app/pull/1) and the owner's final release receipt. A later documentation-only Netlify deployment may have a newer ID while retaining the same application artifact.
+
+Start future work from the canonical master worktree. The older `live-tracking-app-master` directory is an untouched legacy/reference workspace with unpublished material; do not build or deploy it. Archive targets remain in place pending individual path approval. Historical reconstruction reports describe earlier states; [release/DEPLOYMENT-RECORD.md](release/DEPLOYMENT-RECORD.md) is the application release record.
+
 ## Local workflow
 
 Use Node 24 and npm with the committed lockfile:
@@ -44,6 +56,6 @@ The first performs one public GET compatibility read. The second previews local 
 - Backend Edge SDK imports remain exactly as downloaded. `esm.sh/@supabase/supabase-js@2` is floating; its historical resolved closure is not recovered. Backend redeployment/build reproduction remains blocked pending separate closure review. Static frontend build and local contract tests do not depend on resolving that import.
 - Historical applied migrations under `provenance/applied-migration-sources/` match 19 existing ledger checksums. They are evidence only; no script applies them. Unactivated A/B/C/D packages are excluded.
 
-See [final decision](reports/FINAL-GO-NOGO.md), [production parity](reports/PRODUCTION-PARITY.md), [dependencies](reports/DEPENDENCIES-AND-BUILD.md), [test reconciliation](reports/RC1-TEST-RECONCILIATION.md), [stop acceptance](reports/STOP-DESIGN-ACCEPTANCE.md), [provenance](reports/PROVENANCE-FINDINGS.md) and [cleanup proposal](reports/SAFE-CLEANUP-PROPOSAL.md).
+See [historical reconstruction-phase decision](reports/FINAL-GO-NOGO.md), [production parity](reports/PRODUCTION-PARITY.md), [dependencies](reports/DEPENDENCIES-AND-BUILD.md), [test reconciliation](reports/RC1-TEST-RECONCILIATION.md), [stop acceptance](reports/STOP-DESIGN-ACCEPTANCE.md), [provenance](reports/PROVENANCE-FINDINGS.md) and [cleanup proposal](reports/SAFE-CLEANUP-PROPOSAL.md).
 
 The owner has authorized controlled GitHub synchronization and a static-frontend release, subject to final gates documented in `release/RELEASE-PLAN.md`. No backend rebuild/deploy, SQL/configuration change, native change, destructive cleanup or individually unapproved archival is included. Historical reconstruction-phase reports record the earlier authorization boundary; the release plan and final deployment record supersede that status.

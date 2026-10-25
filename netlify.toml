@@ -1,4 +1,4 @@
-# Reconstructed portable build proposal. This file has NOT been applied to Netlify.
+# Canonical reconstructed static build; application release recorded in release/DEPLOYMENT-RECORD.md.
 # Backend functions remain an independent Supabase boundary and are never bundled here.
 [build]
   command = "npm ci --ignore-scripts && npm run check:platform && npm run lint && npm test && npm run typecheck && npm run build"
