@@ -1,0 +1,65 @@
+/* Final operational layout. All overlays belong to the map viewport, including in frames. */
+html, body { height:100%; overflow:hidden; }
+#app { position:relative; inset:auto; width:100%; height:100vh; height:100dvh; min-height:0; container-type:size; container-name:live-map; }
+#app[data-presentation] #map { position:absolute; inset:0; height:100%; }
+#app[data-presentation] #next-card {
+ top:max(12px, env(safe-area-inset-top)); left:auto; right:max(12px, env(safe-area-inset-right));
+ width:min(360px, calc(100% - 80px - env(safe-area-inset-left) - env(safe-area-inset-right)));
+ padding:14px 16px; border:1px solid #e7e9ec; border-radius:16px; background:#fff;
+ box-shadow:0 4px 20px #172b4d20; max-height:calc(100% - var(--map-bottom, 100px) - 24px); overflow-y:auto;
+}
+#app[data-presentation] #next-card-top { display:flex; align-items:center; gap:8px; }
+#app[data-presentation] #next-label { font-size:11px; line-height:1.4; letter-spacing:.04em; color:#545b65; }
+#operational-live { margin-left:auto; color:#087638; font-size:12px; font-weight:700; white-space:nowrap; }
+#operational-live::before { content:''; display:inline-block; width:6px; height:6px; margin-right:4px; border-radius:50%; background:currentColor; }
+#operational-stop-badge { flex-shrink:0; width:26px; height:26px; display:inline-flex; align-items:center; justify-content:center; border-radius:50%; background:#087638; color:white; font-weight:700; font-size:14px; }
+#operational-stop-badge[hidden], #operational-live[hidden] { display:none; }
+#app[data-presentation] #van-movement-status { display:block; margin:6px 0 0; font-size:20px; font-weight:750; line-height:1.25; overflow-wrap:anywhere; color:#202731; }
+#app[data-presentation] #next-card #next-destination-row { display:flex !important; align-items:baseline; gap:4px; margin-top:6px; }
+#app[data-presentation] #next-destination-label { display:inline; font-size:13px; color:#545b65; text-transform:none; flex-shrink:0; }
+#app[data-presentation] #next-stop-name { display:block; min-width:0; font-size:14px; line-height:1.4; font-weight:500; overflow-wrap:anywhere; white-space:normal; }
+#app[data-presentation] #next-meta { margin-top:7px; }
+#app[data-presentation] #eta-value { font-size:16px; }
+#app[data-presentation] #next-meta > span:nth-child(2)::before { content:'ETA: '; font-size:14px; }
+#app[data-presentation] #eta-unavailable, #app[data-presentation] #next-stop-distance, #app[data-presentation] #next-meta .vehicle-inline-icon { display:none; }
+#app[data-presentation] #next-card[data-eta="false"] #next-meta,
+#app[data-presentation] #next-card[data-layout="loading"] #next-destination-row { display:none !important; }
+#app[data-presentation] #tourist-location-warning { font-size:12px; line-height:1.4; }
+#app[data-presentation] #map-controls.widget-action-bar {
+ position:absolute; left:50%; right:auto; transform:translateX(-50%); bottom:calc(24px + env(safe-area-inset-bottom));
+ width:min(400px, calc(100% - 24px - env(safe-area-inset-left) - env(safe-area-inset-right)));
+ height:auto; padding:5px; gap:4px; border-radius:16px; border:1px solid #e7e9ec;
+ box-shadow:0 4px 20px #172b4d26; background:rgba(255,255,255,.98);
+}
+#app[data-presentation] #map-controls > button { height:52px; min-height:44px; min-width:44px; padding:3px 1px; gap:3px; border-radius:11px; background:transparent; color:#252d38; box-shadow:none; }
+#app[data-presentation] .map-control-icon { width:24px; height:24px; }
+#app[data-presentation] .map-control-icon svg { width:24px; height:24px; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+#app[data-presentation] .map-control-label { font-size:12px; line-height:16px; font-weight:650; }
+#btn-find-me .map-control-icon { color:#0875E1; }
+#btn-route .map-control-icon { color:#F28C00; }
+#btn-stops .map-control-icon { color:#8530D9; }
+#app[data-presentation] #btn-find-me.active { background:#e8f3ff; }
+#app[data-presentation] #btn-find-van.active { background:#fcebed; }
+#app[data-presentation] #btn-route.active { background:#fff1df; }
+#app[data-presentation] #btn-stops.active { background:#f3eaff; }
+#app[data-presentation] .leaflet-top.leaflet-left { top:max(12px, env(safe-area-inset-top)); bottom:auto; }
+#app[data-presentation] .leaflet-control-zoom { display:block; margin:0 0 0 max(10px, env(safe-area-inset-left)); }
+#app[data-presentation] .leaflet-bottom { bottom:env(safe-area-inset-bottom); }
+#app[data-presentation] #nearest-stop-card { bottom:calc(var(--map-bottom) + 10px); }
+#app[data-presentation] #stops-panel { top:auto; bottom:var(--map-bottom); height:calc(100% - var(--map-bottom) - 12px); max-height:650px; }
+#app[data-presentation] #map-loading { top:50%; pointer-events:none; max-width:calc(100% - 32px); }
+.operational-popup { min-width:120px; max-width:220px; overflow-wrap:anywhere; }
+.operational-popup-number { color:#087638; font-size:11px; font-weight:700; margin-bottom:4px; }
+.operational-popup strong { font-size:17px; }
+.operational-popup p { margin:8px 0 0; }
+@container live-map (max-width:359px) {
+ #app[data-presentation] #next-card { padding:12px; }
+ #app[data-presentation] #van-movement-status { font-size:18px; }
+ #app[data-presentation] #next-card-top { flex-wrap:wrap; gap:5px; }
+}
+@container live-map (max-height:360px) {
+ #app[data-presentation] #next-card { padding:8px 12px; }
+ #app[data-presentation] #van-movement-status { font-size:17px; margin-top:3px; }
+ #app[data-presentation] #map-controls > button { height:46px; }
+}
+@media (prefers-reduced-motion:reduce) { #app *, #app *::before { scroll-behavior:auto; transition:none !important; animation:none !important; } }

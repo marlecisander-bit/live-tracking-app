@@ -1,0 +1,33 @@
+/* Shared stop artwork. No navigation dock or tracking styles. */
+.stop-photo-marker { background:transparent; border:0; }
+.stop-marker-shell { display:block; position:relative; width:44px; height:44px; }
+.stop-portrait { --stop-color:#F20544; position:relative; display:block; width:64px; height:64px; }
+.stop-marker-shell > .stop-portrait { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); }
+.stop-photo-frame { position:relative; display:block; width:100%; height:100%; border:3px solid var(--stop-color); border-radius:50%; background:#f2f3f5; box-shadow:0 3px 9px #182b3633; overflow:hidden; }
+.stop-photo { width:100%; height:100%; object-fit:cover; display:block; }
+.stop-photo[hidden] { display:none; }
+.stop-photo-fallback { display:none; padding:5px; color:#343c46; text-align:center; font:600 9px/1.15 Arial,sans-serif; }
+.is-photo-missing .stop-photo-fallback { display:grid; place-items:center; height:100%; }
+.stop-number-badge { position:absolute; top:-5px; left:-5px; display:grid; place-items:center; width:25px; height:25px; border:2px solid white; border-radius:50%; background:var(--stop-color); color:white; font:750 12px/1 Arial,sans-serif; box-shadow:0 2px 5px #182b3633; text-shadow:0 1px 2px #0009; }
+.stop-name-pill { position:absolute; top:calc(100% - 3px); left:50%; transform:translateX(-50%); width:max-content; max-width:132px; border:1px solid white; border-radius:14px; padding:4px 8px; background:var(--stop-color); color:white; font:650 11px/1.25 Arial,sans-serif; text-align:center; overflow-wrap:anywhere; box-shadow:0 2px 5px #182b3633; text-shadow:0 1px 2px #0009; }
+.stop-name-pill { display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2; overflow:hidden; }
+.stop-compact { display:none; position:absolute; inset:5px; align-items:center; justify-content:center; border:2px solid white; border-radius:50%; background:var(--stop-color); color:white; font:750 14px Arial,sans-serif; box-shadow:0 2px 7px #182b3640; text-shadow:0 1px 2px #0009; }
+.stop-photo-compact .stop-marker-shell>.stop-portrait { display:none; }
+.stop-photo-compact .stop-compact { display:flex; }
+.stop-photo-marker:focus-visible { outline:3px solid #192d45; outline-offset:5px; border-radius:50%; }
+#app .operational-popup { border-top:4px solid var(--stop-color,#087638); padding-top:8px; }
+#app .operational-popup-number { color:var(--stop-color,#087638); }
+#app[data-presentation] #stops-panel { position:absolute; left:auto; right:max(10px,env(safe-area-inset-right)); width:min(420px,calc(100% - 20px - env(safe-area-inset-left) - env(safe-area-inset-right))); height:min(480px,calc(100% - var(--map-bottom,100px) - 16px)); min-height:0; max-height:none; border-radius:18px; overflow:hidden; }
+#app #panel-backdrop { position:absolute; bottom:var(--map-bottom,100px); }
+#app #stop-arrivals-list { overscroll-behavior:contain; touch-action:pan-y; padding:8px 10px 12px; min-height:0; }
+#app .arrival-item { display:grid; grid-template-columns:52px minmax(0,1fr); gap:10px; margin-bottom:7px; min-height:72px; border:1px solid var(--stop-color); border-radius:13px; padding:10px; background:var(--stop-tint); color:#202731; }
+#app .arrival-item:is(.current,.next,.completed) { background:var(--stop-tint); border-color:var(--stop-color); }
+#app .arrival-item .stop-portrait { width:46px; height:46px; grid-row:1/3; }
+#app .arrival-item .stop-number-badge { width:22px; height:22px; font-size:11px; }
+#app .arrival-item .arrival-name { color:#202731; font-size:14px; font-weight:650; line-height:1.3; overflow-wrap:anywhere; }
+#app .arrival-time { grid-column:2; text-align:left; font-size:12px; font-weight:500; color:#44505f; white-space:normal; line-height:1.35; }
+#app .arrival-item:focus-visible { outline:3px solid #192d45; outline-offset:-3px; }
+#stop-appearance-group input[type=url] { width:100%; }
+#stop-appearance-group input[type=color] { width:100%; min-height:44px; padding:4px; }
+#stop-appearance-group small { display:block; margin:6px 0 12px; line-height:1.4; color:#59626e; }
+@media (min-width:768px) { .stop-marker-shell>.stop-portrait { width:72px; height:72px; } .stop-name-pill { font-size:12px; max-width:144px; } }

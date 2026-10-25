@@ -1,0 +1,74 @@
+[
+  {
+    "path": "index.html",
+    "new": false,
+    "before_sha256": "ae4c248bbaa76500b62d4b06669c4e7c14c90f01bf82704c4c5335fdd132f329",
+    "after_sha256": "21491fc4bfcfd8d5f9acab38f3a9e1bdfc1fe0aa0c7e1f19d5de4262afe14539"
+  },
+  {
+    "path": "live-map.html",
+    "new": false,
+    "before_sha256": "c41fea5ae8df80a7f6a1d3eb1c41321acc4ef0470490fd359f27a848ac3cc73d",
+    "after_sha256": "e665016baec2f8803a066208751e72685160e2a7a0d8d89d7a2c9ae13d427fd2"
+  },
+  {
+    "path": "css/stop-design.css",
+    "new": true,
+    "before_sha256": null,
+    "after_sha256": "c357734b1bc3f8ceb7827fb2634606c560cb4baa3c0629d96f93df3133a9188c"
+  },
+  {
+    "path": "js/shared/stop-design-defaults.js",
+    "new": true,
+    "before_sha256": null,
+    "after_sha256": "84a34bf91702e05a57d2936fa19cbf2ddf19fbb2ab3191dea18d5e74b30e13ad"
+  },
+  {
+    "path": "js/shared/stop-design.js",
+    "new": true,
+    "before_sha256": null,
+    "after_sha256": "868962900373ba65688217158f96a90862eca20ce9a742491d6bdaf7277bb8d8"
+  },
+  {
+    "path": "js/live-map/stop-marker-layout.js",
+    "new": true,
+    "before_sha256": null,
+    "after_sha256": "bf5f74041d74a52edd328749a008987c539d26816b4afba040078997b9e0486a"
+  },
+  {
+    "path": "js/live-map/map-icons.js",
+    "new": false,
+    "before_sha256": "904194dfff9f6ba401944a31cd565d871ebb0bf0e37b1283ed58e190c04d306c",
+    "after_sha256": "ac5a8206a8ea25b8ab3371ec3af4e90e8cec7b4d615abee0b4edb457a3abcf58"
+  },
+  {
+    "path": "js/live-map/load-published-map.js",
+    "new": false,
+    "before_sha256": "1ff0bd884755908f1fd9d15297f9a91109bbf401260211e56e5bab502de5632d",
+    "after_sha256": "d4601a5f8d123fc9a65a11fec980da0404441267f1816431c5547cfe6732dee4"
+  },
+  {
+    "path": "js/live-map/map-popups.js",
+    "new": false,
+    "before_sha256": "daeec020084053e2e6c632b25272046c536fcb19306f7e843d699b31cad0bfa7",
+    "after_sha256": "e87ba43241b870383f126bff9843dcb5ea331cabca4dd738a9e7759c9d4195ab"
+  },
+  {
+    "path": "js/live-map/stops-panel.js",
+    "new": false,
+    "before_sha256": "3b7737acb6d7dec3822a0e71da2153a8d4090ef24c3fc960dd782d758e86ffcf",
+    "after_sha256": "f52652d4b0b8322190f5f11ae7649815724347bd34367334f454f5dcbb6d96b5"
+  },
+  {
+    "path": "js/admin/admin-map-data.js",
+    "new": false,
+    "before_sha256": "23e015303f08928d70cff88fcde42f510706b310554c09a47275c6212cd19033",
+    "after_sha256": "447f715695834a5a6dcbbbe82646818f623cd66b2ee446fed51110fe8c19cc61"
+  },
+  {
+    "path": "js/admin/admin-editing-and-dialogs.js",
+    "new": false,
+    "before_sha256": "2a5b34d1444e8ad13a8b00aea016bd3cc66ec6868cc88e6d61721f3861918e44",
+    "after_sha256": "206f6aa0053392a0ff716257293d85e55a22388214831800a8172608cdb7d16a"
+  }
+]

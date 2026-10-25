@@ -1,0 +1,7 @@
+* text=auto eol=lf
+# Frozen runtime and provenance bytes must survive checkout unchanged.
+frontend/** -text
+backend/functions/** -text
+tests/fixtures/before/** -text
+provenance/applied-migration-sources/** -text
+provenance/original-tests/** -text

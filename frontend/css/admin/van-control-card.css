@@ -1,0 +1,37 @@
+/* Last admin stylesheet: compact map controls, with a phone bottom sheet. */
+#gps-card { width: 520px; max-width: calc(100% - 32px); min-width: 0; left: 16px; right: auto; bottom: 32px; padding: 10px; border: 1px solid #e5e7eb; border-radius: 14px; max-height: none; overflow: visible; box-shadow: 0 5px 22px #18202b1a; }
+.van-card-summary { display: grid; grid-template-columns: minmax(0, 1fr) auto auto auto; gap: 12px; align-items: center; min-height: 48px; }
+.van-card-identity { min-width: 0; }
+#gps-title { display: flex; align-items: center; margin: 0 0 4px; font-size: 12px; white-space: nowrap; }
+#gps-source-active { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #64748b; font-size: 12px; }
+.van-card-readings { display: flex; flex-direction: column; gap: 4px; font-size: 12px; white-space: nowrap; }
+.van-card-readings > span { color: #64748b; font-size: 11px; }
+#gps-card .van-find, #van-details-toggle { display: inline-flex; align-items: center; justify-content: center; gap: 5px; min-height: 44px; min-width: 44px; padding: 0 10px; margin: 0; width: auto; font: inherit; font-weight: 600; border-radius: 9px; white-space: nowrap; cursor: pointer; }
+#van-details-toggle { border: 1px solid #e2e8f0; background: #f8fafc; color: #334155; }
+#gps-card button:focus-visible, #gps-card summary:focus-visible { outline: 3px solid #2563eb; outline-offset: 2px; }
+#gps-card .live-dot { flex: 0 0 7px; height: 7px; background: #269363; }
+#gps-card[data-state="GPS_DELAYED"] .live-dot { background: #c48112; }
+#gps-card[data-state="GPS_OFFLINE"] .live-dot { background: #b45353; }
+#van-card-details { border-top: 1px solid #e5e7eb; margin-top: 10px; padding: 4px 2px; max-height: min(52dvh, 440px); overflow: auto; overscroll-behavior: contain; }
+#van-card-details[hidden] { display: none; }
+#gps-card .gps-source-field { font-size: 12px; }
+#gps-card select { min-height: 44px; font-size: 16px; }
+#gps-card details { width: auto; max-width: none; margin-top: 8px; }
+#gps-card summary { min-height: 44px; align-content: center; cursor: pointer; font-size: 12px; font-weight: 600; }
+#gps-card .gps-device-summary span { font-size: 11px; padding: 8px; }
+#gps-card .gps-telemetry-grid { max-height: none; }
+#gps-card .gps-telemetry-grid dt, #gps-card .gps-telemetry-grid dd { font-size: 12px; }
+#gps-certification-note { font-size: 12px; line-height: 1.5; color: #64748b; }
+@media (max-width: 700px) {
+    #gps-card { left: max(8px, env(safe-area-inset-left)); right: max(8px, env(safe-area-inset-right)); bottom: calc(80px + env(safe-area-inset-bottom)); width: auto; max-width: none; padding: 8px 10px; }
+    .van-card-summary { grid-template-columns: minmax(0, 1fr) auto 44px; gap: 2px 6px; min-height: 56px; }
+    .van-card-identity { grid-column: 1; grid-row: 1; display: flex; flex-wrap: wrap; gap: 0 6px; align-items: center; }
+    #gps-title { font-size: 11px; margin: 0; }
+    #gps-source-active { font-size: 11px; max-width: 115px; }
+    #van-details-toggle { grid-column: 3; grid-row: 1 / span 2; padding: 0; font-size: 20px; }
+    .van-details-label { display: none; }
+    .van-card-readings { grid-column: 1; grid-row: 2; flex-direction: row; flex-wrap: wrap; gap: 3px 8px; }
+    #gps-card .van-find { grid-column: 2; grid-row: 1 / span 2; padding: 0 8px; }
+    #van-card-details { max-height: max(80px, calc(100dvh - var(--ss-header-height) - 230px - env(safe-area-inset-bottom))); }
+    #map-area .leaflet-bottom.leaflet-left { bottom: calc(192px + env(safe-area-inset-bottom)); }
+}

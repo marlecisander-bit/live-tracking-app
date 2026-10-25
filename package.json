@@ -1,0 +1,29 @@
+{
+  "name": "shkodra-reconstructed-production-plus-stops",
+  "private": true,
+  "version": "0.0.0",
+  "engines": {
+    "node": ">=24 <25"
+  },
+  "scripts": {
+    "lint": "node tools/lint.cjs",
+    "check:parity": "node tools/check.cjs",
+    "test:frontend": "node tests/run-frontend.cjs",
+    "test:rc1": "node tests/test-system-live-state.cjs && node tests/test-departure-sequence.cjs",
+    "test:integration": "node tests/test-provider-integration.cjs",
+    "test:backend": "node tests/test-worker-contract.cjs",
+    "typecheck": "tsc --noEmit --skipLibCheck --target es2022 --module esnext --moduleResolution bundler backend/functions/_shared/stop-transition.ts",
+    "test:browser": "node tests/browser.cjs",
+    "test": "npm run test:frontend && npm run test:rc1 && npm run test:backend && npm run test:integration",
+    "build": "node tools/build.cjs",
+    "serve": "node tools/serve.cjs",
+    "check:platform": "node tools/check-platform.cjs",
+    "test:hosted": "node tests/hosted-readonly.cjs"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "0.5.8",
+    "leaflet": "1.9.4",
+    "playwright-core": "1.62.1",
+    "typescript": "5.9.3"
+  }
+}

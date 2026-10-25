@@ -1,0 +1,1 @@
+const {spawnSync}=require('child_process');for(const f of ['test-shared-tracking.cjs','test-tracking-stream.cjs','test-public-freshness.cjs','test-eta-display.cjs']){const r=spawnSync(process.execPath,['tests/'+f],{stdio:'inherit'});if(r.status!==0)process.exit(r.status||1)}

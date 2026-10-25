@@ -1,0 +1,1 @@
+Historical applied-source evidence only. All 19 files match the existing release_metadata ledger checksums. They are not a new migration plan and no build/test/deploy command applies them. Unactivated A/B/C/D proposals are excluded. This ledger and captured RLS/routine metadata do not prove all later managed-platform or manual changes are reconstructible.
