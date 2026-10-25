@@ -46,4 +46,4 @@ The first performs one public GET compatibility read. The second previews local 
 
 See [final decision](reports/FINAL-GO-NOGO.md), [production parity](reports/PRODUCTION-PARITY.md), [dependencies](reports/DEPENDENCIES-AND-BUILD.md), [test reconciliation](reports/RC1-TEST-RECONCILIATION.md), [stop acceptance](reports/STOP-DESIGN-ACCEPTANCE.md), [provenance](reports/PROVENANCE-FINDINGS.md) and [cleanup proposal](reports/SAFE-CLEANUP-PROPOSAL.md).
 
-No push, merge, Netlify/Vercel deployment, production migration/configuration change, reset, prune, deletion or obsolete-folder archiving is authorized or performed. Remote actions and cleanup require separate owner approval.
+The owner has authorized controlled GitHub synchronization and a static-frontend release, subject to final gates documented in `release/RELEASE-PLAN.md`. No backend rebuild/deploy, SQL/configuration change, native change, destructive cleanup or individually unapproved archival is included. Historical reconstruction-phase reports record the earlier authorization boundary; the release plan and final deployment record supersede that status.

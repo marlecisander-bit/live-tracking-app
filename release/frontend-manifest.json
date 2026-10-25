@@ -1,0 +1,681 @@
+{
+  "sourceCommit": "2ef7bf1f4fad6b587c872826961245b4115f5ac0",
+  "baseline": "6adde7b56701005a9f6facc9",
+  "files": [
+    {
+      "path": "_headers",
+      "size": 190,
+      "sha1": "2c5cfcc19e49a7c94e462500c30f54784ad6d40f",
+      "sha256": "e8c22492d59b3d5bcbb473a32693c3838a29738658083e6b89bc0cbe5fff6968"
+    },
+    {
+      "path": "assets/brand/sightseeing-shkodra-brand-sheet.svg",
+      "size": 286930,
+      "sha1": "a35e61a6cf7cad210885c426bf00fa240755782e",
+      "sha256": "d1aac40587246b79ee4b98b81e234e694c1ee6a31d9f6ce54a4efdcd34c4d20d"
+    },
+    {
+      "path": "assets/brand/sightseeing-shkodra-light.svg",
+      "size": 286928,
+      "sha1": "6ef256ee35c2a4be26a1710413e0550434a67eff",
+      "sha256": "392441091cd381379e103e332a16063463857bff1bd703f227f0c53712da4b37"
+    },
+    {
+      "path": "assets/brand/sightseeing-shkodra-red.svg",
+      "size": 286927,
+      "sha1": "c007f0ccf831347a22fc3c88a79fe751a2a78546",
+      "sha256": "e7692ccc9f7d9cc4a06807f336fc50ca90d0800224bb71fc2ed8c845e8374551"
+    },
+    {
+      "path": "assets/brand/sightseeing-van.svg",
+      "size": 6735,
+      "sha1": "eccb51c61e4b6d36dc5e563f3cac079406e1d178",
+      "sha256": "888f450c3f4360fa93112770e4d36e174d7942e0de1d501e57016eb6be525dd2"
+    },
+    {
+      "path": "css/admin/admin-interface.css",
+      "size": 28263,
+      "sha1": "36ee54d820a608226fb7c86f66613e5f3da4e0c6",
+      "sha256": "b30cb6696a8fbbbcf05a127f1be6581539fc5916a92499e4f73718c8ea2153f1"
+    },
+    {
+      "path": "css/admin/base-and-login.css",
+      "size": 2575,
+      "sha1": "40bbbde06e7b3af5740d51a343a90b56de8b830c",
+      "sha256": "75bac046d8efa71d1c8c9bb90ab0812a2fe8235df9e72ba394f7ce3de39ff223"
+    },
+    {
+      "path": "css/admin/bus-status-and-publishing.css",
+      "size": 3062,
+      "sha1": "5dfd504a6b2cabacd0e9430a2cb4f46e3e9fb9e0",
+      "sha256": "e3ef2af21936d0091a836635665cb7ef09086f0e47132cc4c6b902989d75de80"
+    },
+    {
+      "path": "css/admin/buttons-and-inputs.css",
+      "size": 2083,
+      "sha1": "e1a026279a442a7d03bd1b98af7fdfffd98ef612",
+      "sha256": "b5f9b1f94ef471981d6d8114b876264019159ed19c5d1a87d35b331473b45f69"
+    },
+    {
+      "path": "css/admin/export-map.css",
+      "size": 3062,
+      "sha1": "34c5f05f96a3f478e82998523a800ac9e344583e",
+      "sha256": "8c84d56561efa42c2997ccb1906313630024425b761e91dac55dac216834262e"
+    },
+    {
+      "path": "css/admin/poi-manager.css",
+      "size": 5907,
+      "sha1": "3b06c134f44eac502f9e463d0e9ae1c62dd059f8",
+      "sha256": "371935a6f317504f37043b86a1611c7b28c562cac972f6038adc69e620b59ca6"
+    },
+    {
+      "path": "css/admin/stop-and-route-editors.css",
+      "size": 11044,
+      "sha1": "73e1958ea626bc01d3b7e64078d8a0cc72eb41b7",
+      "sha256": "6b5f5a8c1a0d19ec2ea5131ce3908aaadb6a119fabad14197bf79c18e82ab62f"
+    },
+    {
+      "path": "css/admin/tablet-and-mobile.css",
+      "size": 6338,
+      "sha1": "a8ea59d54f72f4f36fc09254abdd1800eab43fd9",
+      "sha256": "b045bb20cbe7ade81424bbf52817acda1c74f1349c630d4ba89c971aecaefd85"
+    },
+    {
+      "path": "css/admin/van-control-card.css",
+      "size": 3523,
+      "sha1": "dcd35c8c5120b73e55d14e8a01f2bacddb7ddf01",
+      "sha256": "2f3ebcc20e48ebe8186b1d952b00dc4019bd6a2fa5e7e82720ce95975d01bef6"
+    },
+    {
+      "path": "css/admin/workspace-and-map.css",
+      "size": 5348,
+      "sha1": "3892fe29f728bdfb36cfb0b1809cc54e6f318ca6",
+      "sha256": "23ed0fed34b42a6c5c31ca364cf8b83322d7d43d9e7bad04e3b6fe1b35a83959"
+    },
+    {
+      "path": "css/live-map/leaflet-adjustments.css",
+      "size": 459,
+      "sha1": "2d73e27bacbd6ad49870f3d6a4e6cc1150bc2ad5",
+      "sha256": "c64ff1ed796261b1e9e1f17bf0c4daab9e2e00ec9ee4f444325db6693958aee0"
+    },
+    {
+      "path": "css/live-map/map-buttons.css",
+      "size": 6344,
+      "sha1": "1274936be145e98986612700fb318454e9ff9b8c",
+      "sha256": "3bced93724c1b91cbdfdbeabac7cd1d5d8910241d5f99f126c01db2410ebb367"
+    },
+    {
+      "path": "css/live-map/map-information.css",
+      "size": 6535,
+      "sha1": "972d09010a67be3bb15d1fb1a76a90778240ebf7",
+      "sha256": "82c07a3c93d3efb11f1b55ab3f92f5c03271615c29a24fb20f31f4f7467154d0"
+    },
+    {
+      "path": "css/live-map/map-markers.css",
+      "size": 4416,
+      "sha1": "e652fc51f09284240302521ed4f8625b1d4c5b46",
+      "sha256": "6a8dc32dbd991661c3742c3299ea03ca78c5743deaf8f409a34ee0e339c67092"
+    },
+    {
+      "path": "css/live-map/mobile-layout.css",
+      "size": 10891,
+      "sha1": "381d4fb31e03cb85f6c08153471da9e3750aff42",
+      "sha256": "9372d5552a2d5e09aaa111314e2a915483f22c082c8f9e55a6071ace2789e318"
+    },
+    {
+      "path": "css/live-map/notifications.css",
+      "size": 661,
+      "sha1": "5ea49667d66b49a2a6b28ab212e200c4a36fb9c4",
+      "sha256": "0770c01387acf883aa17a16c1514afaf5ff92e6342894aec61db752854704800"
+    },
+    {
+      "path": "css/live-map/page-layout.css",
+      "size": 2944,
+      "sha1": "1e92c9ec497ff981a39cd3a92df6ef00e7905a0d",
+      "sha256": "355d7d3f8ac5c02a1e40f491cf5700ee69b7b838dfe718a0a8ebc1b371dfe81a"
+    },
+    {
+      "path": "css/live-map/responsive-presentation.css",
+      "size": 5626,
+      "sha1": "cb235442419b8ec54fbb169a805ab792ebd7a765",
+      "sha256": "e64480f4cac1b5d8b28084b39e7a2528fe343cdb0ddccbf0a31027a5af7a598d"
+    },
+    {
+      "path": "css/live-map/stops-panel.css",
+      "size": 5059,
+      "sha1": "7de2b0f69940b8ba622e8858c654bc3e8ac1bcbd",
+      "sha256": "125f4d3d0790ee8984416ef8854212590d852abce61e3cd348f1b7bc05cb08b2"
+    },
+    {
+      "path": "css/live-map/tourist-layout.css",
+      "size": 11560,
+      "sha1": "d8a1d46dabc14a774bb04f039576f2f9b0200dae",
+      "sha256": "190c318a0b818275e85d1a7389d8af43a6d978562bd709b83416cc6b4435d758"
+    },
+    {
+      "path": "css/live-map/widget-layout.css",
+      "size": 2325,
+      "sha1": "2c9e72dc64255750211c1019f1c1179be842410a",
+      "sha256": "12d60c5ce1bd208b8e82b97bfcee39e508584885557454f1dd25ca29d0b4c400"
+    },
+    {
+      "path": "css/shared.css",
+      "size": 793,
+      "sha1": "44ff2989c5952ce3c01cf085d95f21038a4570a8",
+      "sha256": "f5c30c66c6515882524a3453efb183d5d93e40c3885e249e4c246bde85860b5b"
+    },
+    {
+      "path": "css/stop-design.css",
+      "size": 4190,
+      "sha1": "3f2678fcbc4846e357c3a498f441687dd96e06a2",
+      "sha256": "c357734b1bc3f8ceb7827fb2634606c560cb4baa3c0629d96f93df3133a9188c"
+    },
+    {
+      "path": "css/widget-controls.css",
+      "size": 1412,
+      "sha1": "f366b5c4d83275e5e73c5fbacb4567d21ae98cad",
+      "sha256": "6c05d51cf0751960b8eeccb6f17d4739c44455b8f5706147f874fa08b00bf4f6"
+    },
+    {
+      "path": "icons/apple-touch-icon.png",
+      "size": 8579,
+      "sha1": "cc6ac1e76195955e56823cac3a07ab24abe21d35",
+      "sha256": "c5be8805b48ff67a33a774b768f0025bf39e24ebe62a99995dea4e8e86bea686"
+    },
+    {
+      "path": "icons/favicon-16x16.png",
+      "size": 311,
+      "sha1": "15fedf857f01ef42d01ba009982624bafb76b727",
+      "sha256": "c28c506815f93115421ab292c5e45189adb4d95542fd512d7cd206bd29b91187"
+    },
+    {
+      "path": "icons/favicon-32x32.png",
+      "size": 859,
+      "sha1": "9607c9680c04084eeb16b4c77a1a2062c96c71a2",
+      "sha256": "3e0cd82400fd478235340135491dfc01655f5b534d021b681a2a5891315153d2"
+    },
+    {
+      "path": "icons/favicon.ico",
+      "size": 881,
+      "sha1": "4495d613fe3312a2bf4401460dfe5bac38c3544f",
+      "sha256": "e8ffde14fee451ab35e5d2a0870e0b73416a5fa3887daca499f2192b61597ca7"
+    },
+    {
+      "path": "icons/icon-192x192.png",
+      "size": 9321,
+      "sha1": "b43651cd70e8bf0d9d896dbb067a18b1f844f88a",
+      "sha256": "ac63d83743a9df388f952c983976f5edc93af0797b6a537754aef85e29baf246"
+    },
+    {
+      "path": "icons/icon-512x512.png",
+      "size": 27696,
+      "sha1": "2f81394efe53eee64c3c6a10b2692ed0f96ff495",
+      "sha256": "e6ffeffdc7282c56a085fcdc2bf40221630948b5be14c2015b7e88889f580250"
+    },
+    {
+      "path": "icons/maskable-icon-192x192.png",
+      "size": 7361,
+      "sha1": "de0ede0d1e080cb73cc8ea7d716706ca6ebf63c2",
+      "sha256": "9c4110b98f27c30056ed5d9c5abd175a14e641b3c58270940e1e24962cfa8db1"
+    },
+    {
+      "path": "icons/maskable-icon-512x512.png",
+      "size": 23044,
+      "sha1": "ee37c12c64bf28e550e80dcb8941f5a6acdb1191",
+      "sha256": "bdc8b320df3d210b9a0e496b253c660d27361d1030e8b2601aaf5c443773baee"
+    },
+    {
+      "path": "index.html",
+      "size": 40122,
+      "sha1": "78b77624cf40847bca19b5fc5bb0d1ead81515e5",
+      "sha256": "21491fc4bfcfd8d5f9acab38f3a9e1bdfc1fe0aa0c7e1f19d5de4262afe14539"
+    },
+    {
+      "path": "js/admin/action-and-state-tools.js",
+      "size": 2484,
+      "sha1": "e7b3cd92248c00fc3ea935938b6f9608a7780a81",
+      "sha256": "fa204d94a17c70b5558142917f55d63fe82528a817527d6e87b8f399d1b6613a"
+    },
+    {
+      "path": "js/admin/admin-bus-location.js",
+      "size": 11120,
+      "sha1": "07dd8261c1dbe105a9a3b8e57fae3f27107bf5d7",
+      "sha256": "0f627412eefaa563448e960487dca6bcf1b102adb00c0e15e4ffb29ad6555cd6"
+    },
+    {
+      "path": "js/admin/admin-editing-and-dialogs.js",
+      "size": 22962,
+      "sha1": "1b450252d63504f481438d325f1c2a9373c15cf5",
+      "sha256": "206f6aa0053392a0ff716257293d85e55a22388214831800a8172608cdb7d16a"
+    },
+    {
+      "path": "js/admin/admin-map-data.js",
+      "size": 14345,
+      "sha1": "f1bb00c540634fdfb54bd57c6cbb96bee64e3b78",
+      "sha256": "447f715695834a5a6dcbbbe82646818f623cd66b2ee446fed51110fe8c19cc61"
+    },
+    {
+      "path": "js/admin/admin-poi.js",
+      "size": 9590,
+      "sha1": "354d608f09eaac6706644537525ed32f2027d563",
+      "sha256": "076a0b79bb01aa3aaf4b8e841d08fe583544141c52666069b1c3c7dc7a494bd8"
+    },
+    {
+      "path": "js/admin/admin-projects.js",
+      "size": 10363,
+      "sha1": "facdf7f3e03e4f5248af75aebf08d2006b676a97",
+      "sha256": "a010a130416e644ee4140445115662b5b4e5846a104a4fb383240ca78bef90b1"
+    },
+    {
+      "path": "js/admin/admin-publishing-and-export.js",
+      "size": 13610,
+      "sha1": "df3a8eb554345bbfe0ae7d3e7abd74f36174ccfc",
+      "sha256": "05434bf73cec7bc0350db6e34517c9803897cf25468282ddc9d104e82dc3c1d9"
+    },
+    {
+      "path": "js/admin/admin-state.js",
+      "size": 1113,
+      "sha1": "3fea6f8d2b985201bfe4c4c781bf0c99e85e4777",
+      "sha256": "4f2ada7a951b4ee3143857ebd3291d957882318097b459a9a1864dc8beb302e2"
+    },
+    {
+      "path": "js/admin/automatic-route-calculations.js",
+      "size": 1005,
+      "sha1": "ce5a9c54ea3c73231a6837cd9ca81bbbb0beadea",
+      "sha256": "9abc789f1c9358951da48301273666b849a8bf5f5ef35638c2f47f1188a3fd5e"
+    },
+    {
+      "path": "js/admin/bus-location-actions.js",
+      "size": 998,
+      "sha1": "eb087dc906ecb9a2fba73affc2a1bbe0fd1f860a",
+      "sha256": "b681ffacfc8a94c732cb51a1ec2434ae8c480bfa5c77defcd7310c3797436222"
+    },
+    {
+      "path": "js/admin/bus-location-service.js",
+      "size": 866,
+      "sha1": "71e8ad01c99fca309983bd507cf9b5c431504dea",
+      "sha256": "2de3697012079670249b68fbc97d997cb4ec9132e3b7cbc581f9b881dda8494d"
+    },
+    {
+      "path": "js/admin/configure-map-editor.js",
+      "size": 652,
+      "sha1": "61e5239098cbec8eeca177e124a34cc90d569f89",
+      "sha256": "4e6ddfca6387547cea55109e274b7b449c767ecb759501a8deadd2ae0ce48bc9"
+    },
+    {
+      "path": "js/admin/connect-page-actions.js",
+      "size": 2099,
+      "sha1": "bf99ee4bffd8910c609e890a3bd113aaf63ba3d5",
+      "sha256": "885031efacc1422fbe449c60315bbd8a432d6a3d3b022415ce453ecb01da96b3"
+    },
+    {
+      "path": "js/admin/connect-to-database.js",
+      "size": 660,
+      "sha1": "6fb1e63008ba6f7be377e5857d7cc85af7f2ea15",
+      "sha256": "49b87fd782a301f3fcdfd18f0aeae9ee7f43b41ce099fb7243f33b113319378a"
+    },
+    {
+      "path": "js/admin/create-admin-map.js",
+      "size": 1601,
+      "sha1": "dbabed68c72a2cca77cd92ffe400dd0f9ac12005",
+      "sha256": "b7796dcf3d9886e38bfc7ba2b550e516e4980dedc9162aee9c95207f2443aa17"
+    },
+    {
+      "path": "js/admin/data-and-poi-actions.js",
+      "size": 2078,
+      "sha1": "925d24cff9f9c0a74272d73c39b07a216cdfd1a1",
+      "sha256": "d4939378ad076658244b738aa6e953a076ce8ee7b1df7451302c7378209762fa"
+    },
+    {
+      "path": "js/admin/feature-readiness-checks.js",
+      "size": 598,
+      "sha1": "e98f34f9f99a576edda0184fbbfb3cfa26354eae",
+      "sha256": "535f0d842f039cafc9c2666ed2d7dc77990ef69cb3067701c4a7b98e6f5d5abe"
+    },
+    {
+      "path": "js/admin/feature-registry.js",
+      "size": 1948,
+      "sha1": "0bf563455a382986fdc1520b756ee00c2de53f06",
+      "sha256": "4e4dc9f66deb0274608936f46d556c1d6f76c4bb523f7a15ec97d07272e85858"
+    },
+    {
+      "path": "js/admin/feature-services.js",
+      "size": 626,
+      "sha1": "4537d73061c824e38a9c53de9498b3b66f2577c8",
+      "sha256": "df0ddd72af0184db4754ec045b852f111538cbcd4b42d51233237e300d7d4baa"
+    },
+    {
+      "path": "js/admin/general-map-actions.js",
+      "size": 2727,
+      "sha1": "318bdd521f91baa7768d06befcc2833478a4ccfd",
+      "sha256": "8d4accded269bd421835dda78698420dc680deaa78c2a0717af0967d590ae27b"
+    },
+    {
+      "path": "js/admin/geojson-validation.js",
+      "size": 3836,
+      "sha1": "de6adb158c291f197121423f05260172f7700ae6",
+      "sha256": "08c133658bb1dabaefcdbab1fef627c84d38d7085fdaf5f6db6ad2415aefb1e2"
+    },
+    {
+      "path": "js/admin/gps-provider-status.js",
+      "size": 2349,
+      "sha1": "e917198ff641b1a5b92d158b47b151ca985539a0",
+      "sha256": "134afe9fda08286525abf89d121662f4dc8bed641348857b522b60177320207b"
+    },
+    {
+      "path": "js/admin/map-editing-actions.js",
+      "size": 4306,
+      "sha1": "2b2623fa4792cd882fe7132951121c249198ad81",
+      "sha256": "7b06a8fcd27e9e248342290f975f06f168f16aea42f964b3eda85e051b415af9"
+    },
+    {
+      "path": "js/admin/notifications-and-general-tools.js",
+      "size": 2177,
+      "sha1": "6745acfd0efd05e4422db497b87dd26d8766d15d",
+      "sha256": "b003c623a5ecde52697cc21074dab73a50043dce3c7ecd8d54d2d1666649a36f"
+    },
+    {
+      "path": "js/admin/page-element-helpers.js",
+      "size": 1062,
+      "sha1": "8807d96c72dfde47b8e3c85e272d32ecea927dc2",
+      "sha256": "f1794aacf5d2e48cc1115f3955f864bd6ee2775eba2230ff2a7346733261cd6e"
+    },
+    {
+      "path": "js/admin/page-events.js",
+      "size": 1410,
+      "sha1": "4af9bcdf84a8e2e8849c04a7632f63b032504bd3",
+      "sha256": "802d44c3507515f7481fab3d6e75dad8ccb5d4f6cd56f8ee003855b261d9ee6b"
+    },
+    {
+      "path": "js/admin/poi-category-tools.js",
+      "size": 881,
+      "sha1": "f032e6d943cf5766d1cc5b1a28a44da4f078bb5d",
+      "sha256": "7aacb8106096d914a0116d04aebb65bf06e6e96a0ea56ec7140f4920e4d71799"
+    },
+    {
+      "path": "js/admin/poi-manager-actions.js",
+      "size": 2194,
+      "sha1": "bccbe2bd3af937278f895992ffa1b18180ae74a6",
+      "sha256": "2a0c92731fb851b532fa6ee5c3afed363ba1b93993e39a2d7ce1f905a6d6ed70"
+    },
+    {
+      "path": "js/admin/prepare-admin-app.js",
+      "size": 1415,
+      "sha1": "1a4fa2aaa6548d67a4f11c7ed75e6de21b469afb",
+      "sha256": "a390ad3a53b045a12015674089e2b0056000e522e29ad462d1d7eb8566521efe"
+    },
+    {
+      "path": "js/admin/register-admin-actions.js",
+      "size": 488,
+      "sha1": "8bc56b4523e12d61600c72c8c4d2a1b1c3b794f4",
+      "sha256": "68bd1dbe4576a943a21b554a2c5a61ea637431c48592789da1c92ae9e8eda49e"
+    },
+    {
+      "path": "js/admin/route-data-tools.js",
+      "size": 1107,
+      "sha1": "ff8d1d763f32e264f409532e46cc448638256e05",
+      "sha256": "c2df94bf6e9d7459b7bf2ae891432552bff50bb3c8ca134c3e8d9abc2864050a"
+    },
+    {
+      "path": "js/admin/route-editor-actions.js",
+      "size": 2958,
+      "sha1": "f320fd7a96dd6e6c7d947b70528350d5f7a0b010",
+      "sha256": "c623e2e343026dfe3616b626967fb95c482baec308447508c384278ebdf1cd01"
+    },
+    {
+      "path": "js/admin/start-admin-page.js",
+      "size": 2730,
+      "sha1": "ae9efc188f187bed7e2c0d42c2df7c0a9237c73e",
+      "sha256": "a5b8cada3306e1e986ec1575e084d72088048b66fadfbb39480390dea8c248a8"
+    },
+    {
+      "path": "js/admin/van-control-card.js",
+      "size": 2168,
+      "sha1": "01582948355467cc043f4480345912e998f7c1e6",
+      "sha256": "0ed29ff42110fb811be9a101cb222146e44d8df1ff99248e82688e63fbc5eec4"
+    },
+    {
+      "path": "js/live-map/app-settings.js",
+      "size": 2828,
+      "sha1": "14a371331509065b361fdddfdea67f7c62d3a54d",
+      "sha256": "2aecb2c4786b95c64f1fa929c4b6116ac469030c99535e9860f49497cfece1f1"
+    },
+    {
+      "path": "js/live-map/app-state.js",
+      "size": 3017,
+      "sha1": "6d04cb33f2db45983d411aa860ecfbe40b4ae825",
+      "sha256": "ab2c5315674f257735c3b82c3c7f3451d3d82f42f51888d7bd862cf37d45a7d8"
+    },
+    {
+      "path": "js/live-map/automatic-refresh.js",
+      "size": 1502,
+      "sha1": "d7b00db92d158802bc44475dfdc82f5e0f33ee53",
+      "sha256": "cd20960cc631722eac2d4884597d3849d1f4529ca78db371e4007094b94a3a72"
+    },
+    {
+      "path": "js/live-map/build-route-contexts.js",
+      "size": 9680,
+      "sha1": "4187d40a09ca470af3f20cd7fb44a640aca6494f",
+      "sha256": "121d99ee7a3bfa92ce234150389414900b51bddd6388e2607b2fb3f12ccb209e"
+    },
+    {
+      "path": "js/live-map/calculate-arrivals.js",
+      "size": 2760,
+      "sha1": "25b5cc66290be6af5094837b628a29b759f2327f",
+      "sha256": "fadd8f8c9f9c342f64af882200d88e810ad3fd087c39afd7c825da3f32d1b320"
+    },
+    {
+      "path": "js/live-map/connect-page-actions.js",
+      "size": 456,
+      "sha1": "ed07918a9b6a98ebfca6c5f4fd3985b7d80e4633",
+      "sha256": "16de917c060dd8dda67362a62a05832770dddd5ddf5671ab0c129aaa0d9d8e20"
+    },
+    {
+      "path": "js/live-map/connect-to-database.js",
+      "size": 626,
+      "sha1": "244e762be6b5f6116ae95207aa8e4f710ae6f61d",
+      "sha256": "98f9208b1b007aaebf4ee096fbf1c4e4baa717ec4d394ee7269b5bcec1487bca"
+    },
+    {
+      "path": "js/live-map/create-map.js",
+      "size": 486,
+      "sha1": "00b9fbec8eb769d6f50331c952b7b0b6b3739910",
+      "sha256": "455d9873360f1c09f13d9ebace74f5e623c70e93502e65a2253bab83332c4f79"
+    },
+    {
+      "path": "js/live-map/display-full-route.js",
+      "size": 1353,
+      "sha1": "c66b3aa4149cab5ba5d492cffc4c1b8e8ee3dfec",
+      "sha256": "658c84beba19dc457720a4d693b041d0e990f3c8f6bc32d60a08340bd51d072d"
+    },
+    {
+      "path": "js/live-map/format-display-values.js",
+      "size": 1888,
+      "sha1": "6e595efe7d4175d467ecc6971f903dbecc21e54f",
+      "sha256": "5365d86c93d604948c513f30ce934da2e338fc3193f492be325596f841f11a4f"
+    },
+    {
+      "path": "js/live-map/load-published-map.js",
+      "size": 9122,
+      "sha1": "d355eea990a696d2fe00eab5c73c803f268b0327",
+      "sha256": "d4601a5f8d123fc9a65a11fec980da0404441267f1816431c5547cfe6732dee4"
+    },
+    {
+      "path": "js/live-map/load-vehicle-progress.js",
+      "size": 634,
+      "sha1": "ef7b50d227a5c81b58c6508c54886c61a22f666b",
+      "sha256": "6e8a635891c208bc9dcc27324d5345c8e64581440a20896669849f108373767d"
+    },
+    {
+      "path": "js/live-map/map-buttons.js",
+      "size": 3640,
+      "sha1": "e771d7ea23c733f0ad292ea6090db3db698fc1da",
+      "sha256": "f24e506c87e6671ea565b6ca7060eb403107d2cbfc41e0510913602a88974acc"
+    },
+    {
+      "path": "js/live-map/map-icons.js",
+      "size": 2143,
+      "sha1": "785fa768d9b7f843f5090e78b7f2e8919ee2d933",
+      "sha256": "ac5a8206a8ea25b8ab3371ec3af4e90e8cec7b4d615abee0b4edb457a3abcf58"
+    },
+    {
+      "path": "js/live-map/map-popups.js",
+      "size": 1346,
+      "sha1": "8182eb8436a0b1c95f3404ed322e6571684c2b18",
+      "sha256": "e87ba43241b870383f126bff9843dcb5ea331cabca4dd738a9e7759c9d4195ab"
+    },
+    {
+      "path": "js/live-map/marker-motion.js",
+      "size": 4448,
+      "sha1": "0a647a4616e02eacc81c72cd5128331aa62c412e",
+      "sha256": "377f43086cac8deaa444f5687ae016713760664aff7ed5c16d5ace27cf724964"
+    },
+    {
+      "path": "js/live-map/notifications.js",
+      "size": 1380,
+      "sha1": "38c8678f31ac4ef31c9b38b6f1953f20cf9ff0b2",
+      "sha256": "ff4457ffa11d0a3b506671914a2539ed31423978c2d99508d59d092901eb5fdf"
+    },
+    {
+      "path": "js/live-map/prepare-route-data.js",
+      "size": 5855,
+      "sha1": "170ab3dbaecb5c6d9098054ea08a5d3510178c4d",
+      "sha256": "58fa8b4c227cdadd58db5b5241be1686e0daac65f245ec5ca3285440a08de29a"
+    },
+    {
+      "path": "js/live-map/project-context.js",
+      "size": 2536,
+      "sha1": "d69d57076f40d8dd9879d2e6fdbcc5c92958b57f",
+      "sha256": "1d533b02aad1e9bcbc8c649881f15ca27ab7fa345b54ea730bb8267e2a5f97a1"
+    },
+    {
+      "path": "js/live-map/public-presentation.js",
+      "size": 10944,
+      "sha1": "246fd104ae2549223b78a9663730fd31b8461db3",
+      "sha256": "ee1deffc4222e3ac68648cb3b640ebc9636245bb30f250cba3fae9ab91339ffd"
+    },
+    {
+      "path": "js/live-map/responsive-presentation.js",
+      "size": 1783,
+      "sha1": "283fd200e607e6952055c1eea6bb3cacb7766dbf",
+      "sha256": "6ac92263d23f2a9ec01471808be4e31a1c531c5d6877d5dc19152c0dd65f0511"
+    },
+    {
+      "path": "js/live-map/route-movement-calculations.js",
+      "size": 316,
+      "sha1": "9dc0ac9cd913269afa46b275439b0ef2127c4e94",
+      "sha256": "802a2f3efd345d5ea137d10cbdd500bfd0c638f336c90f14caaaeae8b01223da"
+    },
+    {
+      "path": "js/live-map/start-live-map.js",
+      "size": 2595,
+      "sha1": "765634534c687e858722f0b99285f54b54da62be",
+      "sha256": "92a7a513132ede074bee9c043277a19f97dbba7c114dcdeea75b1f94cfd40b6e"
+    },
+    {
+      "path": "js/live-map/stop-marker-layout.js",
+      "size": 2201,
+      "sha1": "111c2b5edff414ed2c112af454bf9af75564be93",
+      "sha256": "bf5f74041d74a52edd328749a008987c539d26816b4afba040078997b9e0486a"
+    },
+    {
+      "path": "js/live-map/stops-panel.js",
+      "size": 4817,
+      "sha1": "c57387188aaf686c4bfdc049e480f15885a970c3",
+      "sha256": "f52652d4b0b8322190f5f11ae7649815724347bd34367334f454f5dcbb6d96b5"
+    },
+    {
+      "path": "js/live-map/track-bus.js",
+      "size": 11669,
+      "sha1": "543565fea1e6ceda0cacb9325d8bc36ed93a58c9",
+      "sha256": "db4fece31298e32234233c7259130b09bbd9525a29c25013601ce977e0a0ae1b"
+    },
+    {
+      "path": "js/live-map/track-user.js",
+      "size": 9898,
+      "sha1": "8e61f7c36bd4cc0064cdf5a14ef5fe3f788eff10",
+      "sha256": "2a8c201214f7ece807a3809837f582d98703bd81cf828bbc1f6c11e710ad74fe"
+    },
+    {
+      "path": "js/live-map/tracking-diagnostics.js",
+      "size": 2076,
+      "sha1": "0ea57a2d43b7b3e14838f324cd60b9f90ea958d2",
+      "sha256": "a275b2161424cfcdf50d85440a65610e370f15e949cd50f7820811c302415a9d"
+    },
+    {
+      "path": "js/live-map/update-route-progress.js",
+      "size": 4291,
+      "sha1": "f308544c348e99105c4895d753b98a0709cdd6c6",
+      "sha256": "f3118b64d41918e81a5a0f8bd065929c994e21aa924f005bea6a8c4b0449ad77"
+    },
+    {
+      "path": "js/shared/app-config.js",
+      "size": 1813,
+      "sha1": "6e4d32a7da04f1e09ce962733cdec85e5715805b",
+      "sha256": "355eb35cd0d67196b679f3c1da80f5620db050bc95840e101f6161bc73316779"
+    },
+    {
+      "path": "js/shared/gps-source.js",
+      "size": 7854,
+      "sha1": "e1d2fc8336e526a9a4495f46c99b7e84dcb56ea6",
+      "sha256": "108a31101463cf8ca0b73300e3d00e5e983ea4f5720a7f2fa3cde821b76ae85b"
+    },
+    {
+      "path": "js/shared/map-content-safety.js",
+      "size": 539,
+      "sha1": "cb78fd2a5f74ae3575779f87e6d1ac986c000445",
+      "sha256": "0d53659783157dd1f8714adbef228b112e379b08f4ce34ca055f038438abf201"
+    },
+    {
+      "path": "js/shared/stop-design-defaults.js",
+      "size": 1947,
+      "sha1": "fcc84656727f656020a09ebee048da1c616f12e7",
+      "sha256": "84a34bf91702e05a57d2936fa19cbf2ddf19fbb2ab3191dea18d5e74b30e13ad"
+    },
+    {
+      "path": "js/shared/stop-design.js",
+      "size": 1925,
+      "sha1": "29a0bd810f9bc1ea4fccdde6b4389e0b2d480ea8",
+      "sha256": "868962900373ba65688217158f96a90862eca20ce9a742491d6bdaf7277bb8d8"
+    },
+    {
+      "path": "js/shared/tracking-realtime.js",
+      "size": 886,
+      "sha1": "3012f62c2c754e9ee280fa827b1bd5c7d75a54e1",
+      "sha256": "50957e5e734aee4fa2c0793bfb620bf479aedbcfa643de46f39b6f64424cc877"
+    },
+    {
+      "path": "js/shared/tracking-state.js",
+      "size": 3931,
+      "sha1": "3f056ed8e175aba3c5edb9874e456d7a990970d1",
+      "sha256": "163f510d111947e2b371d591118f1ec8be70bc45ae923a81732d0a4d464e1f3f"
+    },
+    {
+      "path": "js/shared/vehicle-icon.js",
+      "size": 1790,
+      "sha1": "273a1ce8695dedeca65a07f70813676c61156a20",
+      "sha256": "f6bb9834ff32f4df7ed770228d28adba9ae16a2b8cc2a1a4672026ec415e39d1"
+    },
+    {
+      "path": "live-map.html",
+      "size": 12867,
+      "sha1": "593e1db811c85ea3c77b4e20c9042aee5d58ecf2",
+      "sha256": "e665016baec2f8803a066208751e72685160e2a7a0d8d89d7a2c9ae13d427fd2"
+    },
+    {
+      "path": "manifest.webmanifest",
+      "size": 855,
+      "sha1": "8b02857f05f3c30ae2e30755946f9b1c032a143d",
+      "sha256": "22a78b662e4339244c3ddbcb3b23755a947a4bffbc59fa19eb9045d4075c3140"
+    },
+    {
+      "path": "netlify.toml",
+      "size": 1279,
+      "sha1": "96578f8ee358e6e9e141579cafad4b48dfec6f3e",
+      "sha256": "730888b051b46f8dbfcac4a7d2643e47edbd5b186931859c9ef8c260e68937a4"
+    }
+  ],
+  "functions": {},
+  "edge_functions": {},
+  "function_schedules": []
+}
