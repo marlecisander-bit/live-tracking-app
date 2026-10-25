@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 300" fill="none">
+ <title>Sightseeing Shkodra tour van</title>
+ <desc>A vector adaptation of the red van with colourful landmark graphics, transparent background and no white sticker outline.</desc>
+ <defs>
+  <linearGradient id="red" x1="300" y1="35" x2="300" y2="260" gradientUnits="userSpaceOnUse"><stop stop-color="#ff3946"/><stop offset="1" stop-color="#e00725"/></linearGradient>
+  <linearGradient id="glass" x1="300" y1="95" x2="300" y2="174" gradientUnits="userSpaceOnUse"><stop stop-color="#355971"/><stop offset="1" stop-color="#132637"/></linearGradient>
+  <linearGradient id="metal"><stop stop-color="#e6edf2"/><stop offset=".5" stop-color="#87949f"/><stop offset="1" stop-color="#dce4eb"/></linearGradient>
+  <clipPath id="shell"><path d="M15 207 22 179 81 145 159 69Q189 36 242 35L588 43Q610 43 614 66L624 225Q624 248 599 250H40Q10 249 15 207Z"/></clipPath>
+ </defs>
+ <path d="M15 207 22 179 81 145 159 69Q189 36 242 35L588 43Q610 43 614 66L624 225Q624 248 599 250H40Q10 249 15 207Z" fill="url(#red)" stroke="#171c25" stroke-width="5" stroke-linejoin="round"/>
+ <g clip-path="url(#shell)">
+  <path d="m87 144 85-76q27-27 73-29l-13 65-87 31Z" fill="#ffed00"/>
+  <path d="M271 39q33-8 52 13t54 8q28-9 53 3t51-1q32-19 58 6l15 34H254Z" fill="#00c6eb"/>
+  <path d="M260 66q32-21 65-6l41 15q20 6 34-18t45 0q9 14 38 11t48 13l-9 21H256Z" fill="#a50aab"/>
+  <path d="m51 239 66-40 61 28 73-51 56 46 65-45 48 46 40-28 42 23 62-34 41 36 34-27 26 70H42Z" fill="#00bde8"/>
+  <path d="m170 250 56-25 35 25 60-33 27 33 40-38 43 38 64-27 58 27 41-29 34 31Z" fill="#ffec00"/>
+  <path d="m111 230 45-37 43 17-24 39h-50Zm223 22 33-28 30 11-12 21Zm197-19 22-29 27 17 31-14 6 36-38 7Z" fill="#e719bc"/>
+  <path d="M427 213v-32h15v-9h10v9h13v-9h11v10h14v-13h11v13h15v-10h11v11h15v-9h11v37" fill="#00bcec" stroke="#182236" stroke-width="3"/>
+  <path d="m535 215 24-45 19-10 22 10 3 47" fill="#ffee00" stroke="#182236" stroke-width="3"/>
+  <path d="m578 164 1-21 13 3v10l-13-2" fill="#f51a35" stroke="#182236" stroke-width="2"/>
+  <path d="M246 251 252 184 259 146 275 141 286 150 293 251Z" fill="#ffd900" stroke="#252538" stroke-width="3"/>
+  <path d="m255 171 33 1m-37 16 40 1m-42 16 43 1m-44 16 45 1m-46 16 47 1" stroke="#ed249e" stroke-width="7"/>
+  <path d="m248 225 45-17 1 43h-49Z" fill="#00b9e7"/>
+  <path d="M263 251v-18q8-14 15 0v18" fill="#ffeb00" stroke="#243041" stroke-width="3"/>
+  <path d="M300 193q12-31 25-15t-8 25q26-8 27 10t-27 8" stroke="#00d6c6" stroke-width="13" stroke-linecap="round"/>
+ </g>
+ <!-- Glazing follows the reference: shared upper belt line, two long passenger panes. -->
+ <path d="M89 142 164 82 203 80 149 144Z" fill="url(#glass)" stroke="#111923" stroke-width="4"/>
+ <path d="m104 134 65-48 17-1-56 49Z" fill="#b0e5ef" opacity=".75"/>
+ <path d="m163 143 44-48q16-15 50-15h5q9 0 8 12l-7 39q-2 11-16 14l-84 16Z" fill="url(#glass)" stroke="#111923" stroke-width="4"/>
+ <path d="m186 145 30-49 32-10-46 61Z" fill="#83c7df" opacity=".4"/>
+ <path d="m212 91-6 61" stroke="#111923" stroke-width="4"/>
+ <path d="M308 80 593 87q11 0 13 12l5 40q1 8-10 8H315q-13 0-15-12l-7-43q-2-12 15-12Z" fill="url(#glass)" stroke="#101821" stroke-width="5"/>
+ <path d="m306 88 291 8" stroke="#789bae" stroke-width="5" opacity=".35"/>
+ <path d="m432 84 4 62" stroke="#101821" stroke-width="6"/>
+ <path d="M317 141v-23q0-9 9-9h14q9 0 11 11l3 21m12 0 5-24q2-9 11-9h18q9 0 11 10l4 23m42 0 3-19q1-10 12-10h19q9 0 11 11l3 18m14 0 2-19q1-9 10-9h14q9 0 11 10l3 18" fill="#102233" opacity=".7"/>
+ <path d="m277 77-7 167m163-94 3 57" stroke="#9c142a" stroke-width="2"/>
+ <rect x="169" y="122" width="19" height="33" rx="6" fill="#303740" stroke="#111821" stroke-width="3"/>
+ <path d="M179 144h7v8h-9Z" fill="#e3edf2"/>
+ <rect x="246" y="164" width="24" height="6" rx="3" fill="#191e28"/>
+ <text x="308" y="69" fill="#ffe900" font-family="Arial,sans-serif" font-size="20" font-weight="900" textLength="221" lengthAdjust="spacingAndGlyphs">SIGHTSEEING SHKODRA</text>
+ <g stroke="#17212c" stroke-width="1.3">
+  <circle cx="550" cy="57" r="7" fill="#06479a"/><path d="m545 52 10 10m0-10-10 10" stroke="white" stroke-width="2"/><path d="M550 50v14m-7-7h14" stroke="#ff3042" stroke-width="2.5"/>
+  <circle cx="572" cy="57" r="7" fill="#fff"/><path d="M568 52v10" stroke="#079e53" stroke-width="4"/><path d="M576 52v10" stroke="#f1263d" stroke-width="4"/>
+  <circle cx="594" cy="57" r="7" fill="#fff"/><path d="M590 52v10" stroke="#153b99" stroke-width="4"/><path d="M598 52v10" stroke="#f1263d" stroke-width="4"/>
+  <circle cx="550" cy="76" r="7" fill="#f8d924"/><path d="M544 72h12" stroke="#141c26" stroke-width="4"/><path d="M543 76h14" stroke="#ed1835" stroke-width="4"/>
+  <circle cx="572" cy="76" r="7" fill="#fff"/><path d="M566 79h12" stroke="#ed2442" stroke-width="5"/>
+  <circle cx="594" cy="76" r="7" fill="#fff"/><path d="M588 79h12" stroke="#e82138" stroke-width="5"/><path d="m588 71 7 5-7 5" fill="#095bad" stroke="none"/>
+ </g>
+ <circle cx="230" cy="65" r="10" fill="#ac10af" stroke="#ffef00" stroke-width="4"/>
+ <path d="M230 48v-6m0 46v-6m-17-17h-6m46 0h-6m-29-12-4-4m32 32-4-4m-24 0-4 4m32-32-4 4" stroke="#00c8ea" stroke-width="4" stroke-linecap="round"/>
+ <text x="196" y="185" fill="#fff" stroke="#9d0aaa" stroke-width="5" paint-order="stroke" font-family="Arial,sans-serif" font-weight="900" font-size="15" text-anchor="middle">Hop On</text>
+ <text x="216" y="205" fill="#fff" stroke="#9d0aaa" stroke-width="5" paint-order="stroke" font-family="Arial,sans-serif" font-weight="900" font-size="15" text-anchor="middle">Hop Off</text>
+ <path d="m18 208 600-4 1 20-19 13H38l-21-10Z" fill="#252e38" stroke="#151c25" stroke-width="4"/>
+ <path d="m22 188 27-2-10 24H17Z" fill="#101923"/>
+ <path d="m48 184 29-15 14 2-16 21-31 6Z" fill="#c2e6f0" stroke="#26323e" stroke-width="3"/>
+ <path d="M610 162h9v43h-9Z" fill="#f8fafc"/><path d="M610 162h9v15h-9Zm0 31h9v7h-9Z" fill="#cc0928"/>
+ <rect x="302" y="214" width="11" height="5" rx="2.5" fill="#ff9600"/><rect x="586" y="213" width="10" height="5" rx="2.5" fill="#ff9600"/>
+ <path d="M88 247a52 52 0 0 1 104 0m278 0a52 52 0 0 1 104 0" fill="#141a23" stroke="#141a23" stroke-width="9"/>
+ <g stroke="#111821" stroke-width="5"><circle cx="140" cy="244" r="43" fill="#252930"/><circle cx="522" cy="244" r="43" fill="#252930"/><circle cx="140" cy="244" r="28" fill="url(#metal)"/><circle cx="522" cy="244" r="28" fill="url(#metal)"/></g>
+ <g fill="#202833" stroke="#68737e" stroke-width="3"><circle cx="140" cy="244" r="15"/><circle cx="522" cy="244" r="15"/></g>
+ <g stroke="#202833" stroke-width="5" stroke-dasharray="1 10" stroke-linecap="round"><circle cx="140" cy="244" r="22"/><circle cx="522" cy="244" r="22"/></g>
+</svg>

@@ -1,0 +1,44 @@
+[
+  {
+    "url": "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js",
+    "resolvedUrl": "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js",
+    "bytes": 147552,
+    "sha256": "db49d009c841f5ca34a888c96511ae936fd9f5533e90d8b2c4d57596f4e5641a",
+    "floating": false,
+    "capturedAt": "2026-10-25T12:32:13.289Z"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.3",
+    "resolvedUrl": "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.3",
+    "bytes": 212199,
+    "sha256": "cf529fe8980cbe6f2dd3e3930ecf96352ed3d3d71233b6760e4f927f89b94b9f",
+    "floating": false,
+    "capturedAt": "2026-10-25T12:32:13.411Z"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/@turf/turf@7.3.5/turf.min.js",
+    "resolvedUrl": "https://cdn.jsdelivr.net/npm/@turf/turf@7.3.5/turf.min.js",
+    "bytes": 540746,
+    "sha256": "505d3a35da8a8bf1f8aed590cdad0ffa11e70d51f28d0c2359007bafed0fd382",
+    "floating": false,
+    "capturedAt": "2026-10-25T12:32:13.456Z"
+  },
+  {
+    "url": "https://esm.sh/@supabase/supabase-js@2",
+    "resolvedUrl": "https://esm.sh/@supabase/supabase-js@2",
+    "bytes": 531,
+    "sha256": "942ade13e13fec62a14a647739725d560e32e405ecf3b56058e33aeacb04db2a",
+    "floating": true,
+    "exportTargets": [
+      "/@supabase/auth-js@2.118.0/es2022/auth-js.mjs",
+      "/@supabase/functions-js@2.118.0/es2022/functions-js.mjs",
+      "/@supabase/postgrest-js@2.118.0/es2022/postgrest-js.mjs",
+      "/@supabase/realtime-js@2.118.0/es2022/realtime-js.mjs",
+      "/@supabase/storage-js@2.118.0/es2022/storage-js.mjs",
+      "/@supabase/supabase-js@2.118.0/es2022/dist/tracingRegistry.mjs",
+      "/node/process.mjs",
+      "/@supabase/supabase-js@2.118.0/es2022/supabase-js.mjs"
+    ],
+    "capturedAt": "2026-10-25T12:32:13.800Z"
+  }
+]

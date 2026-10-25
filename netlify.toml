@@ -1,20 +1,49 @@
+# Reconstructed portable build proposal. This file has NOT been applied to Netlify.
+# Backend functions remain an independent Supabase boundary and are never bundled here.
 [build]
-  publish = "."
+  command = "npm ci --ignore-scripts && npm run check:platform && npm run lint && npm test && npm run typecheck && npm run build"
+  publish = "dist"
 
-# This application uses stable HTML, CSS, and JavaScript filenames. Require
-# browsers to revalidate them so a newly published map is not hidden by an old
-# mobile cache after Netlify finishes a deployment.
+# Cache/MIME header declarations copied from the verified deployed configuration.
 [[headers]]
-  for = "/*.html"
-  [headers.values]
-    Cache-Control = "no-cache, must-revalidate"
+for = "/"
 
-[[headers]]
-  for = "/js/*"
   [headers.values]
-    Cache-Control = "no-cache, must-revalidate"
+  Cache-Control = "no-cache, must-revalidate"
 
 [[headers]]
-  for = "/css/*"
+for = "/manifest.webmanifest"
+
   [headers.values]
-    Cache-Control = "no-cache, must-revalidate"
+  Cache-Control = "no-cache, must-revalidate"
+
+[[headers]]
+for = "/*.html"
+
+  [headers.values]
+  Cache-Control = "no-cache, must-revalidate"
+
+[[headers]]
+for = "/js/*"
+
+  [headers.values]
+  Cache-Control = "no-cache, must-revalidate"
+
+[[headers]]
+for = "/css/*"
+
+  [headers.values]
+  Cache-Control = "no-cache, must-revalidate"
+
+[[headers]]
+for = "/manifest.webmanifest"
+
+  [headers.values]
+  Content-Type = "application/manifest+json"
+  Cache-Control = "no-cache, must-revalidate"
+
+[[headers]]
+for = "/icons/*"
+
+  [headers.values]
+  Cache-Control = "no-cache, must-revalidate"

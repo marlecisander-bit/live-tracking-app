@@ -1,0 +1,1068 @@
+{
+  "runtime": "Selected manifest.json; frontend/backend unchanged from approved package",
+  "new_source_layout_parent": "50368beb8ad170987c83e2623a2b2f19a0715f27",
+  "source_files": [
+    {
+      "path": ".env.example",
+      "bytes": 358,
+      "sha256": "09e9e0a715cc7ebb8c00d91310c9647d4c7f43ac007d3bf2a09292b39b8a7a0b"
+    },
+    {
+      "path": ".gitignore",
+      "bytes": 126,
+      "sha256": "96ecddd68df5d9a9f8f25691bb97016435620705d34e0ff793162b75aa86bc4d"
+    },
+    {
+      "path": ".nvmrc",
+      "bytes": 3,
+      "sha256": "68ca3fba3b7e864770cb61aeb306d4bd4354b68ab4dd38450860c5d823e42a53"
+    },
+    {
+      "path": "README.md",
+      "bytes": 4632,
+      "sha256": "4d04cc937f7f8000f4888d88a521c85a49ed7104fee27532ac32ea8215e8b2c5"
+    },
+    {
+      "path": "backend/functions/_shared/stop-transition.ts",
+      "bytes": 10906,
+      "sha256": "924dddad80c9ad10fd53754e56a6fd794f630b42cfb82e3f858efceb062c1c7c"
+    },
+    {
+      "path": "backend/functions/eta-engine/index.ts",
+      "bytes": 415,
+      "sha256": "57b438cc32bf47197ae5501f3420bfa211b418160b4a164bf00eb98181e31d71"
+    },
+    {
+      "path": "backend/functions/gps-collector/index.ts",
+      "bytes": 3303,
+      "sha256": "12329e72ad3b5cadbf85c6c6f0f6598f49631e1caad6e34a856d0e4cb6896473"
+    },
+    {
+      "path": "backend/functions/gps-ingest/index.ts",
+      "bytes": 15896,
+      "sha256": "9038052075b22478c175257904077524610fa6493416998389e198c0bedcd4ba"
+    },
+    {
+      "path": "backend/functions/osm-poi-search/index.ts",
+      "bytes": 7600,
+      "sha256": "f7ccecfc01446f292bed8ed2db34cbf0d49c7a6384ad056f0f99424ea3d46df5"
+    },
+    {
+      "path": "backend/functions/segment-analyzer/index.ts",
+      "bytes": 415,
+      "sha256": "57b438cc32bf47197ae5501f3420bfa211b418160b4a164bf00eb98181e31d71"
+    },
+    {
+      "path": "backend/functions/stop-detector/index.ts",
+      "bytes": 1519,
+      "sha256": "2d7ee7421c2e3ed7084c2668d428367a6619f21997052e84111fa981fcd89ef9"
+    },
+    {
+      "path": "backend/functions/stop-detector/provider-handler.ts",
+      "bytes": 1193,
+      "sha256": "d7f5fe6d98554c1e1ad2fe1db95ad9ed39fe45668891a0aedcb46c3f618212bc"
+    },
+    {
+      "path": "frontend/_headers",
+      "bytes": 190,
+      "sha256": "e8c22492d59b3d5bcbb473a32693c3838a29738658083e6b89bc0cbe5fff6968"
+    },
+    {
+      "path": "frontend/assets/brand/sightseeing-shkodra-brand-sheet.svg",
+      "bytes": 286930,
+      "sha256": "d1aac40587246b79ee4b98b81e234e694c1ee6a31d9f6ce54a4efdcd34c4d20d"
+    },
+    {
+      "path": "frontend/assets/brand/sightseeing-shkodra-light.svg",
+      "bytes": 286928,
+      "sha256": "392441091cd381379e103e332a16063463857bff1bd703f227f0c53712da4b37"
+    },
+    {
+      "path": "frontend/assets/brand/sightseeing-shkodra-red.svg",
+      "bytes": 286927,
+      "sha256": "e7692ccc9f7d9cc4a06807f336fc50ca90d0800224bb71fc2ed8c845e8374551"
+    },
+    {
+      "path": "frontend/assets/brand/sightseeing-van.svg",
+      "bytes": 6735,
+      "sha256": "888f450c3f4360fa93112770e4d36e174d7942e0de1d501e57016eb6be525dd2"
+    },
+    {
+      "path": "frontend/css/admin/admin-interface.css",
+      "bytes": 28263,
+      "sha256": "b30cb6696a8fbbbcf05a127f1be6581539fc5916a92499e4f73718c8ea2153f1"
+    },
+    {
+      "path": "frontend/css/admin/base-and-login.css",
+      "bytes": 2575,
+      "sha256": "75bac046d8efa71d1c8c9bb90ab0812a2fe8235df9e72ba394f7ce3de39ff223"
+    },
+    {
+      "path": "frontend/css/admin/bus-status-and-publishing.css",
+      "bytes": 3062,
+      "sha256": "e3ef2af21936d0091a836635665cb7ef09086f0e47132cc4c6b902989d75de80"
+    },
+    {
+      "path": "frontend/css/admin/buttons-and-inputs.css",
+      "bytes": 2083,
+      "sha256": "b5f9b1f94ef471981d6d8114b876264019159ed19c5d1a87d35b331473b45f69"
+    },
+    {
+      "path": "frontend/css/admin/export-map.css",
+      "bytes": 3062,
+      "sha256": "8c84d56561efa42c2997ccb1906313630024425b761e91dac55dac216834262e"
+    },
+    {
+      "path": "frontend/css/admin/poi-manager.css",
+      "bytes": 5907,
+      "sha256": "371935a6f317504f37043b86a1611c7b28c562cac972f6038adc69e620b59ca6"
+    },
+    {
+      "path": "frontend/css/admin/stop-and-route-editors.css",
+      "bytes": 11044,
+      "sha256": "6b5f5a8c1a0d19ec2ea5131ce3908aaadb6a119fabad14197bf79c18e82ab62f"
+    },
+    {
+      "path": "frontend/css/admin/tablet-and-mobile.css",
+      "bytes": 6338,
+      "sha256": "b045bb20cbe7ade81424bbf52817acda1c74f1349c630d4ba89c971aecaefd85"
+    },
+    {
+      "path": "frontend/css/admin/van-control-card.css",
+      "bytes": 3523,
+      "sha256": "2f3ebcc20e48ebe8186b1d952b00dc4019bd6a2fa5e7e82720ce95975d01bef6"
+    },
+    {
+      "path": "frontend/css/admin/workspace-and-map.css",
+      "bytes": 5348,
+      "sha256": "23ed0fed34b42a6c5c31ca364cf8b83322d7d43d9e7bad04e3b6fe1b35a83959"
+    },
+    {
+      "path": "frontend/css/live-map/leaflet-adjustments.css",
+      "bytes": 459,
+      "sha256": "c64ff1ed796261b1e9e1f17bf0c4daab9e2e00ec9ee4f444325db6693958aee0"
+    },
+    {
+      "path": "frontend/css/live-map/map-buttons.css",
+      "bytes": 6344,
+      "sha256": "3bced93724c1b91cbdfdbeabac7cd1d5d8910241d5f99f126c01db2410ebb367"
+    },
+    {
+      "path": "frontend/css/live-map/map-information.css",
+      "bytes": 6535,
+      "sha256": "82c07a3c93d3efb11f1b55ab3f92f5c03271615c29a24fb20f31f4f7467154d0"
+    },
+    {
+      "path": "frontend/css/live-map/map-markers.css",
+      "bytes": 4416,
+      "sha256": "6a8dc32dbd991661c3742c3299ea03ca78c5743deaf8f409a34ee0e339c67092"
+    },
+    {
+      "path": "frontend/css/live-map/mobile-layout.css",
+      "bytes": 10891,
+      "sha256": "9372d5552a2d5e09aaa111314e2a915483f22c082c8f9e55a6071ace2789e318"
+    },
+    {
+      "path": "frontend/css/live-map/notifications.css",
+      "bytes": 661,
+      "sha256": "0770c01387acf883aa17a16c1514afaf5ff92e6342894aec61db752854704800"
+    },
+    {
+      "path": "frontend/css/live-map/page-layout.css",
+      "bytes": 2944,
+      "sha256": "355d7d3f8ac5c02a1e40f491cf5700ee69b7b838dfe718a0a8ebc1b371dfe81a"
+    },
+    {
+      "path": "frontend/css/live-map/responsive-presentation.css",
+      "bytes": 5626,
+      "sha256": "e64480f4cac1b5d8b28084b39e7a2528fe343cdb0ddccbf0a31027a5af7a598d"
+    },
+    {
+      "path": "frontend/css/live-map/stops-panel.css",
+      "bytes": 5059,
+      "sha256": "125f4d3d0790ee8984416ef8854212590d852abce61e3cd348f1b7bc05cb08b2"
+    },
+    {
+      "path": "frontend/css/live-map/tourist-layout.css",
+      "bytes": 11560,
+      "sha256": "190c318a0b818275e85d1a7389d8af43a6d978562bd709b83416cc6b4435d758"
+    },
+    {
+      "path": "frontend/css/live-map/widget-layout.css",
+      "bytes": 2325,
+      "sha256": "12d60c5ce1bd208b8e82b97bfcee39e508584885557454f1dd25ca29d0b4c400"
+    },
+    {
+      "path": "frontend/css/shared.css",
+      "bytes": 793,
+      "sha256": "f5c30c66c6515882524a3453efb183d5d93e40c3885e249e4c246bde85860b5b"
+    },
+    {
+      "path": "frontend/css/stop-design.css",
+      "bytes": 4190,
+      "sha256": "c357734b1bc3f8ceb7827fb2634606c560cb4baa3c0629d96f93df3133a9188c"
+    },
+    {
+      "path": "frontend/css/widget-controls.css",
+      "bytes": 1412,
+      "sha256": "6c05d51cf0751960b8eeccb6f17d4739c44455b8f5706147f874fa08b00bf4f6"
+    },
+    {
+      "path": "frontend/icons/apple-touch-icon.png",
+      "bytes": 8579,
+      "sha256": "c5be8805b48ff67a33a774b768f0025bf39e24ebe62a99995dea4e8e86bea686"
+    },
+    {
+      "path": "frontend/icons/favicon-16x16.png",
+      "bytes": 311,
+      "sha256": "c28c506815f93115421ab292c5e45189adb4d95542fd512d7cd206bd29b91187"
+    },
+    {
+      "path": "frontend/icons/favicon-32x32.png",
+      "bytes": 859,
+      "sha256": "3e0cd82400fd478235340135491dfc01655f5b534d021b681a2a5891315153d2"
+    },
+    {
+      "path": "frontend/icons/favicon.ico",
+      "bytes": 881,
+      "sha256": "e8ffde14fee451ab35e5d2a0870e0b73416a5fa3887daca499f2192b61597ca7"
+    },
+    {
+      "path": "frontend/icons/icon-192x192.png",
+      "bytes": 9321,
+      "sha256": "ac63d83743a9df388f952c983976f5edc93af0797b6a537754aef85e29baf246"
+    },
+    {
+      "path": "frontend/icons/icon-512x512.png",
+      "bytes": 27696,
+      "sha256": "e6ffeffdc7282c56a085fcdc2bf40221630948b5be14c2015b7e88889f580250"
+    },
+    {
+      "path": "frontend/icons/maskable-icon-192x192.png",
+      "bytes": 7361,
+      "sha256": "9c4110b98f27c30056ed5d9c5abd175a14e641b3c58270940e1e24962cfa8db1"
+    },
+    {
+      "path": "frontend/icons/maskable-icon-512x512.png",
+      "bytes": 23044,
+      "sha256": "bdc8b320df3d210b9a0e496b253c660d27361d1030e8b2601aaf5c443773baee"
+    },
+    {
+      "path": "frontend/index.html",
+      "bytes": 40122,
+      "sha256": "21491fc4bfcfd8d5f9acab38f3a9e1bdfc1fe0aa0c7e1f19d5de4262afe14539"
+    },
+    {
+      "path": "frontend/js/admin/action-and-state-tools.js",
+      "bytes": 2484,
+      "sha256": "fa204d94a17c70b5558142917f55d63fe82528a817527d6e87b8f399d1b6613a"
+    },
+    {
+      "path": "frontend/js/admin/admin-bus-location.js",
+      "bytes": 11120,
+      "sha256": "0f627412eefaa563448e960487dca6bcf1b102adb00c0e15e4ffb29ad6555cd6"
+    },
+    {
+      "path": "frontend/js/admin/admin-editing-and-dialogs.js",
+      "bytes": 22962,
+      "sha256": "206f6aa0053392a0ff716257293d85e55a22388214831800a8172608cdb7d16a"
+    },
+    {
+      "path": "frontend/js/admin/admin-map-data.js",
+      "bytes": 14345,
+      "sha256": "447f715695834a5a6dcbbbe82646818f623cd66b2ee446fed51110fe8c19cc61"
+    },
+    {
+      "path": "frontend/js/admin/admin-poi.js",
+      "bytes": 9590,
+      "sha256": "076a0b79bb01aa3aaf4b8e841d08fe583544141c52666069b1c3c7dc7a494bd8"
+    },
+    {
+      "path": "frontend/js/admin/admin-projects.js",
+      "bytes": 10363,
+      "sha256": "a010a130416e644ee4140445115662b5b4e5846a104a4fb383240ca78bef90b1"
+    },
+    {
+      "path": "frontend/js/admin/admin-publishing-and-export.js",
+      "bytes": 13610,
+      "sha256": "05434bf73cec7bc0350db6e34517c9803897cf25468282ddc9d104e82dc3c1d9"
+    },
+    {
+      "path": "frontend/js/admin/admin-state.js",
+      "bytes": 1113,
+      "sha256": "4f2ada7a951b4ee3143857ebd3291d957882318097b459a9a1864dc8beb302e2"
+    },
+    {
+      "path": "frontend/js/admin/automatic-route-calculations.js",
+      "bytes": 1005,
+      "sha256": "9abc789f1c9358951da48301273666b849a8bf5f5ef35638c2f47f1188a3fd5e"
+    },
+    {
+      "path": "frontend/js/admin/bus-location-actions.js",
+      "bytes": 998,
+      "sha256": "b681ffacfc8a94c732cb51a1ec2434ae8c480bfa5c77defcd7310c3797436222"
+    },
+    {
+      "path": "frontend/js/admin/bus-location-service.js",
+      "bytes": 866,
+      "sha256": "2de3697012079670249b68fbc97d997cb4ec9132e3b7cbc581f9b881dda8494d"
+    },
+    {
+      "path": "frontend/js/admin/configure-map-editor.js",
+      "bytes": 652,
+      "sha256": "4e6ddfca6387547cea55109e274b7b449c767ecb759501a8deadd2ae0ce48bc9"
+    },
+    {
+      "path": "frontend/js/admin/connect-page-actions.js",
+      "bytes": 2099,
+      "sha256": "885031efacc1422fbe449c60315bbd8a432d6a3d3b022415ce453ecb01da96b3"
+    },
+    {
+      "path": "frontend/js/admin/connect-to-database.js",
+      "bytes": 660,
+      "sha256": "49b87fd782a301f3fcdfd18f0aeae9ee7f43b41ce099fb7243f33b113319378a"
+    },
+    {
+      "path": "frontend/js/admin/create-admin-map.js",
+      "bytes": 1601,
+      "sha256": "b7796dcf3d9886e38bfc7ba2b550e516e4980dedc9162aee9c95207f2443aa17"
+    },
+    {
+      "path": "frontend/js/admin/data-and-poi-actions.js",
+      "bytes": 2078,
+      "sha256": "d4939378ad076658244b738aa6e953a076ce8ee7b1df7451302c7378209762fa"
+    },
+    {
+      "path": "frontend/js/admin/feature-readiness-checks.js",
+      "bytes": 598,
+      "sha256": "535f0d842f039cafc9c2666ed2d7dc77990ef69cb3067701c4a7b98e6f5d5abe"
+    },
+    {
+      "path": "frontend/js/admin/feature-registry.js",
+      "bytes": 1948,
+      "sha256": "4e4dc9f66deb0274608936f46d556c1d6f76c4bb523f7a15ec97d07272e85858"
+    },
+    {
+      "path": "frontend/js/admin/feature-services.js",
+      "bytes": 626,
+      "sha256": "df0ddd72af0184db4754ec045b852f111538cbcd4b42d51233237e300d7d4baa"
+    },
+    {
+      "path": "frontend/js/admin/general-map-actions.js",
+      "bytes": 2727,
+      "sha256": "8d4accded269bd421835dda78698420dc680deaa78c2a0717af0967d590ae27b"
+    },
+    {
+      "path": "frontend/js/admin/geojson-validation.js",
+      "bytes": 3836,
+      "sha256": "08c133658bb1dabaefcdbab1fef627c84d38d7085fdaf5f6db6ad2415aefb1e2"
+    },
+    {
+      "path": "frontend/js/admin/gps-provider-status.js",
+      "bytes": 2349,
+      "sha256": "134afe9fda08286525abf89d121662f4dc8bed641348857b522b60177320207b"
+    },
+    {
+      "path": "frontend/js/admin/map-editing-actions.js",
+      "bytes": 4306,
+      "sha256": "7b06a8fcd27e9e248342290f975f06f168f16aea42f964b3eda85e051b415af9"
+    },
+    {
+      "path": "frontend/js/admin/notifications-and-general-tools.js",
+      "bytes": 2177,
+      "sha256": "b003c623a5ecde52697cc21074dab73a50043dce3c7ecd8d54d2d1666649a36f"
+    },
+    {
+      "path": "frontend/js/admin/page-element-helpers.js",
+      "bytes": 1062,
+      "sha256": "f1794aacf5d2e48cc1115f3955f864bd6ee2775eba2230ff2a7346733261cd6e"
+    },
+    {
+      "path": "frontend/js/admin/page-events.js",
+      "bytes": 1410,
+      "sha256": "802d44c3507515f7481fab3d6e75dad8ccb5d4f6cd56f8ee003855b261d9ee6b"
+    },
+    {
+      "path": "frontend/js/admin/poi-category-tools.js",
+      "bytes": 881,
+      "sha256": "7aacb8106096d914a0116d04aebb65bf06e6e96a0ea56ec7140f4920e4d71799"
+    },
+    {
+      "path": "frontend/js/admin/poi-manager-actions.js",
+      "bytes": 2194,
+      "sha256": "2a0c92731fb851b532fa6ee5c3afed363ba1b93993e39a2d7ce1f905a6d6ed70"
+    },
+    {
+      "path": "frontend/js/admin/prepare-admin-app.js",
+      "bytes": 1415,
+      "sha256": "a390ad3a53b045a12015674089e2b0056000e522e29ad462d1d7eb8566521efe"
+    },
+    {
+      "path": "frontend/js/admin/register-admin-actions.js",
+      "bytes": 488,
+      "sha256": "68bd1dbe4576a943a21b554a2c5a61ea637431c48592789da1c92ae9e8eda49e"
+    },
+    {
+      "path": "frontend/js/admin/route-data-tools.js",
+      "bytes": 1107,
+      "sha256": "c2df94bf6e9d7459b7bf2ae891432552bff50bb3c8ca134c3e8d9abc2864050a"
+    },
+    {
+      "path": "frontend/js/admin/route-editor-actions.js",
+      "bytes": 2958,
+      "sha256": "c623e2e343026dfe3616b626967fb95c482baec308447508c384278ebdf1cd01"
+    },
+    {
+      "path": "frontend/js/admin/start-admin-page.js",
+      "bytes": 2730,
+      "sha256": "a5b8cada3306e1e986ec1575e084d72088048b66fadfbb39480390dea8c248a8"
+    },
+    {
+      "path": "frontend/js/admin/van-control-card.js",
+      "bytes": 2168,
+      "sha256": "0ed29ff42110fb811be9a101cb222146e44d8df1ff99248e82688e63fbc5eec4"
+    },
+    {
+      "path": "frontend/js/live-map/app-settings.js",
+      "bytes": 2828,
+      "sha256": "2aecb2c4786b95c64f1fa929c4b6116ac469030c99535e9860f49497cfece1f1"
+    },
+    {
+      "path": "frontend/js/live-map/app-state.js",
+      "bytes": 3017,
+      "sha256": "ab2c5315674f257735c3b82c3c7f3451d3d82f42f51888d7bd862cf37d45a7d8"
+    },
+    {
+      "path": "frontend/js/live-map/automatic-refresh.js",
+      "bytes": 1502,
+      "sha256": "cd20960cc631722eac2d4884597d3849d1f4529ca78db371e4007094b94a3a72"
+    },
+    {
+      "path": "frontend/js/live-map/build-route-contexts.js",
+      "bytes": 9680,
+      "sha256": "121d99ee7a3bfa92ce234150389414900b51bddd6388e2607b2fb3f12ccb209e"
+    },
+    {
+      "path": "frontend/js/live-map/calculate-arrivals.js",
+      "bytes": 2760,
+      "sha256": "fadd8f8c9f9c342f64af882200d88e810ad3fd087c39afd7c825da3f32d1b320"
+    },
+    {
+      "path": "frontend/js/live-map/connect-page-actions.js",
+      "bytes": 456,
+      "sha256": "16de917c060dd8dda67362a62a05832770dddd5ddf5671ab0c129aaa0d9d8e20"
+    },
+    {
+      "path": "frontend/js/live-map/connect-to-database.js",
+      "bytes": 626,
+      "sha256": "98f9208b1b007aaebf4ee096fbf1c4e4baa717ec4d394ee7269b5bcec1487bca"
+    },
+    {
+      "path": "frontend/js/live-map/create-map.js",
+      "bytes": 486,
+      "sha256": "455d9873360f1c09f13d9ebace74f5e623c70e93502e65a2253bab83332c4f79"
+    },
+    {
+      "path": "frontend/js/live-map/display-full-route.js",
+      "bytes": 1353,
+      "sha256": "658c84beba19dc457720a4d693b041d0e990f3c8f6bc32d60a08340bd51d072d"
+    },
+    {
+      "path": "frontend/js/live-map/format-display-values.js",
+      "bytes": 1888,
+      "sha256": "5365d86c93d604948c513f30ce934da2e338fc3193f492be325596f841f11a4f"
+    },
+    {
+      "path": "frontend/js/live-map/load-published-map.js",
+      "bytes": 9122,
+      "sha256": "d4601a5f8d123fc9a65a11fec980da0404441267f1816431c5547cfe6732dee4"
+    },
+    {
+      "path": "frontend/js/live-map/load-vehicle-progress.js",
+      "bytes": 634,
+      "sha256": "6e8a635891c208bc9dcc27324d5345c8e64581440a20896669849f108373767d"
+    },
+    {
+      "path": "frontend/js/live-map/map-buttons.js",
+      "bytes": 3640,
+      "sha256": "f24e506c87e6671ea565b6ca7060eb403107d2cbfc41e0510913602a88974acc"
+    },
+    {
+      "path": "frontend/js/live-map/map-icons.js",
+      "bytes": 2143,
+      "sha256": "ac5a8206a8ea25b8ab3371ec3af4e90e8cec7b4d615abee0b4edb457a3abcf58"
+    },
+    {
+      "path": "frontend/js/live-map/map-popups.js",
+      "bytes": 1346,
+      "sha256": "e87ba43241b870383f126bff9843dcb5ea331cabca4dd738a9e7759c9d4195ab"
+    },
+    {
+      "path": "frontend/js/live-map/marker-motion.js",
+      "bytes": 4448,
+      "sha256": "377f43086cac8deaa444f5687ae016713760664aff7ed5c16d5ace27cf724964"
+    },
+    {
+      "path": "frontend/js/live-map/notifications.js",
+      "bytes": 1380,
+      "sha256": "ff4457ffa11d0a3b506671914a2539ed31423978c2d99508d59d092901eb5fdf"
+    },
+    {
+      "path": "frontend/js/live-map/prepare-route-data.js",
+      "bytes": 5855,
+      "sha256": "58fa8b4c227cdadd58db5b5241be1686e0daac65f245ec5ca3285440a08de29a"
+    },
+    {
+      "path": "frontend/js/live-map/project-context.js",
+      "bytes": 2536,
+      "sha256": "1d533b02aad1e9bcbc8c649881f15ca27ab7fa345b54ea730bb8267e2a5f97a1"
+    },
+    {
+      "path": "frontend/js/live-map/public-presentation.js",
+      "bytes": 10944,
+      "sha256": "ee1deffc4222e3ac68648cb3b640ebc9636245bb30f250cba3fae9ab91339ffd"
+    },
+    {
+      "path": "frontend/js/live-map/responsive-presentation.js",
+      "bytes": 1783,
+      "sha256": "6ac92263d23f2a9ec01471808be4e31a1c531c5d6877d5dc19152c0dd65f0511"
+    },
+    {
+      "path": "frontend/js/live-map/route-movement-calculations.js",
+      "bytes": 316,
+      "sha256": "802a2f3efd345d5ea137d10cbdd500bfd0c638f336c90f14caaaeae8b01223da"
+    },
+    {
+      "path": "frontend/js/live-map/start-live-map.js",
+      "bytes": 2595,
+      "sha256": "92a7a513132ede074bee9c043277a19f97dbba7c114dcdeea75b1f94cfd40b6e"
+    },
+    {
+      "path": "frontend/js/live-map/stop-marker-layout.js",
+      "bytes": 2201,
+      "sha256": "bf5f74041d74a52edd328749a008987c539d26816b4afba040078997b9e0486a"
+    },
+    {
+      "path": "frontend/js/live-map/stops-panel.js",
+      "bytes": 4817,
+      "sha256": "f52652d4b0b8322190f5f11ae7649815724347bd34367334f454f5dcbb6d96b5"
+    },
+    {
+      "path": "frontend/js/live-map/track-bus.js",
+      "bytes": 11669,
+      "sha256": "db4fece31298e32234233c7259130b09bbd9525a29c25013601ce977e0a0ae1b"
+    },
+    {
+      "path": "frontend/js/live-map/track-user.js",
+      "bytes": 9898,
+      "sha256": "2a8c201214f7ece807a3809837f582d98703bd81cf828bbc1f6c11e710ad74fe"
+    },
+    {
+      "path": "frontend/js/live-map/tracking-diagnostics.js",
+      "bytes": 2076,
+      "sha256": "a275b2161424cfcdf50d85440a65610e370f15e949cd50f7820811c302415a9d"
+    },
+    {
+      "path": "frontend/js/live-map/update-route-progress.js",
+      "bytes": 4291,
+      "sha256": "f3118b64d41918e81a5a0f8bd065929c994e21aa924f005bea6a8c4b0449ad77"
+    },
+    {
+      "path": "frontend/js/shared/app-config.js",
+      "bytes": 1813,
+      "sha256": "355eb35cd0d67196b679f3c1da80f5620db050bc95840e101f6161bc73316779"
+    },
+    {
+      "path": "frontend/js/shared/gps-source.js",
+      "bytes": 7854,
+      "sha256": "108a31101463cf8ca0b73300e3d00e5e983ea4f5720a7f2fa3cde821b76ae85b"
+    },
+    {
+      "path": "frontend/js/shared/map-content-safety.js",
+      "bytes": 539,
+      "sha256": "0d53659783157dd1f8714adbef228b112e379b08f4ce34ca055f038438abf201"
+    },
+    {
+      "path": "frontend/js/shared/stop-design-defaults.js",
+      "bytes": 1947,
+      "sha256": "84a34bf91702e05a57d2936fa19cbf2ddf19fbb2ab3191dea18d5e74b30e13ad"
+    },
+    {
+      "path": "frontend/js/shared/stop-design.js",
+      "bytes": 1925,
+      "sha256": "868962900373ba65688217158f96a90862eca20ce9a742491d6bdaf7277bb8d8"
+    },
+    {
+      "path": "frontend/js/shared/tracking-realtime.js",
+      "bytes": 886,
+      "sha256": "50957e5e734aee4fa2c0793bfb620bf479aedbcfa643de46f39b6f64424cc877"
+    },
+    {
+      "path": "frontend/js/shared/tracking-state.js",
+      "bytes": 3931,
+      "sha256": "163f510d111947e2b371d591118f1ec8be70bc45ae923a81732d0a4d464e1f3f"
+    },
+    {
+      "path": "frontend/js/shared/vehicle-icon.js",
+      "bytes": 1790,
+      "sha256": "f6bb9834ff32f4df7ed770228d28adba9ae16a2b8cc2a1a4672026ec415e39d1"
+    },
+    {
+      "path": "frontend/live-map.html",
+      "bytes": 12867,
+      "sha256": "e665016baec2f8803a066208751e72685160e2a7a0d8d89d7a2c9ae13d427fd2"
+    },
+    {
+      "path": "frontend/manifest.webmanifest",
+      "bytes": 855,
+      "sha256": "22a78b662e4339244c3ddbcb3b23755a947a4bffbc59fa19eb9045d4075c3140"
+    },
+    {
+      "path": "frontend/netlify.toml",
+      "bytes": 1279,
+      "sha256": "730888b051b46f8dbfcac4a7d2643e47edbd5b186931859c9ef8c260e68937a4"
+    },
+    {
+      "path": "manifest.json",
+      "bytes": 20829,
+      "sha256": "398c2b7dffa95594c9e4ec79233e83e3fb78fa7679711e04077a606e5e56e74b"
+    },
+    {
+      "path": "netlify.toml",
+      "bytes": 1141,
+      "sha256": "53f916ec374915b52a7bcdcd1bd0e2ace7b3da8468a1db91b3509120e5a94166"
+    },
+    {
+      "path": "package-lock.json",
+      "bytes": 2012,
+      "sha256": "9fc66719553a2f96ff26400fe8417d39cf5082f4104ae84fabdd0a7cdb093e6e"
+    },
+    {
+      "path": "package.json",
+      "bytes": 1157,
+      "sha256": "a5839ed04261d6de47db91fc21e480142c19294f56158b7ff6b3666cb73960f6"
+    },
+    {
+      "path": "provenance/applied-migration-sources/202609130001_audit_access_and_tracking_guards.sql",
+      "bytes": 4584,
+      "sha256": "3acd0c8629d8f7fcd5da5e71a8cd8e178e6340636a762955df2e77afe5faf292"
+    },
+    {
+      "path": "provenance/applied-migration-sources/202609140001_device_identity_and_project_transactions.sql",
+      "bytes": 5765,
+      "sha256": "3d7ec93f882b58fc526cf036c93ccc56a15f4581325900ad74d120fc902f530c"
+    },
+    {
+      "path": "provenance/applied-migration-sources/202609160001_provider_selection.sql",
+      "bytes": 9534,
+      "sha256": "829822ff3eb6a89ffd62f184662211878719ec2b5dc3e26cd9d8d0af0529a9ca"
+    },
+    {
+      "path": "provenance/applied-migration-sources/202609160002_revoke_browser_truncate.sql",
+      "bytes": 780,
+      "sha256": "ed4cb92093eab05c6f5369dd3b5420b040e2522e21cc4a00aea910cb54ed6807"
+    },
+    {
+      "path": "provenance/applied-migration-sources/202609160003_editor_request_limits.sql",
+      "bytes": 1759,
+      "sha256": "9dd0b10f1a665aedf248a9bcf1ede8c41eb59ce4926398aa9b48e7f63f401c41"
+    },
+    {
+      "path": "provenance/applied-migration-sources/202609160004_application_contract.sql",
+      "bytes": 1806,
+      "sha256": "e9ddd56b68e79439161d5f9709392db7f4e33a9cf85d9c7bcf1ef38728cbefe1"
+    },
+    {
+      "path": "provenance/applied-migration-sources/202609160005_atomic_provider_processing.sql",
+      "bytes": 8872,
+      "sha256": "74752231a10c843c6c69996a15e95b2cdfa3350ab007d00c5fbcc209672381d5"
+    },
+    {
+      "path": "provenance/applied-migration-sources/202609160006_atomic_device_ingestion.sql",
+      "bytes": 6482,
+      "sha256": "d3d7b3cc8afbdeb5dddd01ec5ff604003a7b2583ab6d31d4d83a6391778da041"
+    },
+    {
+      "path": "provenance/applied-migration-sources/202609160007_scorpion_bindings.sql",
+      "bytes": 5316,
+      "sha256": "f3005dcf2e3318828e5e39fd3e411e4ddd30dab268f37c194306a90f3c4d72cb"
+    },
+    {
+      "path": "provenance/applied-migration-sources/202609160008_private_settings_visibility.sql",
+      "bytes": 434,
+      "sha256": "bddec7791b34db8b2a01d05460959fa54ae2c6c4bb9baa60577968416209ed75"
+    },
+    {
+      "path": "provenance/applied-migration-sources/202609160009_persistent_tours.sql",
+      "bytes": 5114,
+      "sha256": "4e316619a9da21edc8b116b1921a98b50408a05342df8b321d7ebc2835f2664f"
+    },
+    {
+      "path": "provenance/applied-migration-sources/202609190001_tracking_distribution_retention.sql",
+      "bytes": 8001,
+      "sha256": "59c4bae3a150a7cfdf70c4f096bae7442543268eefdf41f41b425ea5925e5c69"
+    },
+    {
+      "path": "provenance/applied-migration-sources/202609200001_current_tracking.sql",
+      "bytes": 31472,
+      "sha256": "beb534f783787a2c467b2e4e0624556d86525f6d0c1b526ae39d94ca046ca1e5"
+    },
+    {
+      "path": "provenance/applied-migration-sources/202609210001_stop_radius_and_reported_status.sql",
+      "bytes": 10567,
+      "sha256": "9d5577ce0c4f94ad53da74bd06d429ebaba77c804d49f44707b182e6c4721c9b"
+    },
+    {
+      "path": "provenance/applied-migration-sources/202609210002_provisional_arrival.sql",
+      "bytes": 11439,
+      "sha256": "1d94536aeeff661d1937e99d54668812c5763a694268c188d772b3234a07794e"
+    },
+    {
+      "path": "provenance/applied-migration-sources/202609210003_lean_tracking.sql",
+      "bytes": 45204,
+      "sha256": "3d200f1bf859554fa854154d13acbc03f402180e77a962ebfb2e349b3f4a640e"
+    },
+    {
+      "path": "provenance/applied-migration-sources/202609210004_eta_context_guard.sql",
+      "bytes": 3329,
+      "sha256": "3a47e96173c143a30739766757bfef68c8aea2f21b5c49a41c46097d7848b918"
+    },
+    {
+      "path": "provenance/applied-migration-sources/202609260001_live_only_tracking.sql",
+      "bytes": 19995,
+      "sha256": "db1084e9489e3c5c43ec9c5bc035c7e1469d8f0b9569b2883f0711cb946ef5d0"
+    },
+    {
+      "path": "provenance/applied-migration-sources/202609260002_preserve_validation_history.sql",
+      "bytes": 2052,
+      "sha256": "2817eb82044230475654d63318f744f6d07a8fe04655fef44f808f9368582c3a"
+    },
+    {
+      "path": "provenance/applied-migration-sources/README.md",
+      "bytes": 358,
+      "sha256": "dd4717d6b6bb974bf80eea3742217a3f277e6447f42c39452e62e42198171dc4"
+    },
+    {
+      "path": "provenance/approved-stop-design.json",
+      "bytes": 2681,
+      "sha256": "4545946d82e5de43882b79feb0baf1e2bacf12fce45cbd2e7c4c13ae16e5c380"
+    },
+    {
+      "path": "provenance/backend-readonly.json",
+      "bytes": 9973,
+      "sha256": "bef9480d751acde64e09d23bdabfcdca6f74c28839fdb420b4eabb8f9500cca2"
+    },
+    {
+      "path": "provenance/cleanup-proposal.json",
+      "bytes": 464506,
+      "sha256": "3872d2b3bb49b51ddc8a21b797628186fca0f02f3ea3b2466968096c4171d442"
+    },
+    {
+      "path": "provenance/deployed-backend-manifest.json",
+      "bytes": 1394,
+      "sha256": "d44bbae9902cea21d6088b63c1d6de34a330fc02550c2c5a6a18124b687166be"
+    },
+    {
+      "path": "provenance/function-versions.json",
+      "bytes": 3099,
+      "sha256": "6f83f9029bb6915c24e98523e519b800a479293cb634212aff5e62db9d565c89"
+    },
+    {
+      "path": "provenance/migration-ledger-columns.json",
+      "bytes": 563,
+      "sha256": "36cc9bd584a860ca7bd78f10158b565676107ce9b3f8393d99daccc569d7bce5"
+    },
+    {
+      "path": "provenance/migration-ledger-discovery.json",
+      "bytes": 1034,
+      "sha256": "66baae9c9621e33ce89cca39d593341e6e1a6ff1bae345f67dda75f062cb8c31"
+    },
+    {
+      "path": "provenance/migration-ledger.json",
+      "bytes": 4563,
+      "sha256": "3acc59f7f50cc50dd97c4c611ec9647ee034e66c9c7d783ed51a2a52d49c986c"
+    },
+    {
+      "path": "provenance/migration-source-comparison.json",
+      "bytes": 6035,
+      "sha256": "4b4a61a77a6b2338ca47b9e5d2a8e7d72a98039f1d1392d9f456760f5e08eadb"
+    },
+    {
+      "path": "provenance/netlify-readonly.json",
+      "bytes": 287,
+      "sha256": "5d0408d8eb690ab28b943259bb6a655407ee3b7acba667eec3dd2c7d8324dbf4"
+    },
+    {
+      "path": "provenance/original-tests/test-departure-sequence.cjs",
+      "bytes": 3008,
+      "sha256": "f3b39fe5a2b441e5c2ebbaec5310ce094dd5e6f47b5fe8811a785beb597a6bc8"
+    },
+    {
+      "path": "provenance/original-tests/test-system-live-state.cjs",
+      "bytes": 4428,
+      "sha256": "0fff0d0ddbff3a9644d61bd8c9064c43f0bdae61d4ef6607628fcb1bb01da95e"
+    },
+    {
+      "path": "provenance/production-manifest.json",
+      "bytes": 23971,
+      "sha256": "d7935cc58e69811f0088c8b8394338ac0bab56076cba87d86b98ebcfe5663a8e"
+    },
+    {
+      "path": "provenance/production-metadata.json",
+      "bytes": 948,
+      "sha256": "d2d7ff018720a8fa26516a730318bfcb046b28672ef0ac4582edf006bb1f1f88"
+    },
+    {
+      "path": "provenance/provenance-platform.json",
+      "bytes": 235967,
+      "sha256": "272561a0a9903746a36c3bd47616f360173cef65c8f2a10557c5dc316568314f"
+    },
+    {
+      "path": "provenance/queries/ledger-columns-readonly.sql",
+      "bytes": 369,
+      "sha256": "fb6ca5c5e49f26793e84b3ad12eca85171a134f0bbb65e9be778e4014706fbcf"
+    },
+    {
+      "path": "provenance/queries/ledger-discovery-readonly.sql",
+      "bytes": 522,
+      "sha256": "163e48b9c74da3ac3574f459c0540186526df98b6d9bb65bbd9680b1d37f663d"
+    },
+    {
+      "path": "provenance/queries/ledger-entries-readonly.sql",
+      "bytes": 138,
+      "sha256": "a9485c3bfdba7f64e36be6ab060cda7b740eb0187dde72d5333d4dd898bf99b1"
+    },
+    {
+      "path": "provenance/queries/provenance-readonly.sql",
+      "bytes": 2118,
+      "sha256": "9680610a598deaa05a8770b5cf5ae5e680bd85e14e0a1c9cf2d8c91b3dbebc74"
+    },
+    {
+      "path": "provenance/rc1-planner-provenance.json",
+      "bytes": 342,
+      "sha256": "f8ae973cd562fcd3407765329b77e2f7acf2ceefe06ecb26a9068116792c8746"
+    },
+    {
+      "path": "provenance/runtime-dependencies.json",
+      "bytes": 1770,
+      "sha256": "1bd39cd7f93bc146d6f570ea7abd2425df8fe0b986bb3f7df684ea27081c9777"
+    },
+    {
+      "path": "provenance/safe-cleanup.json",
+      "bytes": 27950,
+      "sha256": "adb556f968e1ae567cc607d5461eb02b10117eb88a6c464af547dc934a1b2c5c"
+    },
+    {
+      "path": "provenance/selected-archive.json",
+      "bytes": 398,
+      "sha256": "2f09ee750e2667421ae920e832b4b02eb16c955cde8da830aa5151f00d1353c2"
+    },
+    {
+      "path": "provenance/snapshot-readonly.json",
+      "bytes": 1242,
+      "sha256": "59555547861520b29d5125b9b6f29960abde96661a5e08927f20da72b0807711"
+    },
+    {
+      "path": "provenance/supabase-functions.json",
+      "bytes": 3099,
+      "sha256": "6f83f9029bb6915c24e98523e519b800a479293cb634212aff5e62db9d565c89"
+    },
+    {
+      "path": "reports/DEPENDENCIES-AND-BUILD.md",
+      "bytes": 3285,
+      "sha256": "e56379663df9eb5b472cc2463238eaa8f89c2efd6232f9e0f0f3e7102aa94fc3"
+    },
+    {
+      "path": "reports/FINAL-GO-NOGO.md",
+      "bytes": 3899,
+      "sha256": "600fa02bfab2576234e56ab6f9e8b53387601cf2e4a1259ff55fd5d92b2a1a83"
+    },
+    {
+      "path": "reports/PRODUCTION-PARITY.md",
+      "bytes": 2268,
+      "sha256": "b3accb5819b83f75eb151cedf0ff85013d8c05eaedee7a980299c17d7294ec2b"
+    },
+    {
+      "path": "reports/PROVENANCE-FINDINGS.md",
+      "bytes": 2443,
+      "sha256": "96f79b99bbff3ef64e537d6d6560b39548f16aff125d3ad5ca28abe4176540d1"
+    },
+    {
+      "path": "reports/RC1-TEST-RECONCILIATION.md",
+      "bytes": 2310,
+      "sha256": "43b84373f826897b3e5f9de26fbdf4af99dcb3ad2141ac81b36c2516a09fdf73"
+    },
+    {
+      "path": "reports/SAFE-CLEANUP-PROPOSAL.md",
+      "bytes": 1028,
+      "sha256": "0424a8f3dfaf9eeb8845eadd93f60a6aa87ca31d4143e77ccc126de382cee623"
+    },
+    {
+      "path": "reports/STOP-DESIGN-ACCEPTANCE.md",
+      "bytes": 2369,
+      "sha256": "0d4f1eca1278a31e61ba4a1d871fb948cb33ec513f63373a04cd8b49a79e1557"
+    },
+    {
+      "path": "tests/browser.cjs",
+      "bytes": 14191,
+      "sha256": "87efe4322b91d7496ac612dadbb3525442d4ad4890405014533cab4f977f600a"
+    },
+    {
+      "path": "tests/fixture.cjs",
+      "bytes": 1569,
+      "sha256": "eff7975adf3cfd73c9f40c615fc7809240323cdcf4ca941898bec8d1999e2046"
+    },
+    {
+      "path": "tests/fixtures/before/index.html",
+      "bytes": 39384,
+      "sha256": "ae4c248bbaa76500b62d4b06669c4e7c14c90f01bf82704c4c5335fdd132f329"
+    },
+    {
+      "path": "tests/fixtures/before/js/admin/admin-editing-and-dialogs.js",
+      "bytes": 22403,
+      "sha256": "2a5b34d1444e8ad13a8b00aea016bd3cc66ec6868cc88e6d61721f3861918e44"
+    },
+    {
+      "path": "tests/fixtures/before/js/admin/admin-map-data.js",
+      "bytes": 14069,
+      "sha256": "23e015303f08928d70cff88fcde42f510706b310554c09a47275c6212cd19033"
+    },
+    {
+      "path": "tests/fixtures/before/js/live-map/load-published-map.js",
+      "bytes": 9133,
+      "sha256": "1ff0bd884755908f1fd9d15297f9a91109bbf401260211e56e5bab502de5632d"
+    },
+    {
+      "path": "tests/fixtures/before/js/live-map/map-icons.js",
+      "bytes": 2461,
+      "sha256": "904194dfff9f6ba401944a31cd565d871ebb0bf0e37b1283ed58e190c04d306c"
+    },
+    {
+      "path": "tests/fixtures/before/js/live-map/map-popups.js",
+      "bytes": 1134,
+      "sha256": "daeec020084053e2e6c632b25272046c536fcb19306f7e843d699b31cad0bfa7"
+    },
+    {
+      "path": "tests/fixtures/before/js/live-map/stops-panel.js",
+      "bytes": 3657,
+      "sha256": "3b7737acb6d7dec3822a0e71da2153a8d4090ef24c3fc960dd782d758e86ffcf"
+    },
+    {
+      "path": "tests/fixtures/before/live-map.html",
+      "bytes": 12647,
+      "sha256": "c41fea5ae8df80a7f6a1d3eb1c41321acc4ef0470490fd359f27a848ac3cc73d"
+    },
+    {
+      "path": "tests/fixtures/published-map-106.json",
+      "bytes": 124607,
+      "sha256": "c7c198262cfc3244117678bad0e009dbee656615232e8740be50a996fc7e418c"
+    },
+    {
+      "path": "tests/fixtures/stop-photos/1.image",
+      "bytes": 34371,
+      "sha256": "9454df13de0b1de2daa0db7187fad48c9b97998f08a7c361d5dad9613bc55253"
+    },
+    {
+      "path": "tests/fixtures/stop-photos/2.image",
+      "bytes": 11429,
+      "sha256": "dd6aa49da0cbef0b82683063932d9d3e4ec4372425584fece642b1903b362f1a"
+    },
+    {
+      "path": "tests/fixtures/stop-photos/3.image",
+      "bytes": 9107,
+      "sha256": "84f354034ed18e951db391c5669827ed611f32350bf300693f4eb97892943e27"
+    },
+    {
+      "path": "tests/fixtures/stop-photos/4.image",
+      "bytes": 11260,
+      "sha256": "8b9600ba91c9e7a2f23779c9c210b76c79bea6bd51ce679226161cb3108a3e43"
+    },
+    {
+      "path": "tests/fixtures/stop-photos/5.image",
+      "bytes": 8731,
+      "sha256": "cf645f2c80b3350e3e3722eeae95f8815ec515c4efcaede732837fa880709040"
+    },
+    {
+      "path": "tests/fixtures/stop-photos/manifest.json",
+      "bytes": 2762,
+      "sha256": "3420e6961107a4012be103a0cde4c53b268e6bfbe6e9eaccefa860ae23856301"
+    },
+    {
+      "path": "tests/hosted-readonly.cjs",
+      "bytes": 4294,
+      "sha256": "f6ea94d3ecf672ebf633d63b0a0dbb0a69e3a5b2eb820e300eff90a301c49291"
+    },
+    {
+      "path": "tests/run-frontend.cjs",
+      "bytes": 276,
+      "sha256": "060adb6421e00d63fd3183583214fde42ba2e8acad2afcb55597bcb3b4ac35ce"
+    },
+    {
+      "path": "tests/test-departure-sequence.cjs",
+      "bytes": 3076,
+      "sha256": "1c6044b57142c6ebd07a8742d847a7c99cd76f7ae6e906983dcc034ba625af46"
+    },
+    {
+      "path": "tests/test-eta-display.cjs",
+      "bytes": 1200,
+      "sha256": "58d24603d22a521f82f1b1c8b8246a08bb384b734651128146898ad99ff41ba6"
+    },
+    {
+      "path": "tests/test-provider-integration.cjs",
+      "bytes": 3772,
+      "sha256": "4db22865fa43997e97aa79e65c7ec2fe0be821e43a53f89dff563cf6b6f0504c"
+    },
+    {
+      "path": "tests/test-public-freshness.cjs",
+      "bytes": 1119,
+      "sha256": "df954307bdc1c6ce0a1c90e95baf8efa2af1200c81d985be8fe8b7cdc4ec700c"
+    },
+    {
+      "path": "tests/test-shared-tracking.cjs",
+      "bytes": 1223,
+      "sha256": "35983a10b9bf475abc681925c18cb84b3b77b38e954d8e7f7f0d435c0e898115"
+    },
+    {
+      "path": "tests/test-system-live-state.cjs",
+      "bytes": 4122,
+      "sha256": "c3ac1da9e43b88aa238e08feaf0ae7e7bce58443c6e44d330a969a1074f0926c"
+    },
+    {
+      "path": "tests/test-tracking-stream.cjs",
+      "bytes": 2184,
+      "sha256": "40f5156621e6981d2a78eff58f65b453075117d95d9398a60ffdced313659801"
+    },
+    {
+      "path": "tests/test-worker-contract.cjs",
+      "bytes": 1530,
+      "sha256": "f3d8b99347fef13058c47b41791634c48e99704104a4c6202be9b037494fb25c"
+    },
+    {
+      "path": "tools/build.cjs",
+      "bytes": 1214,
+      "sha256": "dbd7da9a0401acfccf6aaa5a258992e45c27d01b887592f739fc16f49488a9e6"
+    },
+    {
+      "path": "tools/check-platform.cjs",
+      "bytes": 1208,
+      "sha256": "29e920f59493e84cbd47e485d4c63df98be3961cc907321bf93429431ecf0b56"
+    },
+    {
+      "path": "tools/check.cjs",
+      "bytes": 1974,
+      "sha256": "bb3996594154a767b96b4359055cfe2599d9ffe0b4e9f4047a72128f02130f1a"
+    },
+    {
+      "path": "tools/lint.cjs",
+      "bytes": 1080,
+      "sha256": "d69a127cde17752e3e94e802ae7594b7fa54f285a48d093a2324c1a541a31735"
+    },
+    {
+      "path": "tools/serve.cjs",
+      "bytes": 1003,
+      "sha256": "83b02f859962f200d2c24ee91ec04a9ee72350ad5dbb466cee7e21797bde6adb"
+    }
+  ],
+  "secretScan": "PASS; public anon browser key retained as required; no private-token patterns found",
+  "excluded": "node_modules, dist, generated logs/screenshots and CLI temporary files"
+}

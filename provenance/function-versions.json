@@ -1,0 +1,80 @@
+[
+  {
+    "created_at": 1787054330299,
+    "entrypoint_path": "file:///tmp/user_fn_jpcjdqwyrrcusuvypwic_fcd90659-f5c5-425b-beb1-4ba0c431bfa4_5/source/supabase/functions/gps-collector/index.ts",
+    "ezbr_sha256": "d2b3b34902b6f3ac79cc16a7122ed747f94e07f69aa4f24ace59d658d353be21",
+    "id": "fcd90659-f5c5-425b-beb1-4ba0c431bfa4",
+    "import_map": false,
+    "name": "gps-collector",
+    "slug": "gps-collector",
+    "status": "ACTIVE",
+    "updated_at": 1789883296657,
+    "verify_jwt": false,
+    "version": 7
+  },
+  {
+    "created_at": 1787058733272,
+    "entrypoint_path": "file:///tmp/user_fn_jpcjdqwyrrcusuvypwic_579ea2ae-5f23-4a0b-a93a-5bd667c14405_20/source/supabase/functions/stop-detector/index.ts",
+    "ezbr_sha256": "d18af917ef017e0c3fa5ee0287a3caeedb94a21f5c70e41d0e4916488437b745",
+    "id": "579ea2ae-5f23-4a0b-a93a-5bd667c14405",
+    "import_map": false,
+    "name": "stop-detector",
+    "slug": "stop-detector",
+    "status": "ACTIVE",
+    "updated_at": 1791750373847,
+    "verify_jwt": false,
+    "version": 20
+  },
+  {
+    "created_at": 1787059379177,
+    "entrypoint_path": "file:///tmp/user_fn_jpcjdqwyrrcusuvypwic_4d7cff8c-3a32-48cc-9335-3f3136ff0b7f_9/source/supabase/functions/segment-analyzer/index.ts",
+    "ezbr_sha256": "7974cf433c20ceba39df5484991ad4f503951f51684c7d9ad778d3b83abbcc98",
+    "id": "4d7cff8c-3a32-48cc-9335-3f3136ff0b7f",
+    "import_map": false,
+    "name": "segment-analyzer",
+    "slug": "segment-analyzer",
+    "status": "ACTIVE",
+    "updated_at": 1790427412328,
+    "verify_jwt": false,
+    "version": 9
+  },
+  {
+    "created_at": 1787152429390,
+    "entrypoint_path": "file:///tmp/user_fn_jpcjdqwyrrcusuvypwic_0435e596-36ba-4589-aa3c-d4831bcaaf1f_11/source/supabase/functions/eta-engine/index.ts",
+    "ezbr_sha256": "f36045c493f8234627798459c597efcc4179c5901f4e7d01aa075c7f1f0cc4af",
+    "id": "0435e596-36ba-4589-aa3c-d4831bcaaf1f",
+    "import_map": false,
+    "name": "eta-engine",
+    "slug": "eta-engine",
+    "status": "ACTIVE",
+    "updated_at": 1790427408759,
+    "verify_jwt": false,
+    "version": 11
+  },
+  {
+    "created_at": 1787651796229,
+    "entrypoint_path": "file:///tmp/user_fn_jpcjdqwyrrcusuvypwic_3c8e425e-8dbe-4ad0-b810-5b516e2e7882_10/source/supabase/functions/osm-poi-search/index.ts",
+    "ezbr_sha256": "9ff344c3ca7767bc78a4d2ff6700832838c8cfb65c74ce527954a9166639c266",
+    "id": "3c8e425e-8dbe-4ad0-b810-5b516e2e7882",
+    "import_map": false,
+    "name": "osm-poi-search",
+    "slug": "osm-poi-search",
+    "status": "ACTIVE",
+    "updated_at": 1789968636284,
+    "verify_jwt": false,
+    "version": 12
+  },
+  {
+    "created_at": 1787751406095,
+    "entrypoint_path": "file:///tmp/user_fn_jpcjdqwyrrcusuvypwic_0dcca76e-4d08-47be-95b3-6425c7cb50d3_6/source/supabase/functions/gps-ingest/index.ts",
+    "ezbr_sha256": "b28a5b99f2f5c59c4eb4f501fc6a97862cfdcc553007cf87b84c4aada31451d5",
+    "id": "0dcca76e-4d08-47be-95b3-6425c7cb50d3",
+    "import_map": false,
+    "name": "gps-ingest",
+    "slug": "gps-ingest",
+    "status": "ACTIVE",
+    "updated_at": 1789883299369,
+    "verify_jwt": false,
+    "version": 8
+  }
+]

@@ -1,0 +1,42 @@
+[
+  {
+    "id": "point_13634d33-3234-4380-9f11-18d95b3276b2",
+    "url": "https://www.sightseeingshkodra.com/_next/image?url=https%3A%2F%2Fybngoppqqiohcduojfyg.supabase.co%2Fstorage%2Fv1%2Fobject%2Fpublic%2Fwebsite-media%2F9185510e-0e82-4027-ab1c-8604dad5c92e%2Fccf0d5dc-74b6-4a9e-857c-24a380395fe4.png&w=256&q=75",
+    "filename": "1.image",
+    "contentType": "image/png",
+    "sha256": "9454df13de0b1de2daa0db7187fad48c9b97998f08a7c361d5dad9613bc55253",
+    "source": "Existing public website photograph, optimized width 256; test fixture only"
+  },
+  {
+    "id": "point_9434301f-9f58-49e1-9032-79398525a2cc",
+    "url": "https://www.sightseeingshkodra.com/_next/image?url=https%3A%2F%2Fybngoppqqiohcduojfyg.supabase.co%2Fstorage%2Fv1%2Fobject%2Fpublic%2Fwebsite-media%2F9185510e-0e82-4027-ab1c-8604dad5c92e%2F735dfc27-f810-4a03-b531-02f44cfd9c1e.jpg&w=256&q=75",
+    "filename": "2.image",
+    "contentType": "image/jpeg",
+    "sha256": "dd6aa49da0cbef0b82683063932d9d3e4ec4372425584fece642b1903b362f1a",
+    "source": "Existing public website photograph, optimized width 256; test fixture only"
+  },
+  {
+    "id": "point_58e64759-bcac-4561-80a4-ecd71ae90d14",
+    "url": "https://www.sightseeingshkodra.com/_next/image?url=https%3A%2F%2Fybngoppqqiohcduojfyg.supabase.co%2Fstorage%2Fv1%2Fobject%2Fpublic%2Fwebsite-media%2F9185510e-0e82-4027-ab1c-8604dad5c92e%2F81b9045d-fbe2-4176-a232-6b4b01859eaf.jpg&w=256&q=75",
+    "filename": "3.image",
+    "contentType": "image/jpeg",
+    "sha256": "84f354034ed18e951db391c5669827ed611f32350bf300693f4eb97892943e27",
+    "source": "Existing public website photograph, optimized width 256; test fixture only"
+  },
+  {
+    "id": "point_1e6d30b8-1a77-411f-97f7-5f3995168e2d",
+    "url": "https://www.sightseeingshkodra.com/_next/image?url=https%3A%2F%2Fybngoppqqiohcduojfyg.supabase.co%2Fstorage%2Fv1%2Fobject%2Fpublic%2Fwebsite-media%2F9185510e-0e82-4027-ab1c-8604dad5c92e%2F9f606459-6c9e-4016-8b31-1cf240843319.webp&w=256&q=75",
+    "filename": "4.image",
+    "contentType": "image/jpeg",
+    "sha256": "8b9600ba91c9e7a2f23779c9c210b76c79bea6bd51ce679226161cb3108a3e43",
+    "source": "Existing public website photograph, optimized width 256; test fixture only"
+  },
+  {
+    "id": "point_83aa80ab-27a9-4df7-b742-dd4f4510f4c6",
+    "url": "https://www.sightseeingshkodra.com/_next/image?url=https%3A%2F%2Fybngoppqqiohcduojfyg.supabase.co%2Fstorage%2Fv1%2Fobject%2Fpublic%2Fwebsite-media%2F9185510e-0e82-4027-ab1c-8604dad5c92e%2F9822de8d-ca3f-4759-b1f1-552a16ae42a3.jpg&w=256&q=75",
+    "filename": "5.image",
+    "contentType": "image/jpeg",
+    "sha256": "cf645f2c80b3350e3e3722eeae95f8815ec515c4efcaede732837fa880709040",
+    "source": "Existing public website photograph, optimized width 256; test fixture only"
+  }
+]

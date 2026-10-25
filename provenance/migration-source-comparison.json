@@ -1,0 +1,158 @@
+{
+  "entries": 19,
+  "matched": 19,
+  "files": [
+    {
+      "file": "supabase/migrations/202609130001_audit_access_and_tracking_guards.sql",
+      "ledger_sha256": "3acd0c8629d8f7fcd5da5e71a8cd8e178e6340636a762955df2e77afe5faf292",
+      "matching_local_sources": [
+        "supabase/migrations/202609130001_audit_access_and_tracking_guards.sql"
+      ],
+      "match": true
+    },
+    {
+      "file": "supabase/migrations/202609140001_device_identity_and_project_transactions.sql",
+      "ledger_sha256": "3d7ec93f882b58fc526cf036c93ccc56a15f4581325900ad74d120fc902f530c",
+      "matching_local_sources": [
+        "supabase/migrations/202609140001_device_identity_and_project_transactions.sql"
+      ],
+      "match": true
+    },
+    {
+      "file": "supabase/migrations/202609160002_revoke_browser_truncate.sql",
+      "ledger_sha256": "ed4cb92093eab05c6f5369dd3b5420b040e2522e21cc4a00aea910cb54ed6807",
+      "matching_local_sources": [
+        "supabase/migrations/202609160002_revoke_browser_truncate.sql"
+      ],
+      "match": true
+    },
+    {
+      "file": "supabase/migrations/202609160003_editor_request_limits.sql",
+      "ledger_sha256": "9dd0b10f1a665aedf248a9bcf1ede8c41eb59ce4926398aa9b48e7f63f401c41",
+      "matching_local_sources": [
+        "supabase/migrations/202609160003_editor_request_limits.sql"
+      ],
+      "match": true
+    },
+    {
+      "file": "supabase/migrations/202609160004_application_contract.sql",
+      "ledger_sha256": "e9ddd56b68e79439161d5f9709392db7f4e33a9cf85d9c7bcf1ef38728cbefe1",
+      "matching_local_sources": [
+        "supabase/migrations/202609160004_application_contract.sql"
+      ],
+      "match": true
+    },
+    {
+      "file": "supabase/migrations/202609160005_atomic_provider_processing.sql",
+      "ledger_sha256": "74752231a10c843c6c69996a15e95b2cdfa3350ab007d00c5fbcc209672381d5",
+      "matching_local_sources": [
+        "supabase/migrations/202609160005_atomic_provider_processing.sql"
+      ],
+      "match": true
+    },
+    {
+      "file": "supabase/migrations/202609160006_atomic_device_ingestion.sql",
+      "ledger_sha256": "d3d7b3cc8afbdeb5dddd01ec5ff604003a7b2583ab6d31d4d83a6391778da041",
+      "matching_local_sources": [
+        "supabase/migrations/202609160006_atomic_device_ingestion.sql"
+      ],
+      "match": true
+    },
+    {
+      "file": "supabase/migrations/202609160007_scorpion_bindings.sql",
+      "ledger_sha256": "f3005dcf2e3318828e5e39fd3e411e4ddd30dab268f37c194306a90f3c4d72cb",
+      "matching_local_sources": [
+        "supabase/migrations/202609160007_scorpion_bindings.sql"
+      ],
+      "match": true
+    },
+    {
+      "file": "supabase/migrations/202609160008_private_settings_visibility.sql",
+      "ledger_sha256": "bddec7791b34db8b2a01d05460959fa54ae2c6c4bb9baa60577968416209ed75",
+      "matching_local_sources": [
+        "supabase/migrations/202609160008_private_settings_visibility.sql"
+      ],
+      "match": true
+    },
+    {
+      "file": "supabase/migrations/202609160009_persistent_tours.sql",
+      "ledger_sha256": "4e316619a9da21edc8b116b1921a98b50408a05342df8b321d7ebc2835f2664f",
+      "matching_local_sources": [
+        "supabase/migrations/202609160009_persistent_tours.sql"
+      ],
+      "match": true
+    },
+    {
+      "file": "supabase/proposals/202609160001_provider_selection.sql",
+      "ledger_sha256": "829822ff3eb6a89ffd62f184662211878719ec2b5dc3e26cd9d8d0af0529a9ca",
+      "matching_local_sources": [
+        "supabase/proposals/202609160001_provider_selection.sql"
+      ],
+      "match": true
+    },
+    {
+      "file": "supabase/proposals/202609190001_tracking_distribution_retention.sql",
+      "ledger_sha256": "59c4bae3a150a7cfdf70c4f096bae7442543268eefdf41f41b425ea5925e5c69",
+      "matching_local_sources": [
+        "supabase/proposals/202609190001_tracking_distribution_retention.sql"
+      ],
+      "match": true
+    },
+    {
+      "file": "supabase/proposals/202609200001_current_tracking.sql",
+      "ledger_sha256": "beb534f783787a2c467b2e4e0624556d86525f6d0c1b526ae39d94ca046ca1e5",
+      "matching_local_sources": [
+        "supabase/proposals/202609200001_current_tracking.sql"
+      ],
+      "match": true
+    },
+    {
+      "file": "supabase/proposals/202609210001_stop_radius_and_reported_status.sql",
+      "ledger_sha256": "9d5577ce0c4f94ad53da74bd06d429ebaba77c804d49f44707b182e6c4721c9b",
+      "matching_local_sources": [
+        "supabase/proposals/202609210001_stop_radius_and_reported_status.sql"
+      ],
+      "match": true
+    },
+    {
+      "file": "supabase/proposals/202609210002_provisional_arrival.sql",
+      "ledger_sha256": "1d94536aeeff661d1937e99d54668812c5763a694268c188d772b3234a07794e",
+      "matching_local_sources": [
+        "supabase/proposals/202609210002_provisional_arrival.sql"
+      ],
+      "match": true
+    },
+    {
+      "file": "supabase/proposals/202609210003_lean_tracking.sql",
+      "ledger_sha256": "3d200f1bf859554fa854154d13acbc03f402180e77a962ebfb2e349b3f4a640e",
+      "matching_local_sources": [
+        "supabase/proposals/202609210003_lean_tracking.sql"
+      ],
+      "match": true
+    },
+    {
+      "file": "supabase/proposals/202609210004_eta_context_guard.sql",
+      "ledger_sha256": "3a47e96173c143a30739766757bfef68c8aea2f21b5c49a41c46097d7848b918",
+      "matching_local_sources": [
+        "supabase/proposals/202609210004_eta_context_guard.sql"
+      ],
+      "match": true
+    },
+    {
+      "file": "supabase/proposals/202609260001_live_only_tracking.sql",
+      "ledger_sha256": "db1084e9489e3c5c43ec9c5bc035c7e1469d8f0b9569b2883f0711cb946ef5d0",
+      "matching_local_sources": [
+        "supabase/proposals/202609260001_live_only_tracking.sql"
+      ],
+      "match": true
+    },
+    {
+      "file": "supabase/proposals/202609260002_preserve_validation_history.sql",
+      "ledger_sha256": "2817eb82044230475654d63318f744f6d07a8fe04655fef44f808f9368582c3a",
+      "matching_local_sources": [
+        "supabase/proposals/202609260002_preserve_validation_history.sql"
+      ],
+      "match": true
+    }
+  ]
+}

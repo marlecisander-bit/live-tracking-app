@@ -1,0 +1,463 @@
+{
+  "authorization": "Proposal only. No filesystem move, archive of obsolete directories, deletion, ref update, reset, clean or prune performed. New verified production/Git backups are evidence preservation, not cleanup.",
+  "entries": [
+    {
+      "classification": "D01",
+      "target": "/Users/aleksandermarleci/Desktop/Projects Dev/live-tracking-app-master/docs/final-approved-design-20261025/proposed",
+      "exists": true,
+      "action_proposed": "Archive or quarantine after owner review; no move now",
+      "reason": "Published bridge-preserving overlay in release/published supersedes this original local patch.",
+      "unique_code": "Directory may contain unique config/evidence; exact file manifest required before archiving",
+      "rollback_material": "Retain the associated deploy ZIP and metadata; do not delete historical deploys",
+      "safe_to_archive": "Only after owner approval, full file manifest, secret review, sealed archive and extraction verification",
+      "safe_to_delete": false,
+      "executed": false
+    },
+    {
+      "classification": "D01",
+      "target": "/Users/aleksandermarleci/Desktop/Projects Dev/live-tracking-app-master/docs/final-approved-design-20261025/redesign.patch",
+      "exists": true,
+      "action_proposed": "Archive or quarantine after owner review; no move now",
+      "reason": "Same superseded proposal; retain historical audit reference.",
+      "unique_code": "Directory may contain unique config/evidence; exact file manifest required before archiving",
+      "rollback_material": "Retain the associated deploy ZIP and metadata; do not delete historical deploys",
+      "safe_to_archive": "Only after owner approval, full file manifest, secret review, sealed archive and extraction verification",
+      "safe_to_delete": false,
+      "executed": false
+    },
+    {
+      "classification": "D02",
+      "target": "/private/tmp/shkodra-map-presentation-release-20261025",
+      "exists": true,
+      "action_proposed": "Archive or quarantine after owner review; no move now",
+      "reason": "Previous deployed frontend artifact superseded by current design; preserve its rollback identity.",
+      "unique_code": "Directory may contain unique config/evidence; exact file manifest required before archiving",
+      "rollback_material": "Retain the associated deploy ZIP and metadata; do not delete historical deploys",
+      "safe_to_archive": "Only after owner approval, full file manifest, secret review, sealed archive and extraction verification",
+      "safe_to_delete": false,
+      "executed": false
+    },
+    {
+      "classification": "D02",
+      "target": "/Users/aleksandermarleci/Desktop/Projects Dev/live-tracking-app-master/.audit/embed-com-fix/candidate",
+      "exists": true,
+      "action_proposed": "Archive or quarantine after owner review; no move now",
+      "reason": "Older embed candidate superseded by published CSP and new dock/card.",
+      "unique_code": "Directory may contain unique config/evidence; exact file manifest required before archiving",
+      "rollback_material": "Retain the associated deploy ZIP and metadata; do not delete historical deploys",
+      "safe_to_archive": "Only after owner approval, full file manifest, secret review, sealed archive and extraction verification",
+      "safe_to_delete": false,
+      "executed": false
+    },
+    {
+      "classification": "D03",
+      "target": "/Users/aleksandermarleci/Desktop/Projects Dev/live-tracking-app-master/.audit/pre-reconciliation-dist",
+      "exists": true,
+      "action_proposed": "Archive or quarantine after owner review; no move now",
+      "reason": "Old generated frontend differs from current production; preserve source/history separately.",
+      "unique_code": "Directory may contain unique config/evidence; exact file manifest required before archiving",
+      "rollback_material": "Retain the associated deploy ZIP and metadata; do not delete historical deploys",
+      "safe_to_archive": "Only after owner approval, full file manifest, secret review, sealed archive and extraction verification",
+      "safe_to_delete": false,
+      "executed": false
+    },
+    {
+      "classification": "D04",
+      "target": "/Users/aleksandermarleci/Desktop/Projects Dev/live-tracking-app-master/.audit/reconciled-candidate",
+      "exists": true,
+      "action_proposed": "Archive or quarantine after owner review; no move now",
+      "reason": "Old baseline proposal; non-frontend uniqueness must be reviewed before moving the whole directory.",
+      "unique_code": "Directory may contain unique config/evidence; exact file manifest required before archiving",
+      "rollback_material": "Retain the associated deploy ZIP and metadata; do not delete historical deploys",
+      "safe_to_archive": "Only after owner approval, full file manifest, secret review, sealed archive and extraction verification",
+      "safe_to_delete": false,
+      "executed": false
+    },
+    {
+      "classification": "D04",
+      "target": "/Users/aleksandermarleci/Desktop/Projects Dev/live-tracking-app-master/.audit/frontend-baseline/dist",
+      "exists": true,
+      "action_proposed": "Archive or quarantine after owner review; no move now",
+      "reason": "Derivative build from older recovered baseline.",
+      "unique_code": "Directory may contain unique config/evidence; exact file manifest required before archiving",
+      "rollback_material": "Retain the associated deploy ZIP and metadata; do not delete historical deploys",
+      "safe_to_archive": "Only after owner approval, full file manifest, secret review, sealed archive and extraction verification",
+      "safe_to_delete": false,
+      "executed": false
+    },
+    {
+      "classification": "E09",
+      "target": "/private/tmp/shkodra-live-map-redesign/dist",
+      "exists": true,
+      "action_proposed": "Archive or quarantine after owner review; no move now",
+      "reason": "Generated output is not the published frozen artifact; quarantine from release selection.",
+      "unique_code": "Directory may contain unique config/evidence; exact file manifest required before archiving",
+      "rollback_material": "Retain the associated deploy ZIP and metadata; do not delete historical deploys",
+      "safe_to_archive": "Only after owner approval, full file manifest, secret review, sealed archive and extraction verification",
+      "safe_to_delete": false,
+      "executed": false
+    },
+    {
+      "classification": "E09",
+      "target": "/private/tmp/shkodra-stop-markers-20261025/dist",
+      "exists": true,
+      "action_proposed": "Archive or quarantine after owner review; no move now",
+      "reason": "Not the frozen 112-file stop-design candidate; quarantine from release selection.",
+      "unique_code": "Directory may contain unique config/evidence; exact file manifest required before archiving",
+      "rollback_material": "Retain the associated deploy ZIP and metadata; do not delete historical deploys",
+      "safe_to_archive": "Only after owner approval, full file manifest, secret review, sealed archive and extraction verification",
+      "safe_to_delete": false,
+      "executed": false
+    },
+    {
+      "classification": "D05-component-duplicate",
+      "target": "/Users/aleksandermarleci/Desktop/Projects Dev/live-tracking-app-master/.audit/embed-com-fix/baseline",
+      "action_proposed": "Review redundant extraction; preserve canonical rollback and all Git histories",
+      "duplicate_frontend_peers": [
+        "/Users/aleksandermarleci/Desktop/Projects Dev/live-tracking-app-master/.audit/optimization/rc1-final/release/frontend",
+        "/Users/aleksandermarleci/Desktop/Projects Dev/live-tracking-app-master/.audit/optimization/stage2-preparation/rc1/frontend",
+        "/Users/aleksandermarleci/Desktop/Projects Dev/live-tracking-app-master/.audit/optimization/stage4/first-bundle-attempt/frontend/site",
+        "/Users/aleksandermarleci/Desktop/Projects Dev/live-tracking-app-master/.audit/optimization/stage4/release/frontend/site"
+      ],
+      "reason": "Identical declared frontend fingerprint; this does not prove enclosing directory duplication",
+      "unique_code": "Outside compared frontend paths not assumed duplicate",
+      "rollback_material": "Potentially necessary rollback/source history; KEEP unless separately verified",
+      "safe_to_archive": "Conditional only; do not move tracked subdirectories out of existing Git checkouts",
+      "safe_to_delete": false,
+      "executed": false
+    },
+    {
+      "classification": "D05-component-duplicate",
+      "target": "/Users/aleksandermarleci/Desktop/Projects Dev/live-tracking-app-master/.audit/optimization/rc1-final/release/frontend",
+      "action_proposed": "Review redundant extraction; preserve canonical rollback and all Git histories",
+      "duplicate_frontend_peers": [
+        "/Users/aleksandermarleci/Desktop/Projects Dev/live-tracking-app-master/.audit/embed-com-fix/baseline",
+        "/Users/aleksandermarleci/Desktop/Projects Dev/live-tracking-app-master/.audit/optimization/stage2-preparation/rc1/frontend",
+        "/Users/aleksandermarleci/Desktop/Projects Dev/live-tracking-app-master/.audit/optimization/stage4/first-bundle-attempt/frontend/site",
+        "/Users/aleksandermarleci/Desktop/Projects Dev/live-tracking-app-master/.audit/optimization/stage4/release/frontend/site"
+      ],
+      "reason": "Identical declared frontend fingerprint; this does not prove enclosing directory duplication",
+      "unique_code": "Outside compared frontend paths not assumed duplicate",
+      "rollback_material": "Potentially necessary rollback/source history; KEEP unless separately verified",
+      "safe_to_archive": "Conditional only; do not move tracked subdirectories out of existing Git checkouts",
+      "safe_to_delete": false,
+      "executed": false
+    },
+    {
+      "classification": "D05-component-duplicate",
+      "target": "/Users/aleksandermarleci/Desktop/Projects Dev/live-tracking-app-master/.audit/optimization/stage2-preparation/rc1/frontend",
+      "action_proposed": "Review redundant extraction; preserve canonical rollback and all Git histories",
+      "duplicate_frontend_peers": [
+        "/Users/aleksandermarleci/Desktop/Projects Dev/live-tracking-app-master/.audit/embed-com-fix/baseline",
+        "/Users/aleksandermarleci/Desktop/Projects Dev/live-tracking-app-master/.audit/optimization/rc1-final/release/frontend",
+        "/Users/aleksandermarleci/Desktop/Projects Dev/live-tracking-app-master/.audit/optimization/stage4/first-bundle-attempt/frontend/site",
+        "/Users/aleksandermarleci/Desktop/Projects Dev/live-tracking-app-master/.audit/optimization/stage4/release/frontend/site"
+      ],
+      "reason": "Identical declared frontend fingerprint; this does not prove enclosing directory duplication",
+      "unique_code": "Outside compared frontend paths not assumed duplicate",
+      "rollback_material": "Potentially necessary rollback/source history; KEEP unless separately verified",
+      "safe_to_archive": "Conditional only; do not move tracked subdirectories out of existing Git checkouts",
+      "safe_to_delete": false,
+      "executed": false
+    },
+    {
+      "classification": "D05-component-duplicate",
+      "target": "/Users/aleksandermarleci/Desktop/Projects Dev/live-tracking-app-master/.audit/optimization/stage4/first-bundle-attempt/frontend/site",
+      "action_proposed": "Review redundant extraction; preserve canonical rollback and all Git histories",
+      "duplicate_frontend_peers": [
+        "/Users/aleksandermarleci/Desktop/Projects Dev/live-tracking-app-master/.audit/embed-com-fix/baseline",
+        "/Users/aleksandermarleci/Desktop/Projects Dev/live-tracking-app-master/.audit/optimization/rc1-final/release/frontend",
+        "/Users/aleksandermarleci/Desktop/Projects Dev/live-tracking-app-master/.audit/optimization/stage2-preparation/rc1/frontend",
+        "/Users/aleksandermarleci/Desktop/Projects Dev/live-tracking-app-master/.audit/optimization/stage4/release/frontend/site"
+      ],
+      "reason": "Identical declared frontend fingerprint; this does not prove enclosing directory duplication",
+      "unique_code": "Outside compared frontend paths not assumed duplicate",
+      "rollback_material": "Potentially necessary rollback/source history; KEEP unless separately verified",
+      "safe_to_archive": "Conditional only; do not move tracked subdirectories out of existing Git checkouts",
+      "safe_to_delete": false,
+      "executed": false
+    },
+    {
+      "classification": "D05-component-duplicate",
+      "target": "/Users/aleksandermarleci/Desktop/Projects Dev/live-tracking-app-master/.audit/optimization/stage4/release/frontend/site",
+      "action_proposed": "Review redundant extraction; preserve canonical rollback and all Git histories",
+      "duplicate_frontend_peers": [
+        "/Users/aleksandermarleci/Desktop/Projects Dev/live-tracking-app-master/.audit/embed-com-fix/baseline",
+        "/Users/aleksandermarleci/Desktop/Projects Dev/live-tracking-app-master/.audit/optimization/rc1-final/release/frontend",
+        "/Users/aleksandermarleci/Desktop/Projects Dev/live-tracking-app-master/.audit/optimization/stage2-preparation/rc1/frontend",
+        "/Users/aleksandermarleci/Desktop/Projects Dev/live-tracking-app-master/.audit/optimization/stage4/first-bundle-attempt/frontend/site"
+      ],
+      "reason": "Identical declared frontend fingerprint; this does not prove enclosing directory duplication",
+      "unique_code": "Outside compared frontend paths not assumed duplicate",
+      "rollback_material": "Potentially necessary rollback/source history; KEEP unless separately verified",
+      "safe_to_archive": "Conditional only; do not move tracked subdirectories out of existing Git checkouts",
+      "safe_to_delete": false,
+      "executed": false
+    },
+    {
+      "classification": "D05-component-duplicate",
+      "target": "/Users/aleksandermarleci/Desktop/Projects Dev/live-tracking-app-master/.audit/frontend-baseline/recovered/netlify-production",
+      "action_proposed": "Review redundant extraction; preserve canonical rollback and all Git histories",
+      "duplicate_frontend_peers": [
+        "/Users/aleksandermarleci/Desktop/Projects Dev/live-tracking-app-master/.audit/optimization/production-baseline/artifact",
+        "/Users/aleksandermarleci/Desktop/Projects Dev/live-tracking-app-master/.audit/optimization/rc1-final-gates/hosted-recovery/original",
+        "/Users/aleksandermarleci/Desktop/Projects Dev/live-tracking-app-master/.audit/optimization/stage3-release-gate-2026-10-11/reconstructed-baseline-git/frontend/site"
+      ],
+      "reason": "Identical declared frontend fingerprint; this does not prove enclosing directory duplication",
+      "unique_code": "Outside compared frontend paths not assumed duplicate",
+      "rollback_material": "Potentially necessary rollback/source history; KEEP unless separately verified",
+      "safe_to_archive": "Conditional only; do not move tracked subdirectories out of existing Git checkouts",
+      "safe_to_delete": false,
+      "executed": false
+    },
+    {
+      "classification": "D05-component-duplicate",
+      "target": "/Users/aleksandermarleci/Desktop/Projects Dev/live-tracking-app-master/.audit/optimization/production-baseline/artifact",
+      "action_proposed": "Review redundant extraction; preserve canonical rollback and all Git histories",
+      "duplicate_frontend_peers": [
+        "/Users/aleksandermarleci/Desktop/Projects Dev/live-tracking-app-master/.audit/frontend-baseline/recovered/netlify-production",
+        "/Users/aleksandermarleci/Desktop/Projects Dev/live-tracking-app-master/.audit/optimization/rc1-final-gates/hosted-recovery/original",
+        "/Users/aleksandermarleci/Desktop/Projects Dev/live-tracking-app-master/.audit/optimization/stage3-release-gate-2026-10-11/reconstructed-baseline-git/frontend/site"
+      ],
+      "reason": "Identical declared frontend fingerprint; this does not prove enclosing directory duplication",
+      "unique_code": "Outside compared frontend paths not assumed duplicate",
+      "rollback_material": "Potentially necessary rollback/source history; KEEP unless separately verified",
+      "safe_to_archive": "Conditional only; do not move tracked subdirectories out of existing Git checkouts",
+      "safe_to_delete": false,
+      "executed": false
+    },
+    {
+      "classification": "D05-component-duplicate",
+      "target": "/Users/aleksandermarleci/Desktop/Projects Dev/live-tracking-app-master/.audit/optimization/rc1-final-gates/hosted-recovery/original",
+      "action_proposed": "Review redundant extraction; preserve canonical rollback and all Git histories",
+      "duplicate_frontend_peers": [
+        "/Users/aleksandermarleci/Desktop/Projects Dev/live-tracking-app-master/.audit/frontend-baseline/recovered/netlify-production",
+        "/Users/aleksandermarleci/Desktop/Projects Dev/live-tracking-app-master/.audit/optimization/production-baseline/artifact",
+        "/Users/aleksandermarleci/Desktop/Projects Dev/live-tracking-app-master/.audit/optimization/stage3-release-gate-2026-10-11/reconstructed-baseline-git/frontend/site"
+      ],
+      "reason": "Identical declared frontend fingerprint; this does not prove enclosing directory duplication",
+      "unique_code": "Outside compared frontend paths not assumed duplicate",
+      "rollback_material": "Potentially necessary rollback/source history; KEEP unless separately verified",
+      "safe_to_archive": "Conditional only; do not move tracked subdirectories out of existing Git checkouts",
+      "safe_to_delete": false,
+      "executed": false
+    },
+    {
+      "classification": "D05-component-duplicate",
+      "target": "/Users/aleksandermarleci/Desktop/Projects Dev/live-tracking-app-master/.audit/optimization/stage3-release-gate-2026-10-11/reconstructed-baseline-git/frontend/site",
+      "action_proposed": "Review redundant extraction; preserve canonical rollback and all Git histories",
+      "duplicate_frontend_peers": [
+        "/Users/aleksandermarleci/Desktop/Projects Dev/live-tracking-app-master/.audit/frontend-baseline/recovered/netlify-production",
+        "/Users/aleksandermarleci/Desktop/Projects Dev/live-tracking-app-master/.audit/optimization/production-baseline/artifact",
+        "/Users/aleksandermarleci/Desktop/Projects Dev/live-tracking-app-master/.audit/optimization/rc1-final-gates/hosted-recovery/original"
+      ],
+      "reason": "Identical declared frontend fingerprint; this does not prove enclosing directory duplication",
+      "unique_code": "Outside compared frontend paths not assumed duplicate",
+      "rollback_material": "Potentially necessary rollback/source history; KEEP unless separately verified",
+      "safe_to_archive": "Conditional only; do not move tracked subdirectories out of existing Git checkouts",
+      "safe_to_delete": false,
+      "executed": false
+    },
+    {
+      "classification": "D05-component-duplicate",
+      "target": "/private/tmp/shkodra-live-map-redesign/evidence/before",
+      "action_proposed": "Review redundant extraction; preserve canonical rollback and all Git histories",
+      "duplicate_frontend_peers": [
+        "/private/tmp/shkodra-live-map-redesign/evidence/production-before",
+        "/private/tmp/shkodra-map-presentation-release-20261025"
+      ],
+      "reason": "Identical declared frontend fingerprint; this does not prove enclosing directory duplication",
+      "unique_code": "Outside compared frontend paths not assumed duplicate",
+      "rollback_material": "Potentially necessary rollback/source history; KEEP unless separately verified",
+      "safe_to_archive": "Conditional only; do not move tracked subdirectories out of existing Git checkouts",
+      "safe_to_delete": false,
+      "executed": false
+    },
+    {
+      "classification": "D05-component-duplicate",
+      "target": "/private/tmp/shkodra-live-map-redesign/evidence/production-before",
+      "action_proposed": "Review redundant extraction; preserve canonical rollback and all Git histories",
+      "duplicate_frontend_peers": [
+        "/private/tmp/shkodra-live-map-redesign/evidence/before",
+        "/private/tmp/shkodra-map-presentation-release-20261025"
+      ],
+      "reason": "Identical declared frontend fingerprint; this does not prove enclosing directory duplication",
+      "unique_code": "Outside compared frontend paths not assumed duplicate",
+      "rollback_material": "Potentially necessary rollback/source history; KEEP unless separately verified",
+      "safe_to_archive": "Conditional only; do not move tracked subdirectories out of existing Git checkouts",
+      "safe_to_delete": false,
+      "executed": false
+    },
+    {
+      "classification": "D05-component-duplicate",
+      "target": "/private/tmp/shkodra-map-presentation-release-20261025",
+      "action_proposed": "Review redundant extraction; preserve canonical rollback and all Git histories",
+      "duplicate_frontend_peers": [
+        "/private/tmp/shkodra-live-map-redesign/evidence/before",
+        "/private/tmp/shkodra-live-map-redesign/evidence/production-before"
+      ],
+      "reason": "Identical declared frontend fingerprint; this does not prove enclosing directory duplication",
+      "unique_code": "Outside compared frontend paths not assumed duplicate",
+      "rollback_material": "Potentially necessary rollback/source history; KEEP unless separately verified",
+      "safe_to_archive": "Conditional only; do not move tracked subdirectories out of existing Git checkouts",
+      "safe_to_delete": false,
+      "executed": false
+    },
+    {
+      "classification": "D05-component-duplicate",
+      "target": "/private/tmp/shkodra-live-map-redesign/evidence/production-candidate",
+      "action_proposed": "Review redundant extraction; preserve canonical rollback and all Git histories",
+      "duplicate_frontend_peers": [
+        "/private/tmp/shkodra-stop-markers-20261025/evidence/before"
+      ],
+      "reason": "Identical declared frontend fingerprint; this does not prove enclosing directory duplication",
+      "unique_code": "Outside compared frontend paths not assumed duplicate",
+      "rollback_material": "Potentially necessary rollback/source history; KEEP unless separately verified",
+      "safe_to_archive": "Conditional only; do not move tracked subdirectories out of existing Git checkouts",
+      "safe_to_delete": false,
+      "executed": false
+    },
+    {
+      "classification": "D05-component-duplicate",
+      "target": "/private/tmp/shkodra-stop-markers-20261025/evidence/before",
+      "action_proposed": "Review redundant extraction; preserve canonical rollback and all Git histories",
+      "duplicate_frontend_peers": [
+        "/private/tmp/shkodra-live-map-redesign/evidence/production-candidate"
+      ],
+      "reason": "Identical declared frontend fingerprint; this does not prove enclosing directory duplication",
+      "unique_code": "Outside compared frontend paths not assumed duplicate",
+      "rollback_material": "Potentially necessary rollback/source history; KEEP unless separately verified",
+      "safe_to_archive": "Conditional only; do not move tracked subdirectories out of existing Git checkouts",
+      "safe_to_delete": false,
+      "executed": false
+    }
+  ],
+  "protected_archives_and_patches": [
+    {
+      "path": ".audit/sharepoint-root.zip",
+      "bytes": 61418,
+      "sha256": "86b74d0ceb55564046a0a17bd2c65dd1c3f87deea20161ffe01fcb4354ef8f56"
+    },
+    {
+      "path": ".audit/sharepoint-source.zip",
+      "bytes": 19201473,
+      "sha256": "af593f287b9f8ecdfca5a5e8bb7d0f64e24470fcfd07162f27e8615917e2ae64"
+    },
+    {
+      "path": ".audit/sharepoint-tools-complete.zip",
+      "bytes": 561066,
+      "sha256": "8f7a4097b4e330f2ba86bc876a76e6fa1e46b01a820bf4fad33edb119434e43f"
+    },
+    {
+      "path": ".audit/sharepoint-android.zip",
+      "bytes": 20045203,
+      "sha256": "b9366bfd43d0af9d521f187c8e3f70e9aea7450ea23f7d5565613fe9c4f4a699"
+    },
+    {
+      "path": ".audit/pre-reconciliation.patch",
+      "bytes": 29884,
+      "sha256": "33ee975dd98a84ea1d97b131516709d78800ed25259621cc8f71a3ebe33c2b2a"
+    },
+    {
+      "path": ".audit/sharepoint-tools.zip",
+      "bytes": 174228,
+      "sha256": "33daafe662c25ef0d7596e7d5124a36ae07b97f80bf7867a90cc72586da8a0df"
+    },
+    {
+      "path": ".audit/before-sharepoint-reconciliation.tar.gz",
+      "bytes": 1199343,
+      "sha256": "ab11374248b0f5e83b4eae1cae9554eb70ded6474fd616a56d7775e02b745553"
+    },
+    {
+      "path": ".audit/original-download.tar.gz",
+      "bytes": 782601,
+      "sha256": "92247820b61cbd518ac9f22f4c5040d235f6ed0219c931ae60f038e283da5a20"
+    },
+    {
+      "path": ".audit/optimization/rc1-final/rc1-review.zip",
+      "bytes": 805617,
+      "sha256": "12ad4f6a46c290b1ec8f3bec21ec375860ad290e440d2df0a4c1d7be9307aeab"
+    },
+    {
+      "path": ".audit/optimization/production-baseline/rollback-6ac3913ad8f02a0e2648eb9b.zip",
+      "bytes": 792040,
+      "sha256": "b35402fea3c92d7f46f0b622171080c556d40f8862163b3f7a80b0b4230c2576"
+    },
+    {
+      "path": ".audit/optimization/rc1-final-gates/tonight-recovery.zip",
+      "bytes": 790435,
+      "sha256": "f8cba2128a65c2456aa79288ee1ea50279ec00f0e53837049665d0487a7bba06"
+    },
+    {
+      "path": ".audit/optimization/rc1-authorized/recovery/verified-recovery.zip",
+      "bytes": 790163,
+      "sha256": "35c63ce852e33ceb30abe32cf71c87f993988dd719d287acecd418df98d93eb7"
+    },
+    {
+      "path": ".audit/optimization/rc1-authorized/recovery/verified/frontend-original.zip",
+      "bytes": 792040,
+      "sha256": "b35402fea3c92d7f46f0b622171080c556d40f8862163b3f7a80b0b4230c2576"
+    },
+    {
+      "path": ".audit/optimization/stage4/rc1-release-package.zip",
+      "bytes": 1127256,
+      "sha256": "b7931831b2aa6ca9d2f8af1e3ce5a6c244873658da5ec49414f9a6152edbe366"
+    },
+    {
+      "path": "docs/stop-marker-design-20261025/candidate-frontend.zip",
+      "bytes": 798949,
+      "sha256": "58870466d5b3c89079e11d5ebc7874a5e44475ea3164b91379acb7164ee28549"
+    },
+    {
+      "path": "docs/stop-marker-design-20261025/stop-design.patch",
+      "bytes": 23171,
+      "sha256": "8ece198c8e6e15d66a8bdc7ce9b733f5bc5dae401bad2dc07d8f93f23def979a"
+    },
+    {
+      "path": "docs/stop-marker-design-20261025/rollback-6adde7b56701005a9f6facc9.zip",
+      "bytes": 793470,
+      "sha256": "278c627d4ecfaf270b582044c18b3245108a8351ef37a65344254a273adedade"
+    },
+    {
+      "path": "docs/embed-com-fix/production-artifact.patch",
+      "bytes": 1259,
+      "sha256": "cada3ee9f31b8193c413032e1e653376e7aa4e4d835e8f0bc3a08c8cd5fa2475"
+    },
+    {
+      "path": "docs/final-approved-design-20261025/redesign.patch",
+      "bytes": 20813,
+      "sha256": "b3d282482e5e156accf6b30025907b45f4c1f59d724d2b3054ff739d297ec78c"
+    },
+    {
+      "path": "docs/final-approved-design-20261025/release/production-relative.patch",
+      "bytes": 21025,
+      "sha256": "ba153c29ae599944d1f69a5a1c1fef0c3f40118bdc802dba93ba26ccca9865a5"
+    },
+    {
+      "path": "docs/final-approved-design-20261025/release/rollback-6adde2915ccb3dff853efa83.zip",
+      "bytes": 793032,
+      "sha256": "33a12fccc1dcb3100d212db665eb2c10d3ff5ec7f103f6be6d5211c232964075"
+    },
+    {
+      "path": "docs/stage2/rc2/apply.patch",
+      "bytes": 4422,
+      "sha256": "b1b120454ccfe1e557b6f1b590b3cced21a6aa1c949266d1c46907a51c9c26b7"
+    },
+    {
+      "path": "docs/stage2/rc2/rollback.patch",
+      "bytes": 4422,
+      "sha256": "7630e35ad5b58db2f6834d3fca409341db0fa89df79b7bd0acefc6288a49ccb4"
+    },
+    {
+      "path": "docs/stage2/rc1/apply.patch",
+      "bytes": 9300,
+      "sha256": "874ef40958e9cefb80000d3d944b6961a83d70043d7103699f77b7b4ab0659e4"
+    },
+    {
+      "path": "docs/stage2/rc1/rollback.patch",
+      "bytes": 9300,
+      "sha256": "5c61acbe2d6ae60600ab09473140b47c7d5678c3b7837ec748372d01e1f5bada"
+    }
+  ],
+  "permanent_deletions": []
+}

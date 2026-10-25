@@ -1,0 +1,27 @@
+{
+  "capturedAt": "2026-10-25T11:49:42.912Z",
+  "siteId": "3a9f7e87-0504-4b1a-b851-c6f155c12d31",
+  "name": "sightseeingshkodralivetrackingapp",
+  "url": "https://sightseeingshkodralivetrackingapp.netlify.app",
+  "accountId": "6a8386d3c747d7979ca615c8",
+  "repo": "https://github.com/marlecisander-bit/live-tracking-app",
+  "repoBranch": "master",
+  "buildCommand": null,
+  "publish": ".",
+  "stopBuilds": false,
+  "deploy": {
+    "id": "6adde7b56701005a9f6facc9",
+    "created_at": "2026-10-25T11:27:49.181Z",
+    "published_at": "2026-10-25T11:29:55.743Z",
+    "state": "ready",
+    "title": "Owner-approved live map operational design; four frontend files",
+    "branch": "master",
+    "context": "deploy-preview",
+    "commit_ref": null,
+    "commit_url": null,
+    "build_id": null,
+    "deploy_ssl_url": "https://6adde7b56701005a9f6facc9--sightseeingshkodralivetrackingapp.netlify.app",
+    "available_functions": [],
+    "locked": null
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "site": "3a9f7e87-0504-4b1a-b851-c6f155c12d31",
+  "deploy": "6adde7b56701005a9f6facc9",
+  "repo": "https://github.com/marlecisander-bit/live-tracking-app",
+  "branch": "master",
+  "buildCommand": null,
+  "publish": ".",
+  "functions": [],
+  "capturedAt": "2026-10-25T12:32:13.136Z"
+}

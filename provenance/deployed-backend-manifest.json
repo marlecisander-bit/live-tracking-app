@@ -1,0 +1,46 @@
+{
+  "project": "jpcjdqwyrrcusuvypwic",
+  "files": [
+    {
+      "path": "gps-collector/index.ts",
+      "sha256": "12329e72ad3b5cadbf85c6c6f0f6598f49631e1caad6e34a856d0e4cb6896473",
+      "size": 3303
+    },
+    {
+      "path": "osm-poi-search/index.ts",
+      "sha256": "f7ccecfc01446f292bed8ed2db34cbf0d49c7a6384ad056f0f99424ea3d46df5",
+      "size": 7600
+    },
+    {
+      "path": "stop-detector/provider-handler.ts",
+      "sha256": "d7f5fe6d98554c1e1ad2fe1db95ad9ed39fe45668891a0aedcb46c3f618212bc",
+      "size": 1193
+    },
+    {
+      "path": "stop-detector/index.ts",
+      "sha256": "2d7ee7421c2e3ed7084c2668d428367a6619f21997052e84111fa981fcd89ef9",
+      "size": 1519
+    },
+    {
+      "path": "segment-analyzer/index.ts",
+      "sha256": "57b438cc32bf47197ae5501f3420bfa211b418160b4a164bf00eb98181e31d71",
+      "size": 415
+    },
+    {
+      "path": "gps-ingest/index.ts",
+      "sha256": "9038052075b22478c175257904077524610fa6493416998389e198c0bedcd4ba",
+      "size": 15896
+    },
+    {
+      "path": "_shared/stop-transition.ts",
+      "sha256": "924dddad80c9ad10fd53754e56a6fd794f630b42cfb82e3f858efceb062c1c7c",
+      "size": 10906
+    },
+    {
+      "path": "eta-engine/index.ts",
+      "sha256": "57b438cc32bf47197ae5501f3420bfa211b418160b4a164bf00eb98181e31d71",
+      "size": 415
+    }
+  ],
+  "source": "Management API download; no historical source commit inferred"
+}

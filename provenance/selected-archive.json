@@ -1,0 +1,11 @@
+{
+  "selected": {
+    "file": "production-plus-stops.zip",
+    "sha256": "e20f25264b329ce05eb76850ddc7a8fb235d9db8eea716d06eef479c66f927c9",
+    "verifiedRuntimeEntries": 120,
+    "frontendEntries": 112
+  },
+  "historicalSourceCommit": null,
+  "branchParent": "50368beb8ad170987c83e2623a2b2f19a0715f27",
+  "label": "Reconstructed production baseline; original source/build provenance not claimed"
+}
