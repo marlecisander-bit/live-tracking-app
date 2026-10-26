@@ -1,144 +1,58 @@
-/* Presentation only: consumes resolved status and the existing freshness classifier. */
-(function(root) {
-    var locationUnavailable=false;
-    function refresh(status) {
-        var card=document.getElementById('next-card');if(!card)return;
-        if(typeof vehicleStopState!=='undefined'&&vehicleStopState&&vehicleStopState.operational_state?.version!==3){
-            card.className='unknown';card.dataset.layout='loading';card.dataset.eta='false';card.dataset.distance='false';
-            var live = document.getElementById('operational-live'), badge = document.getElementById('operational-stop-badge');
-            if (live) live.hidden = true;
-            if (badge) badge.hidden = true;
-            document.getElementById('next-label').innerText='LIVE TRACKING';
-            document.getElementById('next-stop-name').innerText='--';
-            document.getElementById('van-movement-status').innerText='Tracking is being updated. Please try again shortly.';
-            document.getElementById('eta-value').innerText='--';
-            document.getElementById('tourist-location-warning').hidden=true;
-            if(typeof stopRecords!=='undefined')stopRecords.forEach(function(record){var element=record.layer?.getElement?.();element?.classList.remove('tourist-current-stop','tourist-next-stop');});
-            return;
-        }
-        var name=document.getElementById('next-stop-name').innerText.trim();
-        var eta=document.getElementById('eta-value').innerText.trim();
-        var distance=document.getElementById('next-stop-distance').innerText.trim();
-        var approaching=card.classList.contains('arriving'),atStop=card.classList.contains('parked'),stationary=card.classList.contains('stationary');
-        var hasDestination=!!name&&!/^(--|Calculating.*|undefined|NaN)$/.test(name);
-        card.dataset.layout=(atStop||approaching)?'stop':stationary?'stationary':hasDestination?'moving':'loading';
-        card.dataset.eta=String(!!eta&&!/^(--|0 min|NaN.*|undefined)$/.test(eta));
-        card.dataset.distance=String(!!distance&&!/^(--.*|NaN.*|undefined)$/.test(distance));
-        document.getElementById('next-label').innerText=approaching?'ARRIVING AT STOP':atStop?'PARKED AT STOP':stationary?'STOPPED':hasDestination?'NEXT STOP':'FINDING THE VAN';
-        document.getElementById('next-destination-label').innerText='Next:';
-        if(!hasDestination&&!atStop&&!approaching&&!stationary)document.getElementById('van-movement-status').innerText='Locating van...';
-        var warning=document.getElementById('tourist-location-warning');
-        var p=typeof canonicalLivePosition==='undefined'?null:canonicalLivePosition;
-        var arrival=typeof publicUiArrival==='undefined'?null:publicUiArrival;
-        var state=root.trackingState.describe(p,{atStop:atStop,approaching:approaching,
-            stationary:arrival?.stationary,locationState:arrival?.locationState,unavailable:locationUnavailable,
-            quality:typeof publicGpsQuality==='undefined'?null:publicGpsQuality});
-        var offline=state.health==='OFFLINE';
-        card.dataset.trackingHealth=state.health;
-        card.dataset.movement=state.movement;
-        card.dataset.location=state.location;
-        card.dataset.oldLocation=String(!atStop&&(state.health!=='LIVE'&&!state.parkedQuiet));
-        if(approaching&&state.health!=='LIVE')document.getElementById('next-label').innerText='LAST SEEN AT';
-        var unavailable=state.health!=='LIVE'&&!state.parkedQuiet;
-        warning.hidden=!unavailable;
-        if(unavailable){var age=state.ageSeconds*1000;warning.textContent=(offline?'Live tracking temporarily unavailable':'Updating location')+(Number.isFinite(age)&&age>=0?' - Last update '+formatGPSAge(age).replace(/m$/, ' min').replace(/s$/, ' sec')+' ago':'');}
-        if(offline&&!hasDestination&&!atStop&&!stationary){
-            document.getElementById('next-label').innerText='VAN LOCATION';
-            document.getElementById('van-movement-status').innerText='Location temporarily unavailable';
-            warning.hidden=true;
-        }
-        // Project authoritative status only. Freshness thresholds remain in trackingState.
-        var resolved = status || root.publicOperationalStatus;
-        var fresh = state.health === 'LIVE';
-        var badge = document.getElementById('operational-stop-badge');
-        var live = document.getElementById('operational-live');
-        if (live) live.hidden = !fresh;
-        if (badge) {
-            badge.hidden = !(fresh && atStop && resolved?.currentStop);
-            badge.textContent = resolved?.currentStop?.number || '';
-        }
-        card.dataset.eta = String(fresh && card.dataset.eta === 'true');
-        if (!fresh) {
-            document.getElementById('next-destination-label').innerText = 'Last destination:';
-            document.getElementById('van-movement-status').innerText = p ? 'Last known route position' : 'Location unavailable';
-            document.getElementById('next-label').innerText = offline ? 'TRACKING OFFLINE' : 'LAST KNOWN POSITION';
-            if (atStop || approaching) document.getElementById('van-movement-status').innerText =
-                'Last seen at ' + (resolved?.currentStop?.name || resolved?.nextStop?.name || 'a stop');
-            warning.hidden = false;
-            warning.textContent = (offline ? 'Live tracking unavailable' : 'Location update delayed') +
-                (Number.isFinite(state.ageSeconds) && state.ageSeconds >= 0 ? ' · Last update ' + formatGPSAge(state.ageSeconds * 1000) + ' ago' : '');
-        } else if (resolved) {
-            var current = resolved.currentStop, next = resolved.nextStop;
-            document.getElementById('next-label').innerText = atStop ? 'PARKED AT STOP ' + (current?.number || '') : approaching ? 'ARRIVING AT STOP' : stationary ? 'VAN STOPPED' : 'VAN ON ROUTE';
-            if (atStop && current) document.getElementById('van-movement-status').innerText = current.name;
-            if (!atStop && !approaching && !stationary && next) document.getElementById('van-movement-status').innerText = 'Heading to Stop ' + next.number;
-            if (next) document.getElementById('next-stop-name').innerText = (atStop ? 'Stop ' + next.number + ' · ' : '') + next.name;
-        }
-        // Reuse the resolved card status; do not perform another stop/radius test.
-        if(status&&typeof stopRecords!=='undefined')stopRecords.forEach(function(record){
-            var element=record.layer&&record.layer.getElement&&record.layer.getElement();if(!element)return;
-            var number=String(record.feature.properties.stopNumber);
-            var current=fresh&&(atStop||approaching)&&status.currentStop&&number===String(status.currentStop.number);
-            var next=status.nextStop&&number===String(status.nextStop.number);
-            element.classList.toggle('tourist-current-stop',!!current);element.classList.toggle('tourist-next-stop',!current&&!!next);
-            element.setAttribute('aria-label',record.feature.properties.name+(current?' - van at stop':next?' - next stop':''));
-        });
+/* A single presentation owner for card, marker and both version-1 website bridges. */
+(function(root){
+    let model=null, statusOrigin=null, journeyOrigin=null, lastAnnouncement='';
+    const allowed=new Set(root.appConfig.allowedParentOrigins||[]);
+    const journeyAllowed=new Set([...allowed,'https://sightseeingapp.netlify.app']);
+    function text(id,value){const el=document.getElementById(id);if(el)el.textContent=value;}
+    function send(){
+        if(!model)return;
+        if(statusOrigin)root.parent.postMessage({type:'shkodra:public-status',version:1,label:model.gps==='live'?'Live location':model.gps==='delayed'?'Location delayed':'Location unavailable',
+            name:model.currentStop?.name||model.nextStop?.name||'',movement:model.message,unavailable:model.gps!=='live'||!model.coherent},statusOrigin);
+        if(journeyOrigin)root.parent.postMessage({type:'shkodra:journey',version:1,unavailable:model.gps!=='live'||!model.coherent,
+            stops:model.stopStatuses.map(s=>({id:s.id,number:s.number,label:s.name,state:s.bridgeState,eta:s.eta}))},journeyOrigin);
     }
-    root.publicPresentation={refresh:refresh,setLocationUnavailable:function(value){locationUnavailable=!!value;refresh();}};
+    function render(next){
+        model=next;
+        const card=document.getElementById('next-card');if(!card)return;
+        card.dataset.layout='tourist';card.dataset.trackingHealth=model.gps.toUpperCase();
+        card.dataset.eta=String(model.etaConfidence==='valid');card.dataset.oldLocation=String(model.locationHistorical);
+        card.dataset.activity=model.activity;card.dataset.service=model.service;
+        text('next-label','Sightseeing Shkodra');text('operational-live',model.gps==='live'?'Live':model.gps==='delayed'?'Delayed':'Unavailable');
+        document.getElementById('operational-live').hidden=false;
+        document.getElementById('operational-stop-badge').hidden=true;
+        text('van-message-label','');
+        if(lastAnnouncement!==model.message){text('van-movement-status',model.message);lastAnnouncement=model.message;}
+        text('next-destination-label','');text('next-stop-name',model.secondary);
+        text('eta-value',model.timing);text('eta-unavailable','');text('next-stop-distance','');
+        text('tourist-service-note',model.serviceMessage && model.serviceMessage!==model.message?model.serviceMessage:'');
+        const observed=document.getElementById('tourist-observation');
+        observed.textContent=model.lastObservationAt?'Last GPS observation · '+new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/Tirane',day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit',second:'2-digit'}).format(new Date(model.lastObservationAt))+' (Shkodra time)':'Last GPS observation unavailable';
+        if(model.lastObservationAt)observed.setAttribute('datetime',model.lastObservationAt);else observed.removeAttribute('datetime');
+        text('tourist-progress',model.progressText);
+        const warning=document.getElementById('tourist-location-warning');warning.hidden=true;text('tourist-location-warning','');
+        text('live-badge-text',model.message);
+        if(typeof vanMarker!=='undefined' && vanMarker){
+            vanMarker.setOpacity(model.positionValid?(model.locationHistorical?.55:1):0);
+            const element=vanMarker.getElement();if(element){element.classList.toggle('tourist-last-seen',model.locationHistorical);element.setAttribute('aria-label',model.message+(model.lastObservationAt?' · '+observed.textContent:''));}
+            if(model.locationHistorical && typeof publicMarkerController!=='undefined')publicMarkerController?.stop();
+        }
+        if(typeof stopRecords!=='undefined')stopRecords.forEach(r=>{
+            const s=model.stopStatuses.find(s=>s.id===String(r.feature.properties.objectId)),el=r.layer?.getElement?.();
+            if(!el||!s)return;el.classList.toggle('tourist-current-stop',s.current);el.classList.toggle('tourist-next-stop',s.next);
+            el.setAttribute('aria-label',s.name+' · '+s.label);
+        });
+        send();
+    }
+    root.publicPresentation={locationUnavailable:false,render,refresh:function(){if(typeof updateSmartRouteInformation==='function')updateSmartRouteInformation();},
+        setLocationUnavailable(value){this.locationUnavailable=!!value;}};
+    root.sendJourneyPresentation=send;
+    root.addEventListener('message',event=>{
+        if(event.source!==root.parent||!journeyAllowed.has(event.origin))return;
+        if(event.data?.type==='shkodra:request-status'&&allowed.has(event.origin)){statusOrigin=event.origin;send();}
+        if(event.data?.type==='shkodra:request-journey'){journeyOrigin=event.origin;send();}
+        if(event.data?.type==='shkodra:select-stop'&&typeof event.data.id==='string'){
+            const r=stopRecords.find(r=>r.feature.properties.objectId===event.data.id&&r.feature.properties.active!==false);
+            if(r?.layer){map.panTo(r.layer.getLatLng());r.layer.openPopup();}
+        }
+    });
 })(window);
-
-/* Install in the independent map AFTER its existing public presentation scripts.
- * Read-only: relays rendered public status, never coordinates or GPS calculations.
- * Parent initiates the handshake, so no message is sent to an unknown origin.
- */
-(function () {
-  const allowed = new Set(window.appConfig.allowedParentOrigins || []);
-  let parentOrigin = null;
-  function send() {
-    if (window.sendJourneyPresentation) window.sendJourneyPresentation();
-    if (!parentOrigin) return;
-    const card = document.getElementById('next-card');
-    if (!card) return;
-    const text = id => (document.getElementById(id)?.innerText || '').trim().slice(0, 180);
-    const warning=document.getElementById('tourist-location-warning');
-    window.parent.postMessage({type:'shkodra:public-status',version:1,label:text('next-label'),name:text('next-stop-name'),movement:warning&&!warning.hidden?warning.innerText.trim().slice(0,180):text('van-movement-status'),unavailable:!!warning&&!warning.hidden},parentOrigin);
-  }
-  window.addEventListener('message', event => {
-    if (event.source !== window.parent || !allowed.has(event.origin) || event.data?.type !== 'shkodra:request-status') return;
-    parentOrigin = event.origin; send();
-  });
-  const card=document.getElementById('next-card');
-  if (card) new MutationObserver(send).observe(card,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['class','hidden']});
-  // Heartbeat reuses presentation only; it does not query any service.
-  setInterval(send,15000);
-})();
-
-/* Website journey bridge: projects resolved operational state, never polls GPS. */
-(function(){
- const allowed=new Set([...(window.appConfig.allowedParentOrigins||[]),'https://sightseeingapp.netlify.app']);let parentOrigin=null;
- window.sendJourneyPresentation=function(){
-  if(!parentOrigin)return;
-  const op=typeof getNormalizedLiveState==='function'?getNormalizedLiveState():null;
-  const card=document.getElementById('next-card');
-  const warning=document.getElementById('tourist-location-warning');
-  const unavailable=!op||!card||card.dataset.oldLocation==='true'||!!warning&&!warning.hidden;
-  const records=typeof operationalSequence!=='undefined'?operationalSequence:[];
-  const seen=new Set();
-  const stops=records.filter(r=>{const p=r.feature?.properties;if(!p||p.active===false||!p.objectId||seen.has(p.objectId))return false;seen.add(p.objectId);return true;}).map(r=>{
-   const p=r.feature.properties,n=String(p.stopNumber);
-   const state=op?.completedStops?.includes(Number(n))&&n!==String(op.currentStop)?'departed':unavailable?'upcoming':op.currentStop!=null&&n===String(op.currentStop)?'current':op.nextStop!=null&&n===String(op.nextStop)?'next':op.completedStops?.includes(Number(n))?'departed':'upcoming';
-   const eta=state==='next'&&card.dataset.eta==='true'?(document.getElementById('eta-value')?.innerText||''):'';
-   return {id:String(p.objectId||''),number:n,label:String(p.name||'Stop').slice(0,180),state,eta:eta.slice(0,80)};
-  }).filter(s=>s.id);
-  window.parent.postMessage({type:'shkodra:journey',version:1,unavailable,stops},parentOrigin);
- };
- window.addEventListener('message',event=>{
-  if(event.source!==window.parent||!allowed.has(event.origin))return;
-  if(event.data?.type==='shkodra:request-journey'){parentOrigin=event.origin;window.sendJourneyPresentation();}
-  if(event.data?.type==='shkodra:select-stop'&&typeof event.data.id==='string'){
-   const records=typeof stopRecords!=='undefined'?stopRecords:[];
-   const record=records.find(r=>r.feature?.properties?.objectId===event.data.id&&r.feature.properties.active!==false);
-   if(record?.layer){map.panTo(record.layer.getLatLng());record.layer.openPopup();}
-  }
- });
-})();

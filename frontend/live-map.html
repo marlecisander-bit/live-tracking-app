@@ -31,6 +31,7 @@
     <link rel="stylesheet" href="css/live-map/tourist-layout.css">
     <link rel="stylesheet" href="css/widget-controls.css">
     <link rel="stylesheet" href="css/live-map/responsive-presentation.css">
+    <link rel="stylesheet" href="css/live-map/tourist-card.css">
 
     <!-- LEAFLET -->
     <link
@@ -106,7 +107,7 @@
 
 
     <div id="map-loading" role="status" aria-live="polite">
-        Locating sightseeing van...
+        Live location temporarily unavailable
     </div>
 
 
@@ -120,11 +121,11 @@
 
             <span id="operational-stop-badge" hidden aria-hidden="true"></span>
             <div id="next-label">
-                VAN STATUS
+                Sightseeing Shkodra
             </div>
 
 
-            <span id="operational-live" hidden>Live</span>
+            <span id="operational-live">Unavailable</span>
             <div class="next-card-actions">
                 <div id="next-direction">--</div>
                 <button
@@ -132,6 +133,7 @@
                     type="button"
                     aria-label="Show more vehicle information"
                     aria-expanded="false"
+                    aria-controls="tourist-details"
                     data-action="toggleStatusCard"
                 >
                     <span aria-hidden="true">&#8964;</span>
@@ -142,12 +144,12 @@
 
 
         <div id="van-message-label">
-            Live vehicle
+
         </div>
 
 
         <div id="van-movement-status" aria-live="polite" aria-atomic="true">
-            Locating sightseeing van...
+            Live location temporarily unavailable
         </div>
 
 
@@ -157,7 +159,7 @@
         </div>
 
 
-        <div id="next-meta" aria-live="polite">
+        <div id="next-meta">
             <span id="eta-unavailable">Time unavailable</span>
 
             <span>
@@ -173,6 +175,11 @@
         </div>
 
 
+        <p id="tourist-service-note"></p>
+        <div id="tourist-details" class="status-card-extra">
+            <time id="tourist-observation">Last GPS observation unavailable</time>
+            <p id="tourist-progress">Journey progress unavailable</p>
+        </div>
         <div id="eta-progress-wrap" class="status-card-extra">
 
             <div id="eta-progress-head">
@@ -194,7 +201,7 @@
 
         </div>
 
-        <div id="tourist-location-warning" role="status" hidden></div>
+        <div id="tourist-location-warning" hidden></div>
         <!-- Temporary route messages stay with the next-stop information. -->
         <div id="route-status-banner" class="status-card-extra" aria-live="polite"></div>
 
@@ -450,7 +457,7 @@
         </div>
 
 
-        <div id="stop-arrivals-list" aria-live="polite">
+        <div id="stop-arrivals-list">
 
             Waiting for route information...
 
@@ -483,6 +490,8 @@
 <script src="js/live-map/marker-motion.js"></script>
 <script src="js/live-map/calculate-arrivals.js"></script>
 <script src="js/live-map/load-vehicle-progress.js"></script>
+<script src="js/live-map/tourist-state.js"></script>
+<script src="js/live-map/tourist-schedule.js"></script>
 <script src="js/live-map/public-presentation.js"></script>
 <script src="js/live-map/update-route-progress.js"></script>
 <script src="js/live-map/stops-panel.js"></script>

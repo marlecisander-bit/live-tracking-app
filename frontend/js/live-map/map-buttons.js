@@ -181,6 +181,12 @@ function toggleStatusCard() {
 }
 
 
+document.getElementById('next-card').addEventListener('keydown',function(event){
+    if(event.key!=='Escape')return;
+    var card=document.getElementById('next-card');
+    if(card.classList.contains('expanded')){toggleStatusCard();document.getElementById('status-card-toggle').focus();}
+});
+
 /*
    Manual map interaction always gives control back to the visitor.
    The Find Van button can be used at any time to resume following.

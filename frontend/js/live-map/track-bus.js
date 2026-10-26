@@ -19,10 +19,11 @@ async function loadVanPosition() {
             var snapshot = await window.selectedTracking.read(supabaseClient, requestedVehicle);
             if (requestedVehicle !== VEHICLE_ID || requestedProject !== window.PROJECT_ID) return;
             var row = snapshot.position;
-            if(row){publicGpsQuality=publicQualityFilter.check(row,String(requestedProject)+'/'+row.source_run_id,Date.now());if(publicGpsQuality==='REJECTED')return;
+            if(row){publicGpsQuality=publicQualityFilter.check(row,String(requestedProject)+'/'+row.source_run_id,Date.now());if(publicGpsQuality==='REJECTED'){window.publicPresentation?.setLocationUnavailable(true);updateGPSStatus();return;}
              if(activeRouteFeature){try{var projected=turf.nearestPointOnLine(activeRouteFeature,turf.point([row.longitude,row.latitude]),{units:'kilometers'});if(projected.properties.dist>.15)publicGpsQuality='POOR';}catch{}}
 }
             vehicleStopState = snapshot.stop || null;
+            vehicleEtaState = snapshot.eta || null;
             vehicleStopStateLoaded = true;
             canonicalLivePosition = row;
             if (window.publicPresentation) window.publicPresentation.setLocationUnavailable(!row);
@@ -38,6 +39,7 @@ async function loadVanPosition() {
             }
         } catch (error) { console.warn('Selected tracking unavailable', error);
             if (window.publicPresentation) window.publicPresentation.setLocationUnavailable(true);
+            updateGPSStatus();
         }
         finally { vanPositionRequestInFlight = false; }
 }
@@ -276,123 +278,7 @@ function updateVanMarker(data, gpsSourceName) {
 ============================================================ */
 
 function updateGPSStatus() {
-
-
-    var badge =
-        document
-        .getElementById(
-            'live-badge'
-        );
-
-
-    var text =
-        document
-        .getElementById(
-            'live-badge-text'
-        );
-
-
-    var age =
-        getGPSAgeMs();
-
-    if (typeof canonicalLivePosition !== 'undefined' && canonicalLivePosition && canonicalLivePosition.movement_state && window.trackingState) {
-        var state = window.trackingState.classify(canonicalLivePosition);
-        var unhealthy = state === 'GPS_DELAYED' || state === 'GPS_OFFLINE';
-        badge.classList.toggle('stale', unhealthy);
-        text.innerText = state === 'PARKED_AT_STOP'
-            ? 'PARKED · STOP ' + canonicalLivePosition.current_stop_number
-            : state === 'STATIONARY' ? 'Stationary'
-            : state === 'GPS_DELAYED' ? 'DELAYED · ' + formatGPSAge(age)
-            : state === 'GPS_OFFLINE' ? 'Live tracking temporarily unavailable'
-            : 'LIVE · ' + formatGPSAge(age);
-        if (unhealthy) setETAUnavailable();
-        else if (vanPosition && activeRouteFeature) updateSmartRouteInformation();
-        return;
-    }
-
-
-    if (
-        age === null
-    ) {
-        badge.classList.add('stale');
-
-        text.innerText =
-            'WAITING FOR GPS';
-
-        return;
-
-    }
-
-
-    var ageText =
-        formatGPSAge(
-            age
-        );
-
-
-    if (
-        age >
-        (window.appConfig.providerSelectionEnabled ? 180000 : GPS_STALE_AFTER_MS)
-    ) {
-
-
-        badge
-            .classList
-            .add(
-                'stale'
-            );
-
-
-        text.innerText =
-                (window.appConfig.providerSelectionEnabled && age > 600000 ? 'NO RECENT GPS · ' : 'DELAYED · ') +
-            ageText;
-
-
-        setETAUnavailable();
-
-    }
-
-
-    else {
-
-
-        badge
-            .classList
-            .remove(
-                'stale'
-            );
-
-
-        text.innerText =
-                'LIVE · ' +
-            ageText;
-
-
-        /*
-           Recalculate so ETA is restored
-           automatically after GPS recovers.
-        */
-
-        if (
-            vanPosition
-            &&
-            activeRouteFeature
-        ) {
-
-            updateSmartRouteInformation();
-
-        }
-
-    }
-
+    // Local expiry updates every surface even without a new GPS observation.
+    if (typeof updateSmartRouteInformation==='function') updateSmartRouteInformation();
 }
-
-
-
-setInterval(
-
-    updateGPSStatus,
-
-    10000
-
-);
+setInterval(updateGPSStatus,5000);

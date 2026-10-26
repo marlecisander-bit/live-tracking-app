@@ -1,8 +1,9 @@
 // ETA is calculated once in the operational worker, not by each tourist browser.
 function calculateUpcomingArrivals(){
- const op=getNormalizedLiveState();if(!op||op.currentStop!==null||isVanGPSStale())return [];
- const stop=findStopRecordByNumber(op.nextStop);if(!stop)return [];
- return [{stop,sequenceIndex:operationalSequence.findIndex(s=>String(s.feature.properties.stopNumber)===String(op.nextStop)),etaMinutes:op.etaSeconds===null?null:op.etaSeconds/60,distanceKm:op.distanceToNextMetres===null?null:op.distanceToNextMetres/1000}];
+ const model=window.publicOperationalStatus;
+ if(!model||model.etaConfidence!=='valid'||!model.nextStop)return [];
+ const stop=findStopRecordByNumber(model.nextStop.number);if(!stop)return [];
+ return [{stop,etaMinutes:model.etaSeconds/60,etaText:model.etaText,distanceKm:null}];
 }
 function applyBackendEtaToArrival(arrival){return arrival;}
 function getGPSAgeMs() {
@@ -16,21 +17,8 @@ function getGPSAgeMs() {
 
 
 function isVanGPSStale() {
-
-    if (typeof canonicalLivePosition !== 'undefined' && canonicalLivePosition && canonicalLivePosition.movement_state && window.trackingState) {
-        return ['GPS_DELAYED', 'GPS_OFFLINE'].includes(window.trackingState.classify(canonicalLivePosition));
-    }
-
-    var age =
-        getGPSAgeMs();
-
-    return (
-        age !== null
-        &&
-        age > GPS_STALE_AFTER_MS
-    );
+    return window.publicOperationalStatus?.gps !== 'live';
 }
-
 
 function formatGPSAge(ageMs) {
 
@@ -101,25 +89,7 @@ function setRouteStatusBanner(
 }
 
 
-function setETAUnavailable(
-    reason
-) {
-
-    document
-        .getElementById(
-            'eta-value'
-        )
-        .innerText =
-        '--';
-
-    // Clear a prior warning when freshness silently suppresses ETA.
-    setRouteStatusBanner(reason || '', reason ? 'error' : '');
+// Compatibility hook: all public timing still comes from the shared view model.
+function setETAUnavailable(){
     if (window.publicPresentation) window.publicPresentation.refresh();
 }
-
-
-/* ============================================================
-   BACKEND ETA STATE
-   public.vehicle_eta_state is produced by eta-engine.
-============================================================ */
-
