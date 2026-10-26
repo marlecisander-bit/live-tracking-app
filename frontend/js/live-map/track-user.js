@@ -374,62 +374,8 @@ function updateNearestStopCard() {
         +
         ' from you';
 
-    var etaText =
-        isVanGPSStale()
-        ?
-        'Location delayed'
-        :
-        '--';
-
-    var arrivals =
-        getCurrentArrivalsForNearestStop();
-
-    var matchingArrival =
-        null;
-
-    arrivals.forEach(
-        function(arrival) {
-
-            if (
-                arrival.stop ===
-                bestStop
-            ) {
-
-                matchingArrival =
-                    arrival;
-            }
-        }
-    );
-
-    if (
-        matchingArrival
-        &&
-        !isVanGPSStale()
-    ) {
-
-        applyBackendEtaToArrival(
-            matchingArrival
-        );
-
-        etaText =
-            formatETA(
-                matchingArrival.etaMinutes, {confidence: matchingArrival.confidence}
-            );
-    }
-
-    const operational = getNormalizedLiveState();
-    if (operational && String(operational.currentStop) === String(bestStop.feature.properties.stopNumber)) etaText = operational.status === 'PARKED' ? 'Parked at Stop' : 'Arriving at Stop';
-
-    document
-        .getElementById(
-            'nearest-stop-van-eta'
-        )
-        .innerHTML =
-        'Van <strong>' +
-        escapeHTML(
-            etaText
-        ) +
-        '</strong>';
+    var entry=window.publicOperationalStatus?.stopStatuses?.find(s=>s.id===String(bestStop.feature.properties.objectId));
+    document.getElementById('nearest-stop-van-eta').textContent=entry?.label||'Route information updating';
 
     card.classList.add(
         'visible'
