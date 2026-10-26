@@ -38,3 +38,13 @@
 /* Keep a closed drawer out of focus/scroll layout after a delayed opening callback. */
 #stops-panel[aria-hidden="true"] { visibility:hidden; pointer-events:none; }
 #stops-panel[aria-hidden="false"] { visibility:visible; }
+
+/* Keep essential observation confidence in the compact card. */
+#app[data-presentation] .tourist-card-footer { display:flex; align-items:center; gap:8px; margin-top:10px; padding-top:8px; border-top:1px solid #e7e9ec; }
+#app[data-presentation] #tourist-observation { flex:1; min-width:0; font-size:11px; line-height:1.5; color:#59636f; }
+#app[data-presentation] #status-card-toggle { width:auto; min-width:72px; height:44px; padding:0 10px; font-size:12px; font-weight:650; }
+/* Scale the original vector directly; a blurred shadow must not obscure the artwork. */
+#app[data-presentation] .van-marker-circle { left:-16px; top:7px; width:86px; height:40px; }
+#app[data-presentation] .van-marker-circle .vehicle-symbol { width:86px; height:40px; max-width:none; flex-shrink:0; filter:none; }
+#app[data-presentation] .tourist-last-seen { filter:none; }
+#app[data-presentation] .tourist-last-seen .van-marker-circle { border-bottom:2px dashed #687482; }
