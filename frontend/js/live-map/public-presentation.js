@@ -32,7 +32,7 @@
         const warning=document.getElementById('tourist-location-warning');warning.hidden=true;text('tourist-location-warning','');
         text('live-badge-text',model.message);
         if(typeof vanMarker!=='undefined' && vanMarker){
-            vanMarker.setOpacity(model.positionValid?(model.locationHistorical?.55:1):0);
+            vanMarker.setOpacity(model.positionValid?1:0);
             const element=vanMarker.getElement();if(element){element.classList.toggle('tourist-last-seen',model.locationHistorical);element.setAttribute('aria-label',model.message+(model.lastObservationAt?' · '+observed.textContent:''));}
             if(model.locationHistorical && typeof publicMarkerController!=='undefined')publicMarkerController?.stop();
         }

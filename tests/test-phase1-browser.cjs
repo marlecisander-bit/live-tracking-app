@@ -34,6 +34,9 @@ const server=http.createServer((req,res)=>{const u=new URL(req.url,'http://local
   await page.waitForTimeout(120);
   assert.equal(await f.locator('#van-movement-status').textContent(),'At '+mapData.features.find(f=>String(f.properties.stopNumber)==='3'&&f.properties.pointType==='stop').properties.name);
   assert.equal(await f.locator('.stop-photo-marker').count(),5);
+  assert(await f.locator('#tourist-observation').isVisible(),'Observation remains visible while collapsed');
+  assert((await f.locator('#status-card-toggle').innerText()).includes('Details'));
+  assert(await f.evaluate(()=>{let e=document.querySelector('.van-marker-circle .vehicle-symbol');return e.getBoundingClientRect().width>=80&&getComputedStyle(e).filter==='none'}),'Van is legible without a soft shadow');
   await f.locator('#status-card-toggle').click();assert.equal(await f.locator('#status-card-toggle').getAttribute('aria-expanded'),'true');assert(await f.locator('#tourist-observation').isVisible());
   assert(await f.evaluate(()=>document.getElementById('next-card').getBoundingClientRect().bottom+12<=document.getElementById('map-controls').getBoundingClientRect().top));
   await f.locator('#status-card-toggle').press('Escape');assert.equal(await f.locator('#status-card-toggle').getAttribute('aria-expanded'),'false');

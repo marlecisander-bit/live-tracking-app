@@ -126,19 +126,7 @@
 
 
             <span id="operational-live">Unavailable</span>
-            <div class="next-card-actions">
-                <div id="next-direction">--</div>
-                <button
-                    id="status-card-toggle"
-                    type="button"
-                    aria-label="Show more vehicle information"
-                    aria-expanded="false"
-                    aria-controls="tourist-details"
-                    data-action="toggleStatusCard"
-                >
-                    <span aria-hidden="true">&#8964;</span>
-                </button>
-            </div>
+
 
         </div>
 
@@ -176,8 +164,23 @@
 
 
         <p id="tourist-service-note"></p>
-        <div id="tourist-details" class="status-card-extra">
+        <div class="tourist-card-footer">
             <time id="tourist-observation">Last GPS observation unavailable</time>
+            <div class="next-card-actions">
+                <div id="next-direction">--</div>
+                <button
+                    id="status-card-toggle"
+                    type="button"
+                    aria-label="Show more vehicle information"
+                    aria-expanded="false"
+                    aria-controls="tourist-details"
+                    data-action="toggleStatusCard"
+                >
+                    Details <span aria-hidden="true">&#8964;</span>
+                </button>
+            </div>
+        </div>
+        <div id="tourist-details" class="status-card-extra">
             <p id="tourist-progress">Journey progress unavailable</p>
         </div>
         <div id="eta-progress-wrap" class="status-card-extra">
