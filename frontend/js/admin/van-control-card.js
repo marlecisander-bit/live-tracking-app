@@ -16,7 +16,7 @@
     });
     window.adminVanCard = { render: function (position, failed) {
         const state = window.trackingState.classify(position);
-        const provider = position && ({ 'pixel-android': 'Google Pixel', scorpiontrack: 'ScorpionTrack' })[position.source];
+        const provider = position && ({ scorpiontrack: 'ScorpionTrack' })[position.source];
         if (provider) document.getElementById('gps-source-active').textContent = provider;
         const labels = { MOVING: 'LIVE', STATIONARY: 'STOPPED', GPS_DELAYED: 'DELAYED', GPS_OFFLINE: 'NO RECENT SIGNAL', UNKNOWN: 'GPS LIVE' };
         card.dataset.state = failed ? 'GPS_DELAYED' : state;

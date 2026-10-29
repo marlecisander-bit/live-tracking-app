@@ -30,7 +30,7 @@ async function loadVanPosition() {
             if (vanMarker) vanMarker.setOpacity(row ? 1 : 0);
             if (row) updateVanMarker({lat: row.latitude, lng: row.longitude, viteza: row.speed_kmh,
                 directie: row.bearing_deg, source_recorded_at: row.source_recorded_at},
-                row.source === 'pixel-android' ? 'Google Pixel' : 'ScorpionTrack');
+                'ScorpionTrack');
             else {
                 vanPosition = null;
                 lastVanGPSReceivedAt = null;

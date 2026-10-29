@@ -33,6 +33,8 @@ window.app.helpers = {
         }
 
         toast.textContent = message;
+        const feedback = document.getElementById("editor-feedback");
+        if(feedback)feedback.textContent=message;
         toast.classList.add('show');
 
         clearTimeout(window.app.toastTimer);

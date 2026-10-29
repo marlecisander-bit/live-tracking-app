@@ -144,12 +144,9 @@ var activeVanGpsSource =
     null;
 
 
-/* Backend stop and ETA rows are produced from the Pixel position stored in
-   vehicle_positions. Never combine those rows with Scorpion coordinates. */
+/* Current snapshots carry one server-selected Scorpion source and run. */
 function backendVehicleStateMatchesActiveGps() {
-    // Selected snapshots already scope both providers to the active source period.
-    if (window.appConfig.providerSelectionEnabled) return true;
-    return !activeVanGpsSource || activeVanGpsSource === 'Google Pixel';
+    return !activeVanGpsSource || activeVanGpsSource === 'ScorpionTrack';
 }
 
 

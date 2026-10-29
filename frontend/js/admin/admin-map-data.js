@@ -60,6 +60,7 @@ function adminSelectLayer(layer) {
     if (!layer) return;
 
     const previousLayer = window.adminMapData.selectedLayer;
+    if(previousLayer&&previousLayer!==layer&&window.adminWorkflow?.formDirty){window.app.helpers.showToast("Apply the open editor changes or use Close before selecting another object.");return;}
     if (previousLayer && previousLayer !== layer) {
         if (previousLayer instanceof L.Marker && previousLayer.dragging && previousLayer.dragging.enabled()) {
             previousLayer.dragging.disable();
@@ -205,18 +206,24 @@ async function adminLoadLatestMap() {
     try {
         let query = client.from('map_versions').select('id,status,map_data,published_at,created_at');
         if (projectId) query = query.eq('project_id', projectId);
-        const result = await query.order('created_at', { ascending: false }).limit(1).maybeSingle();
+        const result = await query.order('id', { ascending: false }).limit(1).maybeSingle();
         if (request !== adminMapRequest || projectId !== window.appConfig.projectId || userId !== window.app.state.currentUser?.id) return;
         if (result.error) throw result.error;
+        const [publishedResult,draftResult] = await Promise.all(['published','draft'].map(status=>{let q=client.from('map_versions').select('id,status,published_at,created_at').eq('project_id',projectId).eq('status',status);if(status==='published')q=q.order('published_at',{ascending:false});return q.order('id',{ascending:false}).limit(1).maybeSingle();}));
+        if(publishedResult.error||draftResult.error)throw publishedResult.error||draftResult.error;
+        if (request !== adminMapRequest || projectId !== window.appConfig.projectId || userId !== window.app.state.currentUser?.id) return;
+        const published=publishedResult.data,draft=draftResult.data,versions=[published,draft].filter(Boolean).sort((a,b)=>Number(b.id)-Number(a.id));
+        if(String(versions[0]?.id??'')!==String(result.data?.id??''))throw new Error('Map changed while loading. Reload before editing.');
         adminRenderMapData(result.data?.map_data || { type: 'FeatureCollection', features: [] });
+        window.adminWorkflow.loaded(result.data,published,draft);
+        // Checkpoint Leaflet serialization so loading defaults does not count as an edit.
+        window.adminWorkflow.savedData=JSON.parse(JSON.stringify(adminBuildFeatureCollection()));
         window.adminMapData.changeRevision += 1;
         window.app.state.loadedMapProjectId = projectId;
         window.adminMapData.currentVersionId = result.data?.id || null;
         window.adminMapData.currentStatus = result.data?.status || null;
         window.adminMapData.hasChanges = false;
         window.app.state.unpublishedChanges = 0;
-        const published = document.getElementById('last-published');
-        if (published) published.textContent = result.data?.published_at ? new Date(result.data.published_at).toLocaleString() : 'Never';
         window.app.helpers.showToast(result.data ? 'Saved map loaded' : 'No saved map found');
     } catch (error) {
         if (request === adminMapRequest) window.app.helpers.showToast('Could not load saved map: ' + error.message);
@@ -235,7 +242,7 @@ document.addEventListener('projectchange', function() {
     window.app.projectLoadPromise = adminLoadLatestMap();
 });
 window.addEventListener('beforeunload', function(event) {
-    if (window.adminMapData.hasChanges || window.app.state.mapSaveInFlight) { event.preventDefault(); event.returnValue = ''; }
+    if (window.adminMapData.hasChanges || window.adminWorkflow?.formDirty || window.app.state.mapSaveInFlight) { event.preventDefault(); event.returnValue = ''; }
 });
 
 function adminGetAllLayers() {

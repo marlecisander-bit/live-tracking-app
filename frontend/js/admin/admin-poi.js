@@ -36,27 +36,8 @@
         status.setAttribute('aria-live', message ? 'polite' : 'off');
     }
 
-    async function fetchPoiData(category, lat, lng, radius) {
-        const supabaseClient = window.app.supabase && window.app.supabase.getClient
-            ? window.app.supabase.getClient()
-            : null;
-        if (!supabaseClient || !supabaseClient.functions) throw new Error('Supabase is not available');
-
-        const result = await supabaseClient.functions.invoke('osm-poi-search', {
-            body: { category: category, lat: lat, lng: lng, radius: radius, project_id: window.appConfig.projectId }
-        });
-        if (!result.error && result.data && !result.data.error) return result.data;
-
-        let message = result.data && result.data.error;
-        if (!message && result.error && result.error.context && typeof result.error.context.json === 'function') {
-            try {
-                const details = await result.error.context.json();
-                message = details && details.error;
-            } catch (contextError) {
-                console.warn('Could not read POI proxy error response:', contextError);
-            }
-        }
-        throw new Error(message || (result.error && result.error.message) || 'Supabase POI function failed');
+    async function fetchPoiData() {
+        throw new Error('Remote POI search is unavailable. Add or edit POIs manually.');
     }
 
     function updatePoiSelection() {

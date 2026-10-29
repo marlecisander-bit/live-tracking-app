@@ -1010,8 +1010,7 @@ input, select, textarea {
     #gps-card { left: 10px; right: 10px; min-width: 0; max-width: 360px; max-height: min(42dvh, 320px); overflow-y: auto; overscroll-behavior: contain; padding: 12px; }
     .gps-source-field { font-size: 13px; }
     .gps-source-field select { min-height: 44px; font-size: 16px; }
-    .gps-source-active, #gps-device-details summary { font-size: 12px; }
-    #gps-device-details { width: 100%; max-width: 100%; }
+    .gps-source-active { font-size: 12px; }
     #login-box { width: calc(100% - 24px); max-height: calc(100dvh - 24px); overflow-y: auto; }
     #poi-manager-dialog, #export-map-dialog { max-width: calc(100vw - 20px); max-height: calc(100dvh - 24px); overflow-y: auto; }
 }

@@ -18,9 +18,6 @@
 #gps-card select { min-height: 44px; font-size: 16px; }
 #gps-card details { width: auto; max-width: none; margin-top: 8px; }
 #gps-card summary { min-height: 44px; align-content: center; cursor: pointer; font-size: 12px; font-weight: 600; }
-#gps-card .gps-device-summary span { font-size: 11px; padding: 8px; }
-#gps-card .gps-telemetry-grid { max-height: none; }
-#gps-card .gps-telemetry-grid dt, #gps-card .gps-telemetry-grid dd { font-size: 12px; }
 #gps-certification-note { font-size: 12px; line-height: 1.5; color: #64748b; }
 @media (max-width: 700px) {
     #gps-card { left: max(8px, env(safe-area-inset-left)); right: max(8px, env(safe-area-inset-right)); bottom: calc(80px + env(safe-area-inset-bottom)); width: auto; max-width: none; padding: 8px 10px; }

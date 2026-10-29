@@ -3,73 +3,11 @@
 ============================================================ */
 
 function subscribeToPublishedChanges() {
-
-
-    try {
-
-
-        supabaseClient
-
-            .channel(
-                'sightseeing-public-map'
-            )
-
-            .on(
-
-                'postgres_changes',
-
-                {
-
-                    event:
-                        'INSERT',
-
-                    schema:
-                        'public',
-
-                    table:
-                        'map_versions',
-
-                    filter:
-                        'project_id=eq.' + window.PROJECT_ID
-
-                },
-
-                function(payload) {
-
-
-                    if (
-                        payload.new
-                        &&
-                        payload.new.status ===
-                        'published'
-                    ) {
-
-
-                        loadPublishedMap(
-                            true
-                        );
-
-                    }
-
-                }
-
-            )
-
-            .subscribe();
-
-
-    }
-
-
-    catch(error) {
-
-        console.log(error);
-
-    }
-
+    // This project's map_versions table is not in the Realtime publication.
+    // Keep the existing visible-page 30-second polling as the CMS sync path.
+    // GPS uses its independent current-snapshot Realtime subscription.
+    return null;
 }
-
-
 
 function startPublishedMapPolling() {
 

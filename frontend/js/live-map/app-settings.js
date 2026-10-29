@@ -53,7 +53,6 @@ var VEHICLE_ETA_UPDATE_INTERVAL = window.appConfig.vehicleEtaUpdateInterval;
 var MAP_CHECK_INTERVAL = window.appConfig.publishedMapCheckInterval;
 
 var GPS_STALE_AFTER_MS = window.appConfig.providerSelectionEnabled ? 180000 : window.appConfig.gpsStaleAfterMs;
-var PIXEL_GPS_FRESH_AFTER_MS = window.appConfig.pixelGpsFreshAfterMs || 30000;
 var VEHICLE_ETA_STALE_AFTER_MS = window.appConfig.vehicleEtaStaleAfterMs;
 
 var DEFAULT_SERVICE_SPEED_KMH = window.appConfig.defaultServiceSpeedKmh;

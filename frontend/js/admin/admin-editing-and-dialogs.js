@@ -185,7 +185,7 @@
         if (button) button.textContent = 'Move Stop on Map';
         if (saveChange) {
             adminMarkChanged();
-            window.app.helpers.showToast('New stop location saved in the draft');
+            window.app.helpers.showToast('Stop location changed locally. Use Save Draft, then Publish.');
         }
     }
 
@@ -250,6 +250,7 @@
                     throw new Error('The standardized sticker is too complex; use a simpler PNG');
                 }
                 input.dataset.sticker = result.sticker;
+                window.adminWorkflow.formDirty=true;
                 showStickerPreview(input.dataset.sticker);
                 window.app.helpers.showToast(result.backgroundRemoved
                     ? 'Background removed and object prepared for the map'
@@ -266,6 +267,7 @@
                 input.dataset.sticker = '';
             }
             showStickerPreview('');
+            window.adminWorkflow.formDirty=true;
         },
         toggleMoveSelectedPoint: function() {
             const layer = selectedLayer();
@@ -324,13 +326,8 @@
             layer.setIcon(adminPointIcon(p));
             adminMarkChanged();
             adminRefreshLists();
-            if (window.app.actions && typeof window.app.actions.saveDraft === 'function') {
-                const saved = await window.app.actions.saveDraft();
-                if (!saved) return null;
-                window.app.helpers.showToast(p.pointType === 'poi' ? 'POI saved to the draft' : 'Stop saved to the draft');
-                return saved;
-            }
-            window.app.helpers.showToast('Object saved locally; use Save Draft to persist it');
+            window.adminWorkflow.applied();
+            window.app.helpers.showToast('Stop/POI changes are local. Use Save Draft, then Publish.');
             return p;
         },
         saveRouteObject: function() {
@@ -348,7 +345,8 @@
             layer.setStyle(adminRouteStyle(p));
             adminMarkChanged();
             adminRefreshLists();
-            window.app.helpers.showToast('Route saved');
+            window.adminWorkflow.applied();
+            window.app.helpers.showToast('Route changes are local. Use Save Draft, then Publish.');
         },
         deleteSelectedObject: function() {
             const layer = selectedLayer();
@@ -361,6 +359,11 @@
             adminRefreshLists();
         },
         closeEditor: function() {
+            if(window.app.state.mapSaveInFlight)return window.app.helpers.showToast('Wait for the save to finish.');
+            if(window.adminWorkflow.hasUnsaved()) {
+                if(!window.confirm('Discard all unsaved map changes and close? Cancel to continue editing.'))return false;
+                if(!window.adminWorkflow.discard(false))return false;
+            }
             const layer = selectedLayer();
             stopMovingPoint(layer, false);
             if (layer) adminSetLayerSelected(layer, false);
@@ -383,9 +386,10 @@
         autoBuildSequence: function() {
             const p = selectedProperties();
             if (!p || selectedLayer() instanceof L.Marker) return window.app.helpers.showToast('Select a route first');
-            p.stopSequence = adminGetAllStops().sort(function(a, b) {
+            p.stopSequence = adminGetAllStops().filter(layer=>adminFeatureProperties(layer).active!==false).sort(function(a, b) {
                 return Number(adminFeatureProperties(a).stopNumber) - Number(adminFeatureProperties(b).stopNumber);
             }).map(function(layer) { return adminFeatureProperties(layer).objectId; });
+            if(p.stopSequence.length)p.stopSequence.push(p.stopSequence[0]);
             adminRenderStopSequence(p.stopSequence);
             adminMarkChanged();
         },

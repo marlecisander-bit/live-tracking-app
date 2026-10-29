@@ -225,12 +225,3 @@
         .gps-provider-status { margin-top: 8px; padding: 8px; border-radius: 7px; background: #f1f5f3; color: #33443a; font-size: 12px; line-height: 1.5; }
         .gps-provider-status[data-state="warning"] { background: #fff4df; color: #684600; }
         .gps-provider-status p { margin: 5px 0 0; }
-        .gps-device-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-top: 8px; }
-        .gps-device-summary span { padding: 5px; border-radius: 6px; background: #f4f4f4; color: #666; font-size: 9px; text-align: center; }
-        .gps-device-summary strong { display: block; margin-top: 2px; color: #222; font-size: 11px; }
-        #gps-device-details { width: 320px; max-width: calc(100vw - 58px); margin-top: 8px; }
-        #gps-device-details summary { cursor: pointer; color: #444; font-size: 10px; font-weight: 800; }
-        .gps-telemetry-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px 10px; max-height: 285px; margin: 7px 0 0; overflow-y: auto; }
-        .gps-telemetry-grid div { min-width: 0; padding: 4px 0; border-bottom: 1px solid #eee; }
-        .gps-telemetry-grid dt { color: #777; font-size: 9px; }
-        .gps-telemetry-grid dd { margin: 1px 0 0; overflow-wrap: anywhere; color: #222; font-size: 10px; font-weight: 700; }

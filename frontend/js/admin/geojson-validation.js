@@ -34,8 +34,8 @@
                 coordinate(g.coordinates);
                 check(['stop','poi'].includes(p.pointType), 'Points must be stops or POIs.');
                 if (p.pointType === 'stop') {
-                    check(Number.isInteger(p.stopNumber) && p.stopNumber > 0 && !numbers.has(p.stopNumber), 'Stop numbers must be positive and unique.');
-                    stops.add(p.objectId); numbers.add(p.stopNumber);
+                    check(Number.isInteger(Number(p.stopNumber)) && Number(p.stopNumber) > 0 && !numbers.has(Number(p.stopNumber)), 'Stop numbers must be positive and unique.');
+                    stops.add(p.objectId); numbers.add(Number(p.stopNumber));
                 }
             } else {
                 check(Array.isArray(g.coordinates) && g.coordinates.length >= 2, 'Routes need at least two coordinates.');

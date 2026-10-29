@@ -1,0 +1,3 @@
+#editor-save-status { overflow-wrap: anywhere; }
+#editor-save-status [data-action="discardChanges"] { min-height: 44px; }
+#editor-feedback { font-weight: 600; }

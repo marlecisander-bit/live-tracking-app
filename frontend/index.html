@@ -59,6 +59,7 @@
 
 
     <link rel="stylesheet" href="css/stop-design.css">
+<link rel="stylesheet" href="css/admin/admin-workflow.css">
 </head>
 
 
@@ -143,19 +144,15 @@
 
         <div class="admin-project-switcher">
             <select id="admin-project-select" aria-label="Current project"></select>
-            <button class="header-quiet-action" id="create-project-button" type="button" data-action="createProject" aria-label="Create project">+ Project</button>
-            <button class="header-quiet-action" id="invite-admin-button" type="button" data-action="inviteAdministrator">Team</button>
+            <button class="header-quiet-action" id="create-project-button" hidden type="button" data-action="createProject" aria-label="Create project">+ Project</button>
+            <button class="header-quiet-action" id="invite-admin-button" hidden type="button" data-action="inviteAdministrator">Team</button>
         </div>
 
 
         <button
             class="btn-light header-map-action"
             type="button"
-            data-action="previewPublicMap">
-
-            Preview
-
-        </button>
+            data-action="previewPublicMap">View public map</button>
 
 
         <button
@@ -164,7 +161,7 @@
             type="button"
             data-action="saveDraft">
 
-            Save <span class="save-change-count" id="unpublished-count" hidden>0</span>
+            Save Draft <span class="save-change-count" id="unpublished-count" hidden>0</span>
 
         </button>
 
@@ -230,7 +227,7 @@
         </div>
 
 
-        <section class="context-section" data-context-section="map">
+        <section class="context-section" data-context-section="map"><div class="workflow-card" id="editor-save-status" role="status" aria-live="polite"><strong>Saved and published versions</strong><span id="editor-feedback" aria-live="polite"></span><span>Draft: <span id="last-saved-draft">Not loaded</span></span><span>Public: <span id="last-published">Not loaded</span></span><span>Apply edits locally, Save Draft, then Publish. Discard returns to the last saved map.</span><button type="button" class="context-secondary" data-action="discardChanges">Discard unsaved changes</button></div>
 
             <div class="workflow-card">
                 <strong>Tour setup</strong>
@@ -283,7 +280,7 @@
 
             <div class="sidebar-actions">
                 <button class="context-primary" type="button" data-action="startAddPOI">+ Add POI</button>
-                <button class="context-secondary" type="button" data-action="openPOIManager">POI Manager</button>
+                
             </div>
 
             <div class="section-title">POIs</div>
@@ -331,55 +328,14 @@
             </div>
             <div id="van-card-details" hidden>
             <label class="gps-source-field" for="admin-gps-source">
-                Selected GPS provider
-                <select id="admin-gps-source" aria-describedby="gps-certification-note">
-                    <option value="automatic">Automatic — testing only</option>
-                    <option value="pixel">Google Pixel — beta / testing</option>
+                GPS provider (managed)
+                <select id="admin-gps-source" disabled aria-describedby="gps-certification-note">
                     <option value="scorpion">ScorpionTrack</option>
                 </select>
             </label>
 
-            <div class="gps-device-summary" aria-live="polite">
-                <span>Battery <strong id="gps-battery">--</strong></span>
-                <span>GPS <strong id="gps-quality">--</strong></span>
-                <span>Satellites <strong id="gps-satellites">--</strong></span>
-            </div>
-
-            <details id="gps-device-details">
-                <summary>Pixel device parameters</summary>
-                <dl class="gps-telemetry-grid">
-                    <div><dt>Device</dt><dd id="gps-device-id">--</dd></div>
-                    <div><dt>Motion</dt><dd id="gps-motion">--</dd></div>
-                    <div><dt>Latitude</dt><dd id="gps-latitude">--</dd></div>
-                    <div><dt>Longitude</dt><dd id="gps-longitude">--</dd></div>
-                    <div><dt>Accuracy</dt><dd id="gps-accuracy">--</dd></div>
-                    <div><dt>Vertical accuracy</dt><dd id="gps-vertical-accuracy">--</dd></div>
-                    <div><dt>Altitude</dt><dd id="gps-altitude">--</dd></div>
-                    <div><dt>Bearing</dt><dd id="gps-bearing">--</dd></div>
-                    <div><dt>Bearing accuracy</dt><dd id="gps-bearing-accuracy">--</dd></div>
-                    <div><dt>Derived course</dt><dd id="gps-derived-course">--</dd></div>
-                    <div><dt>Heading source</dt><dd id="gps-heading-source">--</dd></div>
-                    <div><dt>Speed accuracy</dt><dd id="gps-speed-accuracy">--</dd></div>
-                    <div><dt>External power</dt><dd id="gps-power">--</dd></div>
-                    <div><dt>Battery temperature</dt><dd id="gps-battery-temperature">--</dd></div>
-                    <div><dt>Thermal status</dt><dd id="gps-thermal">--</dd></div>
-                    <div><dt>Provider</dt><dd id="gps-provider">--</dd></div>
-                    <div><dt>Source</dt><dd id="gps-telemetry-source">--</dd></div>
-                    <div><dt>Visible satellites</dt><dd id="gps-satellites-visible">--</dd></div>
-                    <div><dt>Constellations</dt><dd id="gps-constellations">--</dd></div>
-                    <div><dt>Frequency bands</dt><dd id="gps-frequency-bands">--</dd></div>
-                    <div><dt>Median C/N0</dt><dd id="gps-cn0">--</dd></div>
-                    <div><dt>Fix rate</dt><dd id="gps-fix-rate">--</dd></div>
-                    <div><dt>TTFF</dt><dd id="gps-ttff">--</dd></div>
-                    <div><dt>Sequence</dt><dd id="gps-sequence">--</dd></div>
-                    <div><dt>Elapsed realtime</dt><dd id="gps-elapsed-realtime">--</dd></div>
-                    <div><dt>Transport delay</dt><dd id="gps-transport-delay">--</dd></div>
-                </dl>
-            </details>
-
-
             <details class="van-diagnostics"><summary>Diagnostics / provider information</summary>
-            <p id="gps-certification-note">Scorpion is the primary operational tracker; release certification is pending. Pixel is for controlled testing. Automatic is not recommended for operational use until both trackers and failover are physically verified.</p>
+            <p id="gps-certification-note">ScorpionTrack supplies the latest reported location. An old fix does not confirm that the van is still parked.</p>
 <div id="gps-provider-status" class="gps-provider-status" hidden>
                 <div>Saved choice: <strong id="gps-provider-selected">Checking...</strong></div>
                 <div>Last signal: <strong id="gps-provider-signal">Checking...</strong></div>
@@ -609,11 +565,7 @@
             <button
                 class="btn-primary btn-full"
                         type="button"
-                        data-action="savePointObject">
-
-                Save Object
-
-            </button>
+                        data-action="savePointObject">Apply changes locally</button>
 
 
             <button
@@ -767,9 +719,7 @@
 
                 <div class="auto-route-help">
 
-                    Build the route automatically on real roads from
-                    the Stop Order. Add optional via points only where
-                    the router needs extra guidance.
+                    Generate a closed road route from the Stop Order. Edit route vertices manually for adjustments.
 
                 </div>
 
@@ -779,38 +729,15 @@
                 </div>
 
 
-                <div class="form-group">
-
-                    <label>
-                        Add via point to leg
-                    </label>
-
-                    <select id="auto-route-leg-select"></select>
-
-                </div>
+                
 
 
                 <div class="auto-route-grid">
 
-                    <button
-                        class="btn-light"
-                        type="button"
-                        id="auto-route-add-via-button"
-                            data-action="enableAutoRouteViaMode">
-
-                        + Add Via Point
-
-                    </button>
+                    
 
 
-                    <button
-                        class="btn-light"
-                        type="button"
-                            data-action="undoAutoRouteViaPoint">
-
-                        Undo Via
-
-                    </button>
+                    
 
                 </div>
 
@@ -825,7 +752,7 @@
                     </span>
 
                     <input
-                        id="auto-route-close-loop"
+                        id="auto-route-close-loop" disabled
                         type="checkbox"
                         checked
                     >
@@ -844,14 +771,7 @@
                 </button>
 
 
-                <button
-                    class="btn-light btn-full"
-                    type="button"
-                            data-action="clearAutoRouteViaPoints">
-
-                    Clear Via Points
-
-                </button>
+                
 
 
                 <div class="auto-route-map-hint">
@@ -912,11 +832,7 @@
                 <button
                     class="btn-light btn-full"
                     type="button"
-                            data-action="autoBuildSequence">
-
-                    Build from Stop Numbers
-
-                </button>
+                            data-action="autoBuildSequence">Build order 1–5–1</button>
 
             </div>
 
@@ -942,11 +858,7 @@
 
             <button
                 class="btn-primary btn-full"
-                        data-action="saveRouteObject">
-
-                Save Route
-
-            </button>
+                        data-action="saveRouteObject">Apply route changes</button>
 
 
             <button
@@ -1041,7 +953,7 @@
                 <button
                     class="btn-green"
                     type="button"
-                    id="poi-manager-search-button"
+                    id="poi-manager-search-button" disabled title="Remote POI search is unavailable in this backend; manual POI editing remains available"
                         data-action="searchOpenStreetMapPOIs">
 
                     Search POIs
@@ -1133,53 +1045,29 @@
         <div class="export-title-row"><div><h2>Export Map</h2><p>Export the map with routes, stops, names and POIs for print or digital use.</p></div><button id="export-map-close" type="button" data-action="closeExportMapModal">×</button></div>
     <div class="export-grid">
       <div class="export-field"><label>Format</label><select id="export-map-format"><option value="png">PNG</option><option value="pdf">PDF</option><option value="svg">SVG Vector</option></select></div>
-      <div class="export-field"><label>Layout</label><select id="export-map-layout"><option value="screen">Screen 16:9</option><option value="a4-landscape">A4 Landscape</option><option value="a4-portrait">A4 Portrait</option><option value="a3-landscape">A3 Landscape</option><option value="a3-portrait">A3 Portrait</option></select></div>
+      
             <div class="export-field"><label>PNG Quality</label><select id="export-map-scale"><option value="2">2×</option><option value="3" selected>3×</option><option value="4">4×</option></select></div>
     </div>
     <div class="export-field"><label>Map Title</label><input id="export-map-title" type="text" value="Sightseeing Shkodra"></div>
-    <div class="export-field"><label>Include</label><div class="export-checks">
-      <label class="export-check"><input id="export-basemap" type="checkbox" checked>Basemap</label>
-      <label class="export-check"><input id="export-routes" type="checkbox" checked>Routes</label>
-      <label class="export-check"><input id="export-stops" type="checkbox" checked>Stops</label>
-      <label class="export-check"><input id="export-stop-names" type="checkbox" checked>Stop Names</label>
-      <label class="export-check"><input id="export-pois" type="checkbox" checked>POIs</label>
-      <label class="export-check"><input id="export-legend" type="checkbox" checked>Legend</label>
-      <label class="export-check"><input id="export-van" type="checkbox">Live Van</label>
-      <label class="export-check"><input id="export-fit" type="checkbox" checked>Fit Route & Stops</label>
-    </div></div>
+
         <button class="btn-green btn-full" type="button" id="export-map-button" data-action="exportMapNow">Export Map</button>
     <div id="export-map-status"></div>
-    <div class="export-note">PNG/PDF can include the OpenStreetMap basemap. SVG is a clean vector export of routes, stops, labels and POIs.</div>
+    <p>Exports use the current map view. Layout and layer filters are not available.</p><div class="export-note">PNG/PDF can include the OpenStreetMap basemap. SVG is a clean vector export of routes, stops, labels and POIs.</div>
   </div>
 </div>
 <div id="export-stage"></div>
 
 <!-- =========================================================
-     ANALYTICS DASHBOARD
+     PUBLICATION STATUS
 ========================================================= -->
 
 <div id="publish-bar">
 
-    <div id="publish-info">
-
-        Last published:
-
-        <strong id="last-published">
-            Never
-        </strong>
-
-    </div>
-
-
-    <div id="publish-actions">
+    <div id="publish-actions"><button type="button" class="btn-light" data-action="discardChanges">Discard unsaved</button>
 
         <button
             class="btn-light"
-            data-action="previewPublicMap">
-
-            Preview
-
-        </button>
+            data-action="previewPublicMap">View public map</button>
 
 
         <button
@@ -1205,7 +1093,7 @@
 
 
 
-<div id="toast"></div>
+<div id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
 
 <script src="js/shared/app-config.js"></script>
 <script src="js/shared/map-content-safety.js"></script>
@@ -1243,7 +1131,9 @@
 <script src="js/admin/data-and-poi-actions.js"></script>
 <script src="js/admin/general-map-actions.js"></script>
 <script src="js/admin/geojson-validation.js"></script>
+<script src="js/admin/route-validation.js"></script>
 <script src="js/admin/admin-map-data.js"></script>
+<script src="js/admin/admin-workflow.js"></script>
 <script src="js/admin/admin-editing-and-dialogs.js"></script>
 <script src="js/admin/admin-publishing-and-export.js"></script>
 <script src="js/admin/admin-poi.js"></script>

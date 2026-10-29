@@ -29,43 +29,41 @@
     }
 
     async function saveVersion(status) {
-        if (window.app.state.mapSaveInFlight) return null;
-        if (window.app.state.mapLoadInFlight || window.app.state.loadedMapProjectId !== window.appConfig.projectId) { window.app.helpers.showToast('Wait for this project?s map to load before saving.'); return null; }
-        const user = window.app.state.currentUser;
-        const projectId = window.appConfig.projectId;
-        if (!user || !window.app.state.currentProject) { window.app.helpers.showToast('Sign in and select a project first.'); return null; }
-        window.app.state.mapSaveInFlight = true;
-        const revision = window.adminMapData.changeRevision;
-        const authRevision = window.app.state.authRevision || 0;
-        window.app.helpers.setLoading(true, status === 'published' ? 'Publishing map...' : 'Saving draft...');
-        try {
-            const payload = { status, created_by: user.id, map_data: JSON.parse(JSON.stringify(adminBuildFeatureCollection())) };
-            if (projectId) payload.project_id = projectId;
-            if (status === 'published') payload.published_at = new Date().toISOString();
-            const result = await window.app.supabase.getClient().from('map_versions').insert(payload).select('id,status,published_at,created_at').single();
-            if (result.error) throw result.error;
-            if (authRevision !== (window.app.state.authRevision || 0) || projectId !== window.appConfig.projectId || user.id !== window.app.state.currentUser?.id) return result.data;
-            window.adminMapData.currentVersionId = result.data.id;
-            window.adminMapData.currentStatus = result.data.status;
-            if (revision === window.adminMapData.changeRevision) {
-                window.adminMapData.hasChanges = false;
-                window.app.state.unpublishedChanges = 0;
-                const count = document.getElementById('unpublished-count');
-                if (count) { count.textContent = '0'; count.hidden = true; }
-            }
-            if (status === 'published') {
-                const published = document.getElementById('last-published');
-                if (published) published.textContent = new Date(result.data.published_at || result.data.created_at).toLocaleString();
-            }
-            window.app.helpers.showToast(status === 'published' ? 'Map published successfully' : 'Draft saved successfully');
-            return result.data;
-        } catch (error) {
-            window.app.helpers.showToast('Save failed: ' + error.message);
-            return null;
-        } finally {
-            window.app.state.mapSaveInFlight = false;
-            window.app.helpers.setLoading(false);
+        const state=window.app.state,w=window.adminWorkflow,user=state.currentUser,projectId=window.appConfig.projectId;
+        if(window.appConfig.ownerAcceptanceReadOnly){window.app.helpers.showToast("Read-only owner acceptance preview. Save and Publish are tested with isolated fixtures.");return null;}
+        if(state.mapSaveInFlight)return null;
+        if(state.mapLoadInFlight||state.loadedMapProjectId!==projectId){window.app.helpers.showToast('Wait for this project’s map to load before saving.');return null;}
+        if(!user||!state.currentProject){window.app.helpers.showToast('Sign in and select a project first.');return null;}
+        if(w.formDirty){window.app.helpers.showToast('Apply the open editor changes locally before saving.');return null;}
+        if(w.uncertain){window.app.helpers.showToast('Save outcome uncertain. Reload to reconcile before retrying.');return null;}
+        let data;
+        try{data=JSON.parse(JSON.stringify(adminBuildFeatureCollection()));window.geoJsonValidation.validate(data,new TextEncoder().encode(JSON.stringify(data)).length);window.routeValidation.validate(data);}
+        catch(error){window.app.helpers.showToast('Map validation: '+error.message);return null;}
+        if(status==='published'&&(window.adminMapData.currentStatus!=='draft'||w.hasUnsaved())){window.app.helpers.showToast('Save a valid draft before publishing. Unsaved changes cannot be published.');return null;}
+        if(status==='draft'&&!w.hasUnsaved()){window.app.helpers.showToast('No unsaved changes to save.');return null;}
+        state.mapSaveInFlight=true;
+        const authRevision=state.authRevision||0,revision=window.adminMapData.changeRevision,client=window.app.supabase.getClient();
+        const area=document.getElementById('map-area');if(area)area.inert=true;
+        window.app.helpers.setLoading(true,status==='published'?'Publishing saved draft...':'Saving draft...');
+        let submitted=false;
+        async function persist(){
+            const access=await client.rpc('is_tracking_admin',{p:projectId});if(access.error)throw access.error;if(access.data!==true)throw new Error('Map editing permission is no longer available.');
+            await w.checkHead(client,projectId);
+            if(authRevision!==(state.authRevision||0)||user.id!==state.currentUser?.id||projectId!==window.appConfig.projectId)throw new Error('Session changed. Sign in and reload before saving.');
+            const requestId=window.crypto.randomUUID();
+            const payload={p_project:projectId,p_expected_head:w.headId,p_expected_published:w.publishedId,p_expected_draft:w.draftId,p_status:status,p_map:data,p_request:requestId};
+            submitted=true;
+            const result=await client.rpc('save_tracking_map',payload);
+            if(result.error)throw result.error;
+            if(!result.data?.id)throw new Error('Save receipt missing. Reload to reconcile.');
+            if(authRevision!==(state.authRevision||0)||user.id!==state.currentUser?.id||projectId!==window.appConfig.projectId)return result.data;
+            window.adminMapData.currentVersionId=result.data.id;window.adminMapData.currentStatus=status;w.saved(result.data,data);
+            if(revision===window.adminMapData.changeRevision){window.adminMapData.hasChanges=false;state.unpublishedChanges=0;const count=document.getElementById('unpublished-count');if(count){count.textContent='0';count.hidden=true;}}
+            window.app.helpers.showToast(status==='published'?'Saved draft published. Visitors update on their next map refresh.':'Draft saved. The public route is unchanged.');return result.data;
         }
+        try{return await (window.navigator?.locks?window.navigator.locks.request('shkodra-cms-'+projectId,{ifAvailable:true},lock=>{if(!lock)throw new Error('Another browser tab is saving. Wait and reload before saving.');return persist();}):persist());}
+        catch(error){if(submitted&&!/^(42501|40001|22023|235[0-9A-Z]{2})$/.test(error.code||''))w.uncertain=true;window.app.helpers.showToast((w.uncertain?'Save outcome uncertain; reload before retrying. ':'Save failed: ')+error.message);return null;}
+        finally{state.mapSaveInFlight=false;if(area)area.inert=false;window.app.helpers.setLoading(false);}
     }
 
     function geoJsonToSvg(data) {
@@ -128,7 +126,7 @@
         },
         saveDraft: function() { return saveVersion('draft'); },
         publishMap: async function() {
-            if (window.app.state.mapSaveInFlight || !window.confirm('Publish this map for all visitors?')) return null;
+            if (window.app.state.mapSaveInFlight || !window.confirm('Publish the last saved draft for all visitors?')) return null;
             return saveVersion('published');
         },
         exportGeoJSON: function() {
@@ -214,6 +212,71 @@
             }
         } catch (error) {
             console.warn('Could not restore admin session.', error);
+        }
+    });
+})();
+
+// Minimal owner recovery; no service credentials or custom authentication endpoint.
+(function () {
+    document.addEventListener('DOMContentLoaded', function () {
+        const client = window.app.supabase.getClient();
+        const login = document.getElementById('login-screen');
+        const request = document.createElement('button');
+        request.type = 'button'; request.textContent = 'Forgot password?';
+        request.id = 'owner-password-recovery';
+        request.addEventListener('click', async function () {
+            const email = document.getElementById('login-email').value.trim();
+            const errorBox = document.getElementById('login-error');
+            if (!email) { errorBox.textContent = 'Enter your email address first.'; return; }
+            request.disabled = true;
+            try {
+                const result = await client.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin + window.location.pathname });
+                errorBox.textContent = result.error ? 'Recovery email could not be sent. Please try again later.' : 'If this account exists, check your email for the recovery link.';
+            } finally { request.disabled = false; }
+        });
+        request.style.cssText = 'margin-top:12px;background:transparent;color:#9b211d;box-shadow:none;padding:8px;';
+        document.getElementById('login-box').appendChild(request);
+        const dialog = document.createElement('dialog');
+        dialog.id = 'owner-recovery-dialog';
+        dialog.style.cssText = 'width:min(420px,calc(100vw - 32px));max-height:calc(100dvh - 32px);overflow:auto;border:0;border-radius:16px;padding:24px;';
+        const form = document.createElement('form');
+        form.style.cssText = 'display:grid;gap:12px;';
+        const title = document.createElement('h2'); title.id = 'owner-recovery-title'; title.textContent = 'Set a new password';
+        dialog.setAttribute('aria-labelledby', title.id);
+        const label = document.createElement('label'); label.textContent = 'New password (at least 12 characters)';
+        const password = document.createElement('input'); password.type = 'password'; password.autocomplete = 'new-password'; password.required = true; password.minLength = 12; label.appendChild(password);
+        const confirmationLabel = document.createElement('label'); confirmationLabel.textContent = 'Confirm new password';
+        const confirmation = document.createElement('input'); confirmation.type = 'password'; confirmation.autocomplete = 'new-password'; confirmation.required = true; confirmationLabel.appendChild(confirmation);
+        const status = document.createElement('p'); status.setAttribute('role', 'status');
+        const save = document.createElement('button'); save.type = 'submit'; save.textContent = 'Update password';
+        const cancel = document.createElement('button'); cancel.type = 'button'; cancel.textContent = 'Cancel recovery';
+        async function closeRecovery() { password.value = ''; confirmation.value = ''; await client.auth.signOut(); window.app.endAdminSession(); if (dialog.open) dialog.close(); }
+        cancel.addEventListener('click', closeRecovery);
+        dialog.addEventListener('cancel', function (event) { event.preventDefault(); closeRecovery(); });
+        form.addEventListener('submit', async function (event) {
+            event.preventDefault(); if (save.disabled) return;
+            if (password.value !== confirmation.value) { status.textContent = 'Passwords do not match.'; return; }
+            save.disabled = true;
+            try {
+                const session = await client.auth.getUser();
+                if (!session.data.user || session.error) { status.textContent = 'Recovery session expired. Request a new recovery email.'; return; }
+                const result = await client.auth.updateUser({ password: password.value });
+                if (result.error) { status.textContent = 'Password could not be updated. Check the password requirements or request a new link.'; return; }
+                await closeRecovery(); document.getElementById('login-error').textContent = 'Password updated. Sign in with your new password.';
+            } finally { save.disabled = false; }
+        });
+        for (const fieldLabel of [label, confirmationLabel]) fieldLabel.style.cssText = 'display:grid;gap:6px;';
+        for (const input of [password, confirmation]) input.style.cssText = 'box-sizing:border-box;width:100%;min-height:44px;font-size:16px;';
+        form.append(title, label, confirmationLabel, status, save, cancel); dialog.appendChild(form); document.body.appendChild(dialog);
+        function showRecovery() { if (!dialog.open) { status.textContent = ''; dialog.showModal(); password.focus(); } }
+        client.auth.onAuthStateChange(function (event) { if (event === 'PASSWORD_RECOVERY') showRecovery(); });
+        // The SDK can process the callback before DOMContentLoaded listeners attach.
+        if (window.appConfig.ownerRecoveryRequested) {
+            window.appConfig.ownerRecoveryRequested = false;
+            client.auth.getUser().then(function (result) {
+                if (!result.error && result.data.user) showRecovery();
+                else document.getElementById('login-error').textContent = 'Recovery link is invalid or expired. Request a new reset email.';
+            });
         }
     });
 })();

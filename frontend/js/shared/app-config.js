@@ -1,8 +1,9 @@
-// Generated from config/defaults.json + environment profile. Do not edit.
+// Prepared replacement-project configuration. Public client key only.
 window.appConfig = {
   "leanTrackingEnabled": true,
-  "supabaseUrl": "https://jpcjdqwyrrcusuvypwic.supabase.co",
-  "supabaseKey": "sb_publishable_2DouxC7wM67d0bzN09Oikg_kjYzQQ-c",
+  "minimalTrackingAdmin": true,
+  "supabaseUrl": "https://dmqdiazosamyrnkmbtcd.supabase.co",
+  "supabaseKey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRtcWRpYXpvc2FteXJua21idGNkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMxOTMwMjcsImV4cCI6MjEwODc2OTAyN30.c8qgrcCg7chm71aHA0lLsZ7qbCWPMUCgc515eCZBzpQ",
   "mapCenter": {
     "lat": 42.0683,
     "lng": 19.5126,
@@ -17,7 +18,6 @@ window.appConfig = {
   "projectGpsSource": null,
   "providerSelectionEnabled": true,
   "selectedTrackingRealtimeEnabled": true,
-  "pixelGpsFreshAfterMs": 30000,
   "vanFollowZoom": 17,
   "gpsUpdateInterval": 5000,
   "trackingFallbackIntervalMs": 15000,
@@ -56,3 +56,6 @@ window.appConfig = {
 };
 window.SUPABASE_URL=window.appConfig.supabaseUrl;
 window.SUPABASE_KEY=window.appConfig.supabaseKey;
+
+// Capture recovery intent before Supabase Auth consumes the callback fragment.
+window.appConfig.ownerRecoveryRequested = new URLSearchParams(window.location.hash.slice(1)).get("type") === "recovery";
