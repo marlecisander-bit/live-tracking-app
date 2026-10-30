@@ -6,12 +6,12 @@
     function text(id,value){const el=document.getElementById(id);if(el&&el.textContent!==String(value??''))el.textContent=value??'';}
     function send(){
         if(!model)return;
-        const confidence={activity:model.activityConfidence,position:model.positionFreshness,eta:model.etaConfidence};
+        const confidence={activity:model.activityConfidence,position:model.evidenceLive===false&&model.positionFreshness==='live'?'delayed':model.positionFreshness,eta:model.etaConfidence};
         if(statusOrigin)root.parent.postMessage({type:'shkodra:public-status',version:1,label:model.gps==='live'?'Live location':model.passengerState==='last_seen'?'Last seen':'Location unavailable',
             name:model.currentStop?.name||model.nextConfirmedStop?.name||'',movement:model.message,unavailable:model.gps!=='live',
-            passengerState:model.passengerState,confidence,lastObservationAt:model.lastObservationAt},statusOrigin);
-        if(journeyOrigin)root.parent.postMessage({type:'shkodra:journey',version:1,unavailable:(model.gps!=='live'||!model.coherent)&&!model.parkingVerified,
-            movement:model.message,passengerState:model.passengerState,confidence,progressKnown:model.progressKnown,lastObservationAt:model.lastObservationAt,
+            passengerState:model.passengerState,phase:model.phase,statusValidUntil:model.statusValidUntil,confidence,lastObservationAt:model.lastObservationAt},statusOrigin);
+        if(journeyOrigin)root.parent.postMessage({type:'shkodra:journey',version:1,unavailable:model.phase==='UNKNOWN'||((model.gps!=='live'||!model.coherent)&&!model.parkingVerified),
+            movement:model.message,passengerState:model.passengerState,phase:model.phase,statusValidUntil:model.statusValidUntil,confidence,progressKnown:model.progressKnown,lastObservationAt:model.lastObservationAt,
             stops:model.stopStatuses.map(s=>({id:s.id,number:s.number,label:s.name,state:s.bridgeState,eta:s.eta,statusText:s.label,historical:model.locationHistorical}))},journeyOrigin);
     }
     function render(next){

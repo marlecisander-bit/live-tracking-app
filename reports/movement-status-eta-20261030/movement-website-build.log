@@ -1,0 +1,89 @@
+
+> sightseeing-shkodra@0.1.0 build
+> node scripts/check-deployment-env.mjs && next build
+
+▲ Next.js 16.4.2 (Turbopack)
+✓ Running next.config.ts took 10ms
+- Experiments (use with caution):
+  · serverActions
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 556ms
+  Running TypeScript ...
+  Finished TypeScript in 1072ms ...
+  Collecting page data using 9 workers ...
+  Generating static pages using 9 workers (0/37) ...
+  Generating static pages using 9 workers (9/37) 
+  Generating static pages using 9 workers (18/37) 
+  Generating static pages using 9 workers (27/37) 
+✓ Generating static pages using 9 workers (37/37) in 131ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ƒ /
+├ ○ /_not-found
+├ ƒ /admin
+├ ƒ /admin/[operatorId]/bookings
+├ ƒ /admin/[operatorId]/catalog
+├ ƒ /admin/[operatorId]/content
+├ ƒ /admin/[operatorId]/departures
+├ ƒ /admin/[operatorId]/destination-preview
+├ ƒ /admin/[operatorId]/email
+├ ƒ /admin/[operatorId]/more
+├ ƒ /admin/[operatorId]/notifications
+├ ƒ /admin/[operatorId]/overview
+├ ƒ /admin/[operatorId]/partners
+├ ƒ /admin/[operatorId]/reviews
+├ ƒ /admin/[operatorId]/route-stops
+├ ƒ /admin/[operatorId]/website-preview
+├ ƒ /api/admin/notifications
+├ ƒ /api/internal/admin-notifications
+├ ƒ /api/internal/booking-emails
+├ ƒ /api/public/availability
+├ ƒ /api/public/booking-management
+├ ƒ /api/public/checkout
+├ ƒ /api/public/day-planner
+├ ƒ /api/webhooks/resend
+├ ○ /auth/activate
+├ ƒ /auth/forgot-password
+├ ƒ /auth/set-password
+├ ƒ /auth/sign-in
+├ ƒ /book
+├ ƒ /booking/manage
+├ ƒ /credits
+├ ƒ /dev/admin-notifications
+├ ƒ /dev/admin-v2/[section]
+├ ○ /dev/booking-email-preview
+├ ƒ /dev/booking-pass-preview
+├ ƒ /dev/buttons-preview
+├ ○ /dev/calendar-preview
+├ ƒ /dev/cms-reconciliation
+├ ○ /dev/email-reliability-preview
+├ ○ /dev/hero-preview
+├ ○ /dev/partners-preview
+├ ○ /dev/performance-explore
+├ ƒ /dev/performance-navigation/after/[section]
+├ ƒ /dev/performance-navigation/before/[section]
+├ ○ /dev/reviews-preview
+├ ○ /dev/route-stops-preview
+├ ○ /dev/stops-preview
+├ ƒ /dev/tracking-preview
+├ ƒ /dev/whatsapp-preview
+├ ƒ /explore
+├ ƒ /explore/[slug]
+├ ƒ /faq
+├ ƒ /live
+├ ƒ /privacy-policy
+├ ƒ /robots.txt
+├ ƒ /route
+├ ƒ /sitemap.xml
+├ ƒ /terms-and-conditions
+├ ƒ /tour
+└ ƒ /your-day
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

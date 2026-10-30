@@ -1,0 +1,148 @@
+{
+  "status": "LOCAL REVIEW ONLY; NOT PUSHED OR DEPLOYED",
+  "date": "2026-10-30 Europe/Tirane",
+  "bases": {
+    "map": "f910d3fb492424552312cf8bd11cc9801c71f213",
+    "website": "fe4a0fa5af59c0562de4fcfba677c56bd2696619"
+  },
+  "branches": {
+    "map": "master",
+    "website": "main"
+  },
+  "existingWork": "Both canonical source checkouts initially clean; original dirty/broken workspaces and historical release evidence untouched",
+  "files": {
+    "map": [
+      {
+        "path": "frontend/js/live-map/calculate-arrivals.js",
+        "sha256": "2131d928f11cd4ad17a80c082915b17b3515f4e9e9c99e539c087faa30d1f017"
+      },
+      {
+        "path": "frontend/js/live-map/marker-motion.js",
+        "sha256": "3f9c17cbf899ffd89103101b4a8a9b76ef6d1d089778746d0fb94e4f0c0bdfb3"
+      },
+      {
+        "path": "frontend/js/live-map/public-presentation.js",
+        "sha256": "13685b8ae94794c50870836c62c4a12a95af1e716bbc9275b1421a1bfecb9382"
+      },
+      {
+        "path": "frontend/js/live-map/tourist-state.js",
+        "sha256": "422b76893638f3cf7f952f641994f9ee774d7a26cb53199c0ce1461804c89701"
+      },
+      {
+        "path": "frontend/js/live-map/tourist-view.js",
+        "sha256": "38547f5f07bfe781252f1f30571f33942364724475fac30b67b4bf724324f1f6"
+      },
+      {
+        "path": "frontend/js/live-map/track-bus.js",
+        "sha256": "cb50e9ff83d86f85763d4b30aff26694e0d36e0fefceb6cdb7347177c415c3db"
+      },
+      {
+        "path": "frontend/js/live-map/update-route-progress.js",
+        "sha256": "35960a91edb7d60d459d7bed51e2986f3ec3d91174bed53b4ac4a2b8922d5b09"
+      },
+      {
+        "path": "frontend/js/shared/gps-source.js",
+        "sha256": "33f2b99d59a4333b27d4a535bab9e49f1c9457cf9864ad1a3444d4b70491d79b"
+      },
+      {
+        "path": "package.json",
+        "sha256": "e341dd298c38314f545e3b30db89b068accc725229f79b4524c0722f9c52ac0c"
+      },
+      {
+        "path": "reports/movement-status-eta-20261030/movement-map-build.log",
+        "sha256": "744da445379a1d488a4c233efde314667f3a3616405d342b538d41b71c65eb10"
+      },
+      {
+        "path": "reports/movement-status-eta-20261030/movement-map-lint.log",
+        "sha256": "9b9ad7c091c6c3fab9dbc294a81c198167279cf9202b110bf77e0c5cae440d1d"
+      },
+      {
+        "path": "reports/movement-status-eta-20261030/movement-map-tests.log",
+        "sha256": "eb92bb2fdcb442781a59a0d90074f593b987a741fe363886812daa8e19b96b6d"
+      },
+      {
+        "path": "reports/movement-status-eta-20261030/movement-map-types.log",
+        "sha256": "a46275c127c8230516f756057f9d2c82b059bc763480082f2f0da37cee9d2464"
+      },
+      {
+        "path": "reports/movement-status-eta-20261030/movement-website-build.log",
+        "sha256": "b6b876dfdec73fa36e582fb5ad29f4b2040b20cc11f2c723b5b68afc18927907"
+      },
+      {
+        "path": "reports/movement-status-eta-20261030/movement-website-components.log",
+        "sha256": "16d2fe7972e9cbc43412b3ee2fbf5f480f20d8578a1b30ecb3bb438e18a70e26"
+      },
+      {
+        "path": "reports/movement-status-eta-20261030/movement-website-integrations.log",
+        "sha256": "59dfd783651ee5a02789c449b56ae55773c3974b47cfda2f834fde3c0436b473"
+      },
+      {
+        "path": "reports/movement-status-eta-20261030/provider-observation.json",
+        "sha256": "cd1bb2b4a39671fdc2d5b92e4c3bd7e261afc018cfeb8f824ed081f6e41f4fbd"
+      },
+      {
+        "path": "runtime/current-release.json",
+        "sha256": "3b450b7265ddb86dd488ded71d7af00f098e1fded6fe0894e21fcf4870a53b86"
+      },
+      {
+        "path": "supabase/functions/_shared/stop-transition.ts",
+        "sha256": "4d99c4cd27748c042cfe7656e353973a12850adab2c377aeccb1a1cccc7f9f8e"
+      },
+      {
+        "path": "tests/test-current-provider-movement.cjs",
+        "sha256": "f09d6ae899c3b4456fa30812a44d13da6efcd6ed3990d38143271e89298bc665"
+      },
+      {
+        "path": "tests/test-current-stream-timeout.cjs",
+        "sha256": "4050a4135d4f6b17fb1292f8903004e9a4f4086c1d41d5c151edd2b33f5aaed1"
+      },
+      {
+        "path": "tests/test-tourist-presentation.cjs",
+        "sha256": "563e1265a92f8b41fbc5a3d0217c74dbef34e4cb3bfb8547839e7cc921d6ffdf"
+      },
+      {
+        "path": "tests/test-tourist-state.cjs",
+        "sha256": "b197ca9afecfc6677992ccd8a79fad3646aa9e6401b809962f63d6e7b31d3b1b"
+      },
+      {
+        "path": "MOVEMENT-STATUS-ETA-REVIEW.md",
+        "sha256": "7f5483aff3d51c8d6b887b01974f342bbd57e722d32bfb720b1f72b77697fb15"
+      }
+    ],
+    "website": [
+      {
+        "path": "src/components/public/live-journey-tracker.tsx",
+        "sha256": "5e25391e1f5e84578f93e45e3c7d16d2ba44034ca1375ff7f7b5e667b4f0411a"
+      },
+      {
+        "path": "src/components/public/live-map-embed.tsx",
+        "sha256": "5b49493442dcc12eb3f125fb78c384be4b6dcf07d5789e6630eb582a18785b9d"
+      },
+      {
+        "path": "src/components/public/use-map-status.ts",
+        "sha256": "a9cf308422714e99456682db953ae9e4b8f7124e3aa8afba38febce0065428f2"
+      },
+      {
+        "path": "src/modules/content/sightseeing-stops.ts",
+        "sha256": "90b9f9fabe359b6caa813de9367c509d3bba990499904da9cef63497f9299218"
+      },
+      {
+        "path": "src/modules/tracking/journey-contract.ts",
+        "sha256": "288ba02f9a2de55e991c4053e7ca9cbc399fde0395597e502f3e0113a69ea8d0"
+      },
+      {
+        "path": "tests/integrations/tracking-bridge-confidence.test.mjs",
+        "sha256": "35975615cbe3b5d1fe7a82b9d0e246ac8290ba08cb6138c0bc2f11d5c39ac684"
+      }
+    ]
+  },
+  "productionWrites": false,
+  "newPersistentTrackingFields": false,
+  "browserAcceptance": "BLOCKED: authorized Chrome tab discovery timed out, including after owner opened a new window. No visual/mobile/iframe PASS.",
+  "validation": {
+    "map": "lint, full npm test including25 movement groups/current-provider SQL pipeline/real presenter, worker typecheck and pinned122-file build PASS",
+    "website": "lint/typecheck/optimized build,216 integrations and145 components PASS; full database/native suite not rerun"
+  },
+  "providerObservation": "provider-observation.json",
+  "manifestSelfHash": "Intentionally excluded; generated review evidence, not a released source commit"
+}

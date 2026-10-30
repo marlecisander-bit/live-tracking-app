@@ -1,0 +1,32 @@
+{
+  "durationSeconds": 90,
+  "reads": 10,
+  "failed": 0,
+  "distinct": 7,
+  "duplicates": 3,
+  "stationary": 0,
+  "moving": 10,
+  "unchangedStationary": 0,
+  "sourceBehindReceipt": 10,
+  "observedAdvancingGapSeconds": {
+    "min": 3,
+    "max": 32
+  },
+  "normalizedFields": [
+    "accuracy_m",
+    "bearing_deg",
+    "latitude",
+    "longitude",
+    "movement_state",
+    "project_id",
+    "received_at",
+    "source",
+    "source_recorded_at",
+    "source_run_id",
+    "speed_kmh",
+    "ui_observation_valid",
+    "vehicle_id"
+  ],
+  "providerRawPayloadOrCoordinatesStored": false,
+  "conclusion": "Public normalized read observation only; does not establish device cadence, configured suppression, device-clock provenance or independent parked heartbeat"
+}

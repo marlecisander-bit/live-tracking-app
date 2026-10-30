@@ -48,7 +48,7 @@ export function planStopTransition(input:any) {
   const {gps,previousGps,mapVersion,existingState}=input;
   const features=mapVersion?.map_data?.features||[],stops=buildOperationalSequence(features);
   if(stops.length!==5||stops.some((s:any,i:number)=>String(s.properties.stopNumber)!==String(i+1)))throw Error('Published route requires exactly five numbered operational stops');
-  const time=Date.parse(gps.source_recorded_at||gps.received_at),point=[gps.longitude,gps.latitude];
+  const time=Date.parse(gps.source_recorded_at),point=[gps.longitude,gps.latitude];
   const prior=existingState?.operational_state;
   const sameContext=prior?.mapVersion===mapVersion.id && prior?.sourceRun===gps.tracking_source_run_id;
   const previous=sameContext?prior:null;
@@ -57,7 +57,7 @@ export function planStopTransition(input:any) {
     (gps.accuracy_m!=null&&(!Number.isFinite(gps.accuracy_m)||gps.accuracy_m<0||gps.accuracy_m>50)))
     return {skipped:true,reason:'invalid',state:existingState,events:[]};
   if(previous&&time<=Date.parse(previous.timestamp))return {skipped:true,reason:'duplicate_or_older',state:existingState,events:[]};
-  const previousTime=previousGps?Date.parse(previousGps.source_recorded_at||previousGps.received_at):NaN;
+  const previousTime=previousGps?Date.parse(previousGps.source_recorded_at):NaN;
   if(previousGps && time>previousTime && (time-previousTime)<120000 &&
      Math.max(0,distanceMeters([previousGps.longitude,previousGps.latitude],point)-(gps.accuracy_m||0)-(previousGps.accuracy_m||0))/((time-previousTime)/1000)>50)
     return {skipped:true,reason:'jump',state:existingState,events:[]};
@@ -123,11 +123,12 @@ export function planStopTransition(input:any) {
   if(next!==null&&route) {
     const leg=(next+stops.length-2)%stops.length;
     const p=projection(point,route.line,route.offsets[leg],route.offsets[leg+1]);
-    if(p.distance<=200){remaining=Math.max(0,route.offsets[leg+1]-p.along);if(current===null&&age<=delayed)eta=remaining/1000/pace*3600;}
+    if(p.distance<=200){remaining=Math.max(0,route.offsets[leg+1]-p.along);// At a recognized stop this existing field is travel duration AFTER departure, never a live countdown.
+    if(age<=delayed)eta=remaining/1000/pace*3600;}
   }
   // Filter only small speed noise. New leg/reset/gap adopts the new estimate immediately.
   if(eta!==null&&previous?.etaSeconds!=null&&previous.nextStop===next&&!reset&&time-Date.parse(previous.timestamp)<=120000)eta=.7*eta+.3*previous.etaSeconds;
-  const operational={version:3,mapVersion:mapVersion.id,sourceRun:gps.tracking_source_run_id,timestamp:gps.source_recorded_at||gps.received_at,
+  const operational={version:3,mapVersion:mapVersion.id,sourceRun:gps.tracking_source_run_id,timestamp:gps.source_recorded_at,
     currentStop:current,nextStop:next,status,movement:stationary?'STATIONARY':speed===null?'UNKNOWN':'MOVING',outside,lastDeparted,
     completedStops:completed,originAway,originInside,skipCandidate,skipInside,stopOrder:stops.map((s:any)=>String(s.properties.stopNumber)),distanceToNextMetres:remaining,etaSeconds:eta,
     health:age>offline?'OFFLINE':age>delayed?'DELAYED':'LIVE',delayedSeconds:delayed,offlineSeconds:offline,samples,

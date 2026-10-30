@@ -1,0 +1,4 @@
+
+> shkodra-reconstructed-production-plus-stops@0.0.0 typecheck
+> tsc --noEmit --skipLibCheck --target es2022 --module esnext --moduleResolution bundler --allowImportingTsExtensions supabase/functions/gps-worker/engine.ts supabase/functions/gps-worker/handler.ts
+
