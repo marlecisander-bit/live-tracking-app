@@ -20,7 +20,7 @@
         card.dataset.layout='tourist';card.dataset.trackingHealth=model.gps.toUpperCase();
         card.dataset.eta=String(model.etaConfidence==='valid');card.dataset.oldLocation=String(model.locationHistorical);
         card.dataset.activity=model.activity;card.dataset.service=model.service;card.dataset.state=model.passengerState;card.dataset.tone=model.markerTone;
-        text('next-label','Sightseeing Shkodra');text('operational-live',model.gps==='live'?'Live':model.passengerState==='last_seen'?'Last report':'Tracking');
+        text('operational-live',model.gps==='live'?'Live':model.passengerState==='last_seen'?'Last report':'Tracking');
         document.getElementById('operational-live').hidden=false;
         document.getElementById('operational-stop-badge').hidden=true;
         text('van-message-label','');
