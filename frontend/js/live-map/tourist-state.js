@@ -94,36 +94,41 @@
   if(phase==='EN_ROUTE'&&!next||['ARRIVING','PARKED','LEAVING'].includes(phase)&&!stop)phase='UNKNOWN';
   const parked=phase==='PARKED'&&!!stop,arriving=phase==='ARRIVING'&&!!stop,leaving=phase==='LEAVING'&&!!stop;
   const moving=phase==='EN_ROUTE'||leaving,active=parked||arriving?stop:null;
+  // Planned route context is a different fact from confirmed motion. Keep it available during warm-up/slow/off-route reporting.
+  const planAvailable=!!(q.valid&&q.coherent&&next&&!i.unavailable&&op.skipCandidate==null);
+  const offRoute=finite(i.routePosition?.offRouteMetres)&&i.routePosition.offRouteMetres>150;
+  const statusDetail=offRoute?'Reported location is outside the tour route':phase!=='UNKNOWN'?'':i.unavailable?'Waiting for a location update':!op?'Journey progress not yet confirmed':!q.coherent?'Waiting for a current location update':!q.quality?'Location quality is insufficient for ETA':finite(p?.speed_kmh)&&p.speed_kmh<=2?'Confirming the stop':finite(p?.speed_kmh)&&p.speed_kmh<rules.movingKmh?'Low speed; confirming direction':'Confirming travel direction';
   const message=parked?'Parked at '+stop.name:arriving?'Arriving at '+stop.name:leaving?'Leaving '+stop.name:phase==='EN_ROUTE'&&next?'On the way to '+next.name:
-   q.quality&&!i.unavailable&&q.age<=q.delayed?'Movement not yet confirmed':'Location temporarily unavailable';
+   planAvailable?'Next planned stop · '+next.name:q.quality&&!i.unavailable&&q.age<=q.delayed?'Van location updated':'Location temporarily unavailable';
   const passengerState=parked?'parked':arriving?'approaching':leaving?'departing':phase==='EN_ROUTE'?'moving':'unavailable';
   const etaRow=i.eta,etaIdentity=!etaRow||(String(etaRow.map_version_id)===String(op?.mapVersion)&&String(etaRow.next_stop_number)===String(next?.number)&&stamp(etaRow.calculated_at)===q.t&&
    (!etaRow.vehicle_id||etaRow.vehicle_id===i.vehicleId)&&(!etaRow.project_id||etaRow.project_id===i.projectId)&&(etaRow.source_run_id==null||String(etaRow.source_run_id)===String(op?.sourceRun))&&
    etaRow.eta_seconds===op?.etaSeconds&&(etaRow.confidence==null||['MEDIUM','HIGH'].includes(etaRow.confidence)));
-  const validTravel=q.coherent&&gps==='live'&&etaIdentity&&next&&finite(op?.etaSeconds)&&op.etaSeconds>=0;
+  const validTravel=q.coherent&&gps==='live'&&!offRoute&&etaIdentity&&next&&finite(op?.etaSeconds)&&op.etaSeconds>=0;
   const liveEta=validTravel&&moving&&(!op.currentStop||leaving),arrivingNow=arriving&&q.coherent&&gps==='live';
   // Optional departure is an explicitly verified visit-bound application contract, never a timetable or provider guess.
   const d=i.departure,departureAt=stamp(d?.at),knownDeparture=parked&&validTravel&&d?.verified===true&&d.vehicleId===i.vehicleId&&d.projectId===i.projectId&&
    String(d.mapVersion)===String(i.mapVersion)&&String(d.sourceRun)===String(p.source_run_id)&&String(d.stopNumber)===String(stop.number)&&d.visitStartedAt===i.stopState?.entered_at&&departureAt>=now;
+  const contextTravel=phase==='UNKNOWN'&&planAvailable&&validTravel?op.etaSeconds:null;
   const duration=validTravel&&parked?op.etaSeconds:null,etaSeconds=arrivingNow?0:liveEta?op.etaSeconds:knownDeparture?(departureAt-now)/1000+duration:null;
   const mins=s=>s<60?'less than 1 min':'~'+Math.round(s/60)+' min';
-  const etaText=arrivingNow?'Arriving now':liveEta?'Estimated arrival · '+mins(etaSeconds):knownDeparture?'Departure '+new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/Tirane',hour:'2-digit',minute:'2-digit'}).format(departureAt)+' · next arrival '+mins(etaSeconds):duration!==null?'Travel · '+mins(duration)+' after departure':'';
+  const etaText=arrivingNow?'Arriving now':liveEta?'Estimated arrival · '+mins(etaSeconds):knownDeparture?'Departure '+new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/Tirane',hour:'2-digit',minute:'2-digit'}).format(departureAt)+' · next arrival '+mins(etaSeconds):duration!==null?'Travel · '+mins(duration)+' after departure':contextTravel!==null?(op.currentStop!=null?'Travel · '+mins(contextTravel)+' after departure':'Route travel estimate · '+mins(contextTravel)):'';
   const etaConfidence=etaSeconds!==null?'valid':finite(op?.etaSeconds)&&!validTravel?'outdated':'unavailable';
   const local=clock(now),schedule=i.schedule;
   const scheduleValid=schedule?.verifiedForVehicle===true&&schedule.vehicleId===i.vehicleId&&schedule.date===local.date&&finite(schedule.receivedAt)&&now-schedule.receivedAt>=0&&now-schedule.receivedAt<=90000&&Array.isArray(schedule.times)&&schedule.times.every(t=>typeof t==='string'&&/^(?:[01]\d|2[0-3]):[0-5]\d$/.test(t));
   const times=scheduleValid?[...new Set(schedule.times)].sort():[],scheduledDeparture=times.find(t=>t>=local.time)||null;
   const completed=(e.visited||[]).filter(n=>find(n)).map(String),target=active||next,live=!!e.live&&phase!=='UNKNOWN'&&gps==='live';
-  const model={phase,message,passengerState,activity:parked?'parked':arriving?'approaching':leaving?'departed':moving?'moving':'unknown',activityConfidence:phase==='UNKNOWN'?'unknown':live?'confirmed':'historical',
+  const model={phase,message,statusDetail,plannedNextStop:planAvailable?next:null,planAvailable,etaStatusText:etaText?'':'ETA unavailable',passengerState,activity:parked?'parked':arriving?'approaching':leaving?'departed':moving?'moving':'unknown',activityConfidence:phase==='UNKNOWN'?'unknown':live?'confirmed':'historical',
    gps,positionFreshness:gps,evidenceLive:live,statusValidUntil:phase==='UNKNOWN'?null:new Date(e.validUntil??(q.t+(parked?rules.parkGraceSeconds:q.delayed)*1000)).toISOString(),positionValid:q.valid,qualityAccepted:q.quality,coherent:q.coherent,parkingVerified:parked,markerVisible:q.quality&&q.age<=offline&&(!i.unavailable||parked),
    markerTone:!live?'grey':parked?'blue':arriving?'amber':moving?'green':'grey',currentStop:active,departureStop:leaving?stop:null,currentConfirmed:parked,nextStop:next,nextConfirmedStop:phase==='UNKNOWN'?null:target,
    completedStops:completed,progressKnown:!!op,progressText:'Confirmed visits this session · '+completed.length+' of '+(i.stops||[]).length+' stops',
-   etaConfidence,etaText,etaSeconds,etaKind:arrivingNow?'arriving':liveEta?'arrival':knownDeparture?'departure_and_arrival':duration!==null?'after_departure':'unavailable',travelSeconds:duration,
+   etaConfidence,etaText,etaSeconds,etaKind:arrivingNow?'arriving':liveEta?'arrival':knownDeparture?'departure_and_arrival':duration!==null?'after_departure':contextTravel!==null?'travel_estimate':'unavailable',travelSeconds:duration??contextTravel,
    timing:etaText||(scheduledDeparture?'Scheduled departure · '+scheduledDeparture:''),secondary:parked&&next?'Next stop · '+next.name:leaving?'Next stop · '+(next?.name||'not confirmed'):'',
    lastObservationAt:q.valid?new Date(q.t).toISOString():null,ageSeconds:q.valid?Math.max(0,q.age):null,locationHistorical:!live,
    scheduledDeparture,service:scheduleValid?'scheduled':'unknown',serviceMessage:scheduleValid&&!times.length?'No scheduled tours today':scheduledDeparture?'Scheduled departure · '+scheduledDeparture:scheduleValid?'No more scheduled departures today':''};
   model.stopStatuses=(i.stops||[]).filter(s=>s.active!==false).map(s=>{const at=parked&&String(s.number)===String(stop.number),aim=phase!=='UNKNOWN'&&String(s.number)===String((parked?next:target)?.number),departed=leaving&&String(s.number)===String(stop.number),seen=completed.includes(String(s.number));
-   const label=at?'Parked here':departed?'Leaving':aim?arriving?'Arriving now':parked?'Next stop':'On the way':seen?'Visited (dwell confirmed)':'Tour stop';
-   const timing=aim?etaText:'';
+   const label=at?'Parked here':departed?'Leaving':aim?arriving?'Arriving now':parked?'Next stop':'On the way':planAvailable&&String(s.number)===String(next.number)?'Planned next stop':seen?'Visited (dwell confirmed)':'Tour stop';
+   const timing=aim||contextTravel!==null&&planAvailable&&String(s.number)===String(next.number)?etaText:'';
    return {...s,id:String(s.id),number:String(s.number),current:at,next:aim&&!at,completed:seen,label:label+(timing&&timing!==label?' · '+timing:''),bridgeState:at?'current':departed&&seen?'departed':aim?'next':'upcoming',eta:timing};});
   return model;
  }

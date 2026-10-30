@@ -6,9 +6,9 @@
     function text(id,value){const el=document.getElementById(id);if(el&&el.textContent!==String(value??''))el.textContent=value??'';}
     function send(){
         if(!model)return;
-        const confidence={activity:model.activityConfidence,position:model.evidenceLive===false&&model.positionFreshness==='live'?'delayed':model.positionFreshness,eta:model.etaConfidence};
-        if(statusOrigin)root.parent.postMessage({type:'shkodra:public-status',version:1,label:model.gps==='live'?'Live location':model.passengerState==='last_seen'?'Last seen':'Location unavailable',
-            name:model.currentStop?.name||model.nextConfirmedStop?.name||'',movement:model.message,unavailable:model.gps!=='live',
+        const confidence={activity:model.activityConfidence,position:model.positionFreshness,eta:model.etaConfidence};
+        if(statusOrigin)root.parent.postMessage({type:'shkodra:public-status',version:1,label:model.phase==='UNKNOWN'?(model.planAvailable?'Planned route':'Location status'):model.gps==='live'?'Live location':model.passengerState==='last_seen'?'Last seen':'Location unavailable',
+            name:model.currentStop?.name||model.nextConfirmedStop?.name||'',movement:model.message,unavailable:model.phase==='UNKNOWN'||(model.gps!=='live'&&!model.parkingVerified),
             passengerState:model.passengerState,phase:model.phase,statusValidUntil:model.statusValidUntil,confidence,lastObservationAt:model.lastObservationAt},statusOrigin);
         if(journeyOrigin)root.parent.postMessage({type:'shkodra:journey',version:1,unavailable:model.phase==='UNKNOWN'||((model.gps!=='live'||!model.coherent)&&!model.parkingVerified),
             movement:model.message,passengerState:model.passengerState,phase:model.phase,statusValidUntil:model.statusValidUntil,confidence,progressKnown:model.progressKnown,lastObservationAt:model.lastObservationAt,
@@ -35,7 +35,7 @@
         text('tourist-progress',model.progressText);
         text('tourist-activity-confidence',model.activityConfidence==='confirmed'?'Confirmed':model.activityConfidence==='historical'?'Previously observed':'Not yet confirmed');
         text('tourist-position-confidence',model.gps==='live'?'Fresh observation':model.gps==='delayed'?'Last known position':'Out of date or unavailable');
-        text('tourist-eta-confidence',model.etaConfidence==='valid'?'Current estimate':model.etaConfidence==='outdated'?'Expired · not shown':'Not shown');
+        text('tourist-eta-confidence',model.etaConfidence==='valid'?'Current estimate':['travel_estimate','after_departure'].includes(model.etaKind)?'Travel duration only · arrival not confirmed':model.etaConfidence==='outdated'?'Expired · not shown':'Not shown');
         text('tourist-next-destination',model.nextConfirmedStop?'Next destination · '+model.nextConfirmedStop.name:'Next destination not yet confirmed');
         const view=root.touristView.project(model);card.dataset.state=model.passengerState;card.dataset.displayState=view.presentationState;
         text('journey-context',view.label);text('journey-destination',view.destination);text('journey-activity',view.activity);text('journey-eta',view.eta);
