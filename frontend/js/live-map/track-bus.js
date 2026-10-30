@@ -24,7 +24,7 @@ async function loadVanPosition() {
                 updateSmartRouteInformation();return;
             }
             if(row){publicGpsQuality=publicQualityFilter.check(row,String(requestedProject)+'/'+row.source_run_id,Date.now());if(publicGpsQuality==='REJECTED'){window.publicPresentation?.setLocationUnavailable(true);updateGPSStatus();return;}
-             if(activeRouteFeature){try{var projected=turf.nearestPointOnLine(activeRouteFeature,turf.point([row.longitude,row.latitude]),{units:'kilometers'});if(projected.properties.dist>.15)publicGpsQuality='POOR';}catch{}}
+             // Route adherence gates predictions in the shared model, not the validity of a fresh GPS fix.
 }
             vehicleStopState = snapshot.stop || null;
             vehicleEtaState = snapshot.eta || null;

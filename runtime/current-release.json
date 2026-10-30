@@ -6,19 +6,19 @@
   "localOverrides": {
     "js/shared/gps-source.js": "33f2b99d59a4333b27d4a535bab9e49f1c9457cf9864ad1a3444d4b70491d79b",
     "live-map.html": "ab7d425d38064db5d49f8c9758335013191be736f05303d1213ed62ca5f636a1",
-    "js/live-map/public-presentation.js": "13685b8ae94794c50870836c62c4a12a95af1e716bbc9275b1421a1bfecb9382",
+    "js/live-map/public-presentation.js": "c253d7b39c960c0cbcc2fdd50a16448afab515e3479fcd9563eed42c25c43247",
     "css/live-map/final-tourist.css": "6a5f6f4b215e95fb47def6e7a20fdece66847b0f2a171ff0779002cdc821d65a",
     "js/live-map/calculate-arrivals.js": "2131d928f11cd4ad17a80c082915b17b3515f4e9e9c99e539c087faa30d1f017",
-    "js/live-map/tourist-state.js": "422b76893638f3cf7f952f641994f9ee774d7a26cb53199c0ce1461804c89701",
-    "js/live-map/tourist-view.js": "38547f5f07bfe781252f1f30571f33942364724475fac30b67b4bf724324f1f6",
-    "js/live-map/track-bus.js": "cb50e9ff83d86f85763d4b30aff26694e0d36e0fefceb6cdb7347177c415c3db",
+    "js/live-map/tourist-state.js": "af83559cee0bc978305f6206053e9c9db78fb902e3449d73eba021556a3afa89",
+    "js/live-map/tourist-view.js": "651841c085187fa5338d273251dcd11706c2b6fc59e69a266fb986a59f2f012b",
+    "js/live-map/track-bus.js": "bdd5b3d51051f34e4fa8af8e456fb9a8ebbb03f7e8a8698650a258204e315115",
     "js/live-map/update-route-progress.js": "35960a91edb7d60d459d7bed51e2986f3ec3d91174bed53b4ac4a2b8922d5b09",
     "js/live-map/marker-motion.js": "3f9c17cbf899ffd89103101b4a8a9b76ef6d1d089778746d0fb94e4f0c0bdfb3",
     "js/shared/vehicle-icon.js": "1068d0ea2992546f522174835dc3a1aa7af4d6b4d653a12f632514c8eaed66b9",
     "css/live-map/tourist-layout.css": "b4215d05c7954b8984c0c0a1daaeefee05913a1059d6e6bed4fd147cf3155764",
     "css/live-map/tourist-card.css": "9d0b9458368ffbfa96985e55afac67e620e3578f9335d4f1f56d159eb512d553"
   },
-  "status": "Owner-authorized publication: remove attached van status dot and apply white-on-red selected controls",
+  "status": "Owner-reported card regression hotfix: planned stop context and qualified travel durations remain visible; off-route adherence gates ETA rather than GPS validity",
   "additionalFiles": {
     "assets/brand/bus-front.svg": "f5fed0934833d486d3a25a2740e04889626213b3298fa7a4d97718cd8e400a21"
   }
