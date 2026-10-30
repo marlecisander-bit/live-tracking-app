@@ -74,9 +74,17 @@ function getTrackerRecordedAt(data) {
 ============================================================ */
 
 function moveVanMarkerSmoothly(targetPosition, snapImmediately) {
+ var status=typeof getTouristInformation==='function'?getTouristInformation():null;
+ if(status&&(status.gps!=='live'||!status.markerVisible||!['moving','approaching','departing'].includes(status.passengerState))){
+   publicMarkerController?.stop();publicMarkerController=null;
+   if(status.markerVisible&&vanMarker)vanMarker.setLatLng(targetPosition);
+   return 0;
+ }
  if(snapImmediately&&publicMarkerController){publicMarkerController.stop();publicMarkerController=null;}
  if(!publicMarkerController)publicMarkerController=window.markerMotion.create({
-  predictionSeconds:window.appConfig.trackingV2.predictionSeconds,maxPredictionMetres:window.appConfig.trackingV2.maxPredictionMetres,
+  predictionSeconds:0,maxPredictionMetres:0,
+  canAnimate:at=>{var stamp=Date.parse(canonicalLivePosition?.source_recorded_at);return !document.hidden&&Number.isFinite(stamp)&&at-stamp<=Number(window.appConfig.trackingV2.delayedSeconds||90)*1000&&at-stamp>=-60000;},
+  onExpiry:()=>window.publicPresentation?.refresh(),
   reduced:()=>document.hidden||window.matchMedia('(prefers-reduced-motion: reduce)').matches,
   stopDistance:()=>{if(!vehicleStopState)return 0;var n=vehicleStopState.expected_next_stop_number,r=stopRecords.find(r=>String(r.feature.properties.stopNumber)===String(n));return r?Math.max(0,vanPosition.distanceTo(L.latLng(r.feature.geometry.coordinates[1],r.feature.geometry.coordinates[0]))-240):0;},
   render:(p,h)=>{if(!vanMarker)return;vanMarker.setLatLng(L.latLng(p.lat,p.lng));var arrow=vanMarker.getElement()?.querySelector('.van-heading');if(arrow)arrow.style.transform='rotate('+h+'deg)';}

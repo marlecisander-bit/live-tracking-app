@@ -15,6 +15,7 @@
       app.dataset.presentation = preview || width < 768 || height < 520 ? 'compact' : 'full';
       const bottom = Math.ceil(app.getBoundingClientRect().bottom - controls.getBoundingClientRect().top + 8);
       app.style.setProperty('--map-bottom', bottom + 'px');
+      window.journeyFraming?.keepVehicleClear();
       const mapElement = document.getElementById('map');
       if (mapElement.clientWidth !== mapWidth || mapElement.clientHeight !== mapHeight) {
         mapWidth = mapElement.clientWidth; mapHeight = mapElement.clientHeight;

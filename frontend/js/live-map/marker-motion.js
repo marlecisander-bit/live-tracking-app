@@ -37,7 +37,7 @@
    const first=!last;last={time:stamp,point:target};
    if(!first&&speed<3&&d<=Math.max(8,Math.min(30,Number(p.accuracy_m)||0))){render(start,heading);return;}
    if(first||options.reduced?.()||d>1000||(!path&&d>100)){render(target,endHeading);return;}
-   function tick(){const at=options.now?options.now():Date.now(),elapsed=at-now,t=clamp(elapsed/duration,0,1);let point;
+   function tick(){const at=options.now?options.now():Date.now();if(options.canAnimate&&!options.canAnimate(at)){stop();options.onExpiry?.();return;}const elapsed=at-now,t=clamp(elapsed/duration,0,1);let point;
     if(path){let km=from.km+(to.km-from.km)*t;
      // Prediction is short, route-only, never crosses a known stop or outruns stale data.
      if(t===1&&speed>=3&&at-stamp<=predictionSeconds*1000&&p.movement_state==='MOVING'&&Math.abs(angle(endHeading,(path.bearing?.(to.km)??endHeading)+(direction<0?180:0)))<60){

@@ -1,50 +1,57 @@
-/* Phase 1: final card rules; preserve map controls, marker art and photo colors. */
-#app[data-presentation] #next-card { width:min(360px,calc(100% - 80px)); padding:14px 16px; color:#202731; border-radius:16px; overscroll-behavior:contain; }
-#app[data-presentation] #next-card-top { gap:8px; flex-wrap:nowrap; }
-#app[data-presentation] #next-label { color:#303844; text-transform:none; letter-spacing:0; font-size:13px; font-weight:700; flex:1; }
-#app[data-presentation] #operational-live { color:#087038; font-size:11px; margin:0; }
-#app[data-presentation] #next-card[data-tracking-health="DELAYED"] #operational-live,
-#app[data-presentation] #next-card[data-tracking-health="UNAVAILABLE"] #operational-live { color:#635124; }
-#app[data-presentation] .next-card-actions { display:flex !important; }
-#app[data-presentation] #next-direction { display:none; }
-#app[data-presentation] #status-card-toggle { width:44px; height:44px; min-width:44px; padding:0; background:#f1f3f5; border:0; border-radius:10px; color:#303844; cursor:pointer; }
-#app[data-presentation] #van-movement-status { display:block; color:#202731; font-size:20px; line-height:1.3; margin:8px 0 0; }
-#app[data-presentation] #next-card #next-destination-row { display:block !important; margin-top:8px; }
-#app[data-presentation] #next-destination-label, #app[data-presentation] #van-message-label { display:none; }
-#app[data-presentation] #next-stop-name { color:#47515f; font-size:14px; line-height:1.45; font-weight:500; }
-#app[data-presentation] #next-card #next-meta { display:block !important; margin-top:8px; }
-#app[data-presentation] #next-card #next-meta > span:nth-child(2) { display:block; }
+/* Tourist journey card. All layout is frame-local; no viewport escape or telemetry UI. */
+#app[data-presentation] #next-card { --journey-accent:#526173; box-sizing:border-box; width:min(360px,calc(100% - 80px)); left:68px; right:auto; padding:12px 14px; border:1px solid #e1e6eb; border-radius:16px; background:#fff; color:#202731; box-shadow:0 6px 24px #182b4524; max-height:calc(100% - var(--map-bottom,90px) - var(--tourist-header,54px) - 28px); overflow:auto; overscroll-behavior:contain; }
+#app[data-presentation] #next-card[data-tone="green"] { --journey-accent:#166534; }
+#app[data-presentation] #next-card[data-tone="amber"] { --journey-accent:#915600; }
+#app[data-presentation] #next-card[data-tone="blue"] { --journey-accent:#175a9b; }
+#app[data-presentation] #next-card-top { display:flex; gap:8px; align-items:center; flex-wrap:nowrap; }
+#app[data-presentation] #next-label { flex:1; font-size:12px; font-weight:750; color:#b41630; letter-spacing:.01em; text-transform:none; }
+#app[data-presentation] #operational-live { display:flex; align-items:center; gap:5px; margin:0; font-size:11px; color:var(--journey-accent); white-space:nowrap; }
+#app[data-presentation] #operational-live::before { content:""; width:7px; height:7px; border-radius:50%; background:var(--journey-accent); }
+#app[data-presentation] #van-movement-status { display:block; margin:9px 0 0; color:#202731; font-size:20px; line-height:1.3; font-weight:700; overflow-wrap:anywhere; }
+#app[data-presentation] #next-card #next-destination-row { display:block!important; margin-top:7px; }
+#app[data-presentation] #next-stop-name { font-size:13px; line-height:1.4; color:#47515f; font-weight:500; }
+#app[data-presentation] #next-card #next-meta { display:block!important; margin-top:7px; }
+#app[data-presentation] #next-meta > span:nth-child(2) { display:block; }
+#app[data-presentation] #eta-value { font-size:14px; font-weight:650; color:#303844; }
 #app[data-presentation] #next-meta > span:nth-child(2)::before { content:none; }
-#app[data-presentation] #eta-value { color:#303844; font-size:14px; font-weight:650; }
-#app[data-presentation] #eta-unavailable, #app[data-presentation] #next-meta > span:nth-child(3), #app[data-presentation] #eta-progress-wrap { display:none; }
-#app[data-presentation] #tourist-details { display:none; margin-top:10px; border-top:1px solid #e2e5e9; padding-top:10px; color:#47515f; font-size:12px; line-height:1.5; }
-#app[data-presentation] #next-card.expanded #tourist-details { display:block; }
-#app[data-presentation] #tourist-progress { margin:4px 0 0; }
-#app[data-presentation] #tourist-service-note { margin:8px 0 0; font-size:12px; line-height:1.45; color:#47515f; }
-#app[data-presentation] #tourist-service-note:empty { display:none; }
-.tourist-last-seen { filter:grayscale(.6); }
-@container live-map (max-width:600px) {
- #app[data-presentation] #next-card { left:68px; right:12px; width:auto; padding:10px 12px; }
- #app[data-presentation] #next-card-top { gap:5px; }
- #app[data-presentation] #next-label { font-size:12px; }
- #app[data-presentation] #van-movement-status { font-size:18px; }
-}
-@container live-map (max-width:359px) { #app[data-presentation] #next-card-top { flex-wrap:wrap; } }
-@container live-map (max-height:400px) { #app[data-presentation] #next-card { padding:8px 12px; } #app[data-presentation] #van-movement-status { font-size:17px; } }
-/* Keep essential timing and Details visible across legacy breakpoint rules. */
-#app[data-presentation] #next-card[data-eta] #next-meta { display:block !important; }
-#app[data-presentation] #status-card-toggle { display:block; }
-
-/* Keep a closed drawer out of focus/scroll layout after a delayed opening callback. */
-#stops-panel[aria-hidden="true"] { visibility:hidden; pointer-events:none; }
-#stops-panel[aria-hidden="false"] { visibility:visible; }
-
-/* Keep essential observation confidence in the compact card. */
-#app[data-presentation] .tourist-card-footer { display:flex; align-items:center; gap:8px; margin-top:10px; padding-top:8px; border-top:1px solid #e7e9ec; }
-#app[data-presentation] #tourist-observation { flex:1; min-width:0; font-size:11px; line-height:1.5; color:#59636f; }
-#app[data-presentation] #status-card-toggle { width:auto; min-width:72px; height:44px; padding:0 10px; font-size:12px; font-weight:650; }
-/* Scale the original vector directly; a blurred shadow must not obscure the artwork. */
+#app[data-presentation] #next-meta .vehicle-inline-icon { display:none; }
+#app[data-presentation] #next-card #next-meta[hidden], #app[data-presentation] #next-card #next-destination-row[hidden], #app[data-presentation] #tourist-details[hidden] { display:none!important; }
+#app[data-presentation] #eta-unavailable, #app[data-presentation] #next-meta > span:nth-child(3), #app[data-presentation] #next-direction, #app[data-presentation] #eta-progress-wrap, #app[data-presentation] #van-message-label, #app[data-presentation] #next-destination-label { display:none!important; }
+#app[data-presentation] .tourist-card-footer { display:flex; justify-content:flex-end; margin-top:7px; background:#fff; }
+#app[data-presentation] #status-card-toggle { display:inline-flex!important; align-items:center; justify-content:center; gap:7px; min-width:88px; min-height:44px; padding:0 10px; border:1px solid #dce2e8; border-radius:10px; background:#f6f8fa; color:#273747; font-size:12px; font-weight:650; cursor:pointer; transform:none!important; }
+#status-card-toggle .details-chevron { transform:none; transition:transform .15s; flex:none; }
+#status-card-toggle[aria-expanded="true"] .details-chevron { transform:rotate(180deg); }
+#app[data-presentation] #status-card-toggle:focus-visible { outline:3px solid #145da0; outline-offset:2px; }
+#app[data-presentation] #next-card.expanded .tourist-card-footer { position:sticky; top:0; z-index:1; padding:3px 0; border-bottom:1px solid #e3e8ec; }
+#app[data-presentation] #tourist-details { margin-top:9px; padding-top:9px; border-top:1px solid #e3e8ec; font-size:12px; line-height:1.5; color:#47515f; }
+#app[data-presentation] .observation-detail { display:grid; gap:2px; }
+#app[data-presentation] #tourist-observation { font-variant-numeric:tabular-nums; }
+.journey-confidence { margin:9px 0; }
+.journey-confidence > div { display:flex; justify-content:space-between; gap:12px; padding:3px 0; }
+.journey-confidence dt { font-weight:600; }
+.journey-confidence dd { margin:0; text-align:right; }
+#tourist-progress, #tourist-next-destination { margin:8px 0; }
+#tourist-timeline { margin:10px 0 0; padding:0; list-style:none; }
+#tourist-timeline li { margin:0; padding:7px 0 7px 10px; border-left:2px solid #dce2e8; font-size:12px; line-height:1.45; }
+#tourist-timeline li[data-state="current"], #tourist-timeline li[data-state="next"] { border-left-color:var(--journey-accent); color:#263442; font-weight:600; }
+#app[data-presentation] #tourist-service-note { margin:6px 0 0; color:#47515f; font-size:12px; }
+#tourist-service-note:empty { display:none; }
 #app[data-presentation] .van-marker-circle { left:-16px; top:7px; width:86px; height:40px; }
 #app[data-presentation] .van-marker-circle .vehicle-symbol { width:86px; height:40px; max-width:none; flex-shrink:0; filter:none; }
-#app[data-presentation] .tourist-last-seen { filter:none; }
-#app[data-presentation] .tourist-last-seen .van-marker-circle { border-bottom:2px dashed #687482; }
+[data-journey-tone] { --marker-accent:#526173; }
+[data-journey-tone="green"] { --marker-accent:#166534; }
+[data-journey-tone="amber"] { --marker-accent:#915600; }
+[data-journey-tone="blue"] { --marker-accent:#175a9b; }
+[data-journey-tone] .van-marker-circle::after { content:""; position:absolute; right:1px; bottom:-4px; width:10px; height:10px; border:2px solid white; border-radius:50%; background:var(--marker-accent); box-shadow:0 0 0 1px var(--marker-accent); }
+[data-journey-tone="grey"] .van-heading, [data-journey-tone="blue"] .van-heading { visibility:hidden; }
+.tourist-last-seen { filter:none; }
+#stops-panel[aria-hidden="true"] { visibility:hidden; pointer-events:none; }
+#stops-panel[aria-hidden="false"] { visibility:visible; }
+@container live-map (max-width:600px) { #app[data-presentation] #next-card { left:64px; right:10px; width:auto; padding:10px 12px; } #app[data-presentation] #van-movement-status { font-size:18px; } #app[data-presentation] #next-label { font-size:11px; } }
+@container live-map (max-width:359px) { #app[data-presentation] #next-card-top { gap:5px; } #app[data-presentation] #operational-live { font-size:10px; } }
+@media (prefers-reduced-motion:reduce) { #status-card-toggle .details-chevron { transition:none; } }
+/* Keep expanded secondary information compact; the card scrolls within its own bounds. */
+@container live-map (min-height:500px) { #app[data-presentation] #next-card.expanded { max-height:min(42%,calc(100% - var(--map-bottom,90px) - var(--tourist-header,54px) - 28px)); } }
+#tourist-schedule-details:empty { display:none; }
+
+#tourist-details:focus-visible { outline:2px solid #145da0; outline-offset:-2px; }

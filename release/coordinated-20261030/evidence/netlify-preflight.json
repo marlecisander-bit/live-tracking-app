@@ -1,0 +1,24 @@
+{
+  "at": "2026-10-30T11:28:38.472Z",
+  "id": "3a9f7e87-0504-4b1a-b851-c6f155c12d31",
+  "name": "sightseeingshkodralivetrackingapp",
+  "published": {
+    "id": "6ae477c56dcd18f595bc0b18",
+    "state": "ready",
+    "commit": null
+  },
+  "build": {
+    "cmd": null,
+    "dir": ".",
+    "allowed_branches": [
+      "master"
+    ],
+    "functions_dir": null,
+    "stop_builds": false,
+    "provider": "github",
+    "repo_url": "https://github.com/marlecisander-bit/live-tracking-app",
+    "repo_branch": "master",
+    "base": null
+  },
+  "plugins": []
+}

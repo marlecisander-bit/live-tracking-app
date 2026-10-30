@@ -1,0 +1,37 @@
+/* Widget-local controls. Place overlays inside .interactive-widget. */
+.interactive-widget { position: relative; min-width: 0; }
+.widget-action-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--widget-control-gap, 1rem);
+  width: fit-content;
+  max-width: 100%;
+  margin-inline: auto;
+  box-sizing: border-box;
+}
+.widget-action-bar > :is(button,a) { min-height: 44px; min-width: 44px; max-width: 100%; overflow-wrap: anywhere; }
+.widget-action-bar--overlay {
+  position: absolute;
+  left: 50%;
+  right: auto;
+  transform: translateX(-50%);
+  bottom: calc(10px + env(safe-area-inset-bottom));
+  max-width: calc(100% - 2 * max(10px, env(safe-area-inset-left), env(safe-area-inset-right)));
+}
+.widget-action-bar--full { width: 100%; }
+
+/* ID specificity deliberately resolves legacy embed/mobile positioning conflicts.
+   #app is the map viewport, also when rendered inside an iframe. */
+#app #map-controls.widget-action-bar {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  left: 50%;
+  right: auto;
+  transform: translateX(-50%);
+  width: min(440px, calc(100% - 2 * max(10px, env(safe-area-inset-left), env(safe-area-inset-right))));
+  max-width: calc(100% - 2 * max(10px, env(safe-area-inset-left), env(safe-area-inset-right)));
+  margin-inline: 0;
+}
+#app #map-controls.widget-action-bar > button { min-width: 0; min-height: 44px; }

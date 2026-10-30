@@ -93,7 +93,7 @@ function renderArrivalList(){
   }
   item.style.setProperty('--stop-color',appearance.color);item.style.setProperty('--stop-tint','rgba('+rgb.join(',')+',0.09)');
   item.classList.toggle('completed',!!entry?.completed);item.classList.toggle('current',!!entry?.current);item.classList.toggle('next',!entry?.current&&!!entry?.next);
-  const portrait=window.stopDesign.portrait(p,false);
+  const portrait='<span class="list-stop-number" aria-hidden="true">'+escapeHTML(p.stopNumber)+'</span>';
   if(item._portrait!==portrait){item.querySelector('.arrival-portrait').innerHTML=portrait;item._portrait=portrait;}
   item.querySelector('.arrival-name').textContent=p.name;
   item.querySelector('.arrival-time').textContent=entry?.label||'Route information updating';

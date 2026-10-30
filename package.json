@@ -7,22 +7,26 @@
   },
   "scripts": {
     "lint": "node tools/lint.cjs",
-    "check:parity": "node tools/check.cjs",
+    "check:parity": "node tools/check-current.cjs",
     "test:frontend": "node tests/run-frontend.cjs",
     "test:rc1": "node tests/test-system-live-state.cjs && node tests/test-departure-sequence.cjs",
     "test:integration": "node tests/test-provider-integration.cjs",
     "test:backend": "node tests/test-worker-contract.cjs",
-    "typecheck": "tsc --noEmit --skipLibCheck --target es2022 --module esnext --moduleResolution bundler backend/functions/_shared/stop-transition.ts",
+    "typecheck": "tsc --noEmit --skipLibCheck --target es2022 --module esnext --moduleResolution bundler --allowImportingTsExtensions supabase/functions/gps-worker/engine.ts supabase/functions/gps-worker/handler.ts",
     "test:browser": "node tests/browser.cjs",
-    "test": "npm run test:frontend && npm run test:rc1 && npm run test:backend && npm run test:integration",
-    "build": "node tools/build.cjs",
+    "test": "npm run test:frontend && npm run test:rc1 && npm run test:backend && npm run test:integration && npm run test:inspection",
+    "build": "node tools/build-current.cjs",
     "serve": "node tools/serve.cjs",
     "check:platform": "node tools/check-platform.cjs",
-    "test:hosted": "node tests/hosted-readonly.cjs"
+    "test:hosted": "node tests/hosted-readonly.cjs",
+    "test:inspection": "node tests/test-recovery-floor.cjs && node tests/test-current-stream-timeout.cjs && node tests/test-current-stream.cjs",
+    "test:native": "node tests/test-recovery-native.cjs"
   },
   "devDependencies": {
     "@electric-sql/pglite": "0.5.8",
+    "embedded-postgres": "17.10.0-beta.17",
     "leaflet": "1.9.4",
+    "pg": "8.23.0",
     "playwright-core": "1.62.1",
     "typescript": "5.9.3"
   }
