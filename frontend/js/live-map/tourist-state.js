@@ -2,7 +2,7 @@
 (function(root){
  const finite=n=>typeof n==='number'&&Number.isFinite(n), stamp=s=>typeof s==='string'?Date.parse(s):NaN;
  const rules=Object.freeze({radius:200,exit:220,leavingMetres:350,movingKmh:5,stoppedKmh:2,dwellSeconds:30,minDwellFixes:4,maxGapSeconds:45,
-  directionSeconds:10,directionWindowSeconds:90,minDirectionFixes:3,directionMetres:20,stationarySpread:20,parkGraceSeconds:180,failedParkGraceSeconds:30,lastKnownSeconds:86400});
+  directionSeconds:10,directionWindowSeconds:90,minDirectionFixes:3,directionMetres:20,stationarySpread:20,parkGraceSeconds:180,failedParkGraceSeconds:30});
  const metres=(a,b)=>{const rad=n=>n*Math.PI/180,h=Math.sin(rad(b[1]-a[1])/2)**2+Math.cos(rad(a[1]))*Math.cos(rad(b[1]))*Math.sin(rad(b[0]-a[0])/2)**2;return 12742000*Math.asin(Math.sqrt(Math.min(1,h)));};
     function clock(now) {
         const parts = new Intl.DateTimeFormat('en-CA', {timeZone:'Europe/Tirane',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date(now));
@@ -97,7 +97,7 @@
   // Planned route context is a different fact from confirmed motion. Keep it available during warm-up/slow/off-route reporting.
   const planAvailable=!!(q.valid&&q.coherent&&next&&!i.unavailable&&op.skipCandidate==null);
   const offRoute=finite(i.routePosition?.offRouteMetres)&&i.routePosition.offRouteMetres>150;
-  const statusDetail=q.quality&&q.age>q.delayed?'Last known location · waiting for a fresh GPS observation':offRoute?'Reported location is outside the tour route':phase!=='UNKNOWN'?'':i.unavailable?'Waiting for a location update':!op?'Journey progress not yet confirmed':!q.coherent?'Waiting for a current location update':!q.quality?'Location quality is insufficient for ETA':finite(p?.speed_kmh)&&p.speed_kmh<=2?'Confirming the stop':finite(p?.speed_kmh)&&p.speed_kmh<rules.movingKmh?'Low speed; confirming direction':'Confirming travel direction';
+  const statusDetail=offRoute?'Reported location is outside the tour route':phase!=='UNKNOWN'?'':i.unavailable?'Waiting for a location update':!op?'Journey progress not yet confirmed':!q.coherent?'Waiting for a current location update':!q.quality?'Location quality is insufficient for ETA':finite(p?.speed_kmh)&&p.speed_kmh<=2?'Confirming the stop':finite(p?.speed_kmh)&&p.speed_kmh<rules.movingKmh?'Low speed; confirming direction':'Confirming travel direction';
   const message=parked?'Parked at '+stop.name:arriving?'Arriving at '+stop.name:leaving?'Leaving '+stop.name:phase==='EN_ROUTE'&&next?'On the way to '+next.name:
    planAvailable?'Next planned stop · '+next.name:q.quality&&!i.unavailable&&q.age<=q.delayed?'Van location updated':'Location temporarily unavailable';
   const passengerState=parked?'parked':arriving?'approaching':leaving?'departing':phase==='EN_ROUTE'?'moving':'unavailable';
@@ -119,7 +119,7 @@
   const times=scheduleValid?[...new Set(schedule.times)].sort():[],scheduledDeparture=times.find(t=>t>=local.time)||null;
   const completed=(e.visited||[]).filter(n=>find(n)).map(String),target=active||next,live=!!e.live&&phase!=='UNKNOWN'&&gps==='live';
   const model={phase,message,statusDetail,plannedNextStop:planAvailable?next:null,planAvailable,etaStatusText:etaText?'':'ETA unavailable',passengerState,activity:parked?'parked':arriving?'approaching':leaving?'departed':moving?'moving':'unknown',activityConfidence:phase==='UNKNOWN'?'unknown':live?'confirmed':'historical',
-   gps,positionFreshness:gps,evidenceLive:live,statusValidUntil:phase==='UNKNOWN'?null:new Date(e.validUntil??(q.t+(parked?rules.parkGraceSeconds:q.delayed)*1000)).toISOString(),positionValid:q.valid,qualityAccepted:q.quality,coherent:q.coherent,parkingVerified:parked,markerVisible:q.quality&&q.age<=rules.lastKnownSeconds,
+   gps,positionFreshness:gps,evidenceLive:live,statusValidUntil:phase==='UNKNOWN'?null:new Date(e.validUntil??(q.t+(parked?rules.parkGraceSeconds:q.delayed)*1000)).toISOString(),positionValid:q.valid,qualityAccepted:q.quality,coherent:q.coherent,parkingVerified:parked,markerVisible:q.quality&&q.age<=offline&&(!i.unavailable||parked),
    markerTone:!live?'grey':parked?'blue':arriving?'amber':moving?'green':'grey',currentStop:active,departureStop:leaving?stop:null,currentConfirmed:parked,nextStop:next,nextConfirmedStop:phase==='UNKNOWN'?null:target,
    completedStops:completed,progressKnown:!!op,progressText:'Confirmed visits this session · '+completed.length+' of '+(i.stops||[]).length+' stops',
    etaConfidence,etaText,etaSeconds,etaKind:arrivingNow?'arriving':liveEta?'arrival':knownDeparture?'departure_and_arrival':duration!==null?'after_departure':contextTravel!==null?'travel_estimate':'unavailable',travelSeconds:duration??contextTravel,
