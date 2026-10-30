@@ -6,5 +6,5 @@
   "localOverrides": {
     "js/shared/gps-source.js": "8edbcd29a97c395f78785a0b4f32f3c8dfc694fe1a5fadcf3bb490dbe0118429"
   },
-  "status": "Local inspection candidate only; no deployment authorization"
+  "status": "Owner-authorized test release; .com iframe integration deferred by owner; see release/coordinated-20261030/RELEASE-PLAN.md"
 }

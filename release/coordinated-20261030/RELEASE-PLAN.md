@@ -35,3 +35,9 @@ If a migration failure rolls back its transaction, confirm old function digests 
 Actual current Route iframe remains blank/about:blank while its DOM src is the correct Netlify URL and both HEAD endpoints return 200; surrounding published stops are unavailable. No JavaScript console error was captured. This is an observed acceptance failure with unconfirmed cause, not proof of a server-binding cause. Browser viewport override has not changed Route innerWidth (1710); mobile acceptance cannot be claimed. Historical log UI retrieval is still being investigated. Independent parking and physical-device/provider accuracy remain limited by existing evidence.
 
 Until these gates pass, hold SQL/environment writes, master/main merges and production deployment. Independent preparation/PR validation may continue. No duplicate generic confirmation is required; the blocker is evidence, not missing general publication authority.
+
+## Owner scope revision — 30 October 2026
+
+The owner explicitly deferred .app iframe display and responsive .com integration, requested publication for testing, and will integrate the iframe into .com afterward. Those integration/mobile checks remain unaccepted but no longer block this test release. This is not a hosted integration PASS.
+
+Static map publication is independent of migration004: the candidate uses the existing public snapshot contract, and its only reader change is the abort deadline. It may publish first through PR4 after exact artifact/check verification. Managed migration and the two website binding replacements remain authorized, but require restored authorized managed access and fresh preflight; no browser-security bypass or guessed credentials. Website publication follows its binding step. Record partial publication honestly if managed access remains blocked. Previous production rollback targets remain unchanged.
