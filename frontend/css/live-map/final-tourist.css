@@ -1,7 +1,7 @@
 /* Final tourist-first visual layer. Frame-local sizing; no tracking calculations. */
 #legacy-status-anchors,[hidden]{display:none!important}
 #app[data-presentation] #next-card{width:min(410px,calc(100% - 88px));top:max(16px,env(safe-area-inset-top));right:max(16px,env(safe-area-inset-right));left:auto;padding:20px 22px 15px;border:1px solid #e6ebef;border-radius:22px;box-shadow:0 8px 32px #1936511a;max-height:calc(100% - var(--map-bottom,100px) - 30px);overflow:auto;background:#fff;color:#142b3d}
-#app[data-presentation] #next-card-top{display:flex;flex-wrap:nowrap;justify-content:space-between;gap:10px;margin:0 0 16px}
+#app[data-presentation] #next-card-top{display:flex;flex-wrap:nowrap;justify-content:flex-end;gap:10px;margin:0 0 16px}
 #app[data-presentation] #next-label{font-family:inherit;font-size:13px;font-weight:750;letter-spacing:-.02em;color:#203346;line-height:1.25}
 #app[data-presentation] #operational-live{margin:0;display:inline-flex;align-items:center;gap:5px;padding:5px 9px;border-radius:20px;background:#e6f6ec;color:#11683b;font-size:10px;line-height:1;font-weight:800;letter-spacing:.05em}
 #operational-live::before{width:5px;height:5px;margin:0}
