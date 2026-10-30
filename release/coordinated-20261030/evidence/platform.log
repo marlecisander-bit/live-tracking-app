@@ -1,0 +1,5 @@
+
+> shkodra-reconstructed-production-plus-stops@0.0.0 check:platform
+> node tools/check-platform.cjs
+
+PASS replacement public current-state contract; unknown journey accepted conservatively; no GPS saved

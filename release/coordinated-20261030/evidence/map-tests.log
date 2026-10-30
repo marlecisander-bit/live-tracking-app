@@ -1,0 +1,50 @@
+
+> shkodra-reconstructed-production-plus-stops@0.0.0 test
+> npm run test:frontend && npm run test:rc1 && npm run test:backend && npm run test:integration && npm run test:inspection
+
+
+> shkodra-reconstructed-production-plus-stops@0.0.0 test:frontend
+> node tests/run-frontend.cjs
+
+PASS shared tracking: concurrent readers, expiry, project/session isolation, error recovery and vehicle isolation
+PASS stream: shared fetch, bounded sanity, stale event rejection, disconnect fallback, failed read recovery, visibility/session cleanup
+PASS public expiry delegates to the unified presenter every five seconds
+PASS ETA formatter: single, explicit range, sub-minute, invalid/missing, LOW, at-stop and stationary at-stop; no malformed characters
+PASS 39 tourist model scenarios
+PASS real presenter: card/bridge consistency, stale projection, exact parent/source allowlist and no coordinate payloads
+PASS schedule: CORS-dependent integration deferred without requests; same-origin read-only adapter accepts authoritative response
+
+> shkodra-reconstructed-production-plus-stops@0.0.0 test:rc1
+> node tests/test-system-live-state.cjs && node tests/test-departure-sequence.cjs
+
+PASS 14 current RC1 contract scenarios
+(node:11926) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS: reproduced pre-fix delayed arrival loss; Rozafa departure, jitter, 30-minute dwell, repeated loops, no completed-stop regression, stale ETA suppression, persisted duplicate rejection at 0/120/1800-second delay
+(node:11927) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+> shkodra-reconstructed-production-plus-stops@0.0.0 test:backend
+> node tests/test-worker-contract.cjs
+
+(node:11948) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS current worker authentication, explicit vehicle and conflicting-processor guards; zero network
+
+> shkodra-reconstructed-production-plus-stops@0.0.0 test:integration
+> node tests/test-provider-integration.cjs
+
+(node:11969) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS real provider handler -> planner -> local SQL persistence/restart, skipped recovery, guarded reset and empty-queue idempotence; no hosted network
+
+> shkodra-reconstructed-production-plus-stops@0.0.0 test:inspection
+> node tests/test-recovery-floor.cjs && node tests/test-current-stream-timeout.cjs && node tests/test-current-stream.cjs
+
+PASS runtime-loss source/revision floor, fresh recovery, withheld continuity/ETA, bounded rows and denied anon RPC
+(node:11991) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/aleksandermarleci/Desktop/Projects%20Dev/live-tracking-app-release/supabase/functions/gps-worker/engine.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /Users/aleksandermarleci/Desktop/Projects Dev/live-tracking-app-release/package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS stalled current-snapshot read aborts, clears pending and reconnects
+PASS stream: shared fetch, bounded sanity, stale event rejection, disconnect fallback, failed read recovery, visibility/session cleanup

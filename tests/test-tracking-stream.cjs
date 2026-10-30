@@ -5,7 +5,7 @@ const fs=require('fs'),vm=require('vm'),assert=require('node:assert/strict');
  const window={appConfig:{selectedTrackingRealtimeEnabled:true},addEventListener(){}};
  const client={channel(){return {on(type,filter,cb){assert.equal(filter.table,'tracking_live_snapshots');onRow=cb;return this;},subscribe(cb){onStatus=cb;return this;}};},removeChannel(){removed++;},
  from(){return {select(){return this;},eq(){return this;},async maybeSingle(){calls++;return fail?{error:Error('offline')}:{data:{revision,snapshot:{position:{n:revision}}}};}};}};
- vm.runInNewContext(fs.readFileSync('frontend/js/shared/gps-source.js','utf8'),{window,document,CustomEvent:function(n,o){this.type=n;this.detail=o.detail;},Date:{now:()=>now}});
+ vm.runInNewContext(fs.readFileSync(process.env.TRACKING_SOURCE||'frontend/js/shared/gps-source.js','utf8'),{window,document,CustomEvent:function(n,o){this.type=n;this.detail=o.detail;},Date:{now:()=>now}});
  const read=()=>window.selectedTracking.read(client,'van');
  await Promise.all([read(),read(),read()]);assert.equal(calls,1);
  onStatus('SUBSCRIBED');await read();assert.equal(calls,2);

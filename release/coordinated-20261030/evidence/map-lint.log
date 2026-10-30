@@ -1,0 +1,5 @@
+
+> shkodra-reconstructed-production-plus-stops@0.0.0 lint
+> node tools/lint.cjs
+
+PASS JS/CJS syntax, CSS structure/encoding and local HTML asset references.

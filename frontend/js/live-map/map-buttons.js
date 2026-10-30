@@ -167,26 +167,6 @@ function updateFollowIndicator() {
 
 }
 
-function toggleStatusCard() {
-    var card = document.getElementById('next-card');
-    var button = document.getElementById('status-card-toggle');
-    if (!card || !button) return;
-
-    var expanded = card.classList.toggle('expanded');
-    button.setAttribute('aria-expanded', String(expanded));
-    button.setAttribute(
-        'aria-label',
-        expanded ? 'Show less vehicle information' : 'Show more vehicle information'
-    );
-}
-
-
-document.getElementById('next-card').addEventListener('keydown',function(event){
-    if(event.key!=='Escape')return;
-    var card=document.getElementById('next-card');
-    if(card.classList.contains('expanded')){toggleStatusCard();document.getElementById('status-card-toggle').focus();}
-});
-
 /*
    Manual map interaction always gives control back to the visitor.
    The Find Van button can be used at any time to resume following.

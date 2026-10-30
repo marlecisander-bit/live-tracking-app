@@ -16,7 +16,8 @@
         const coordinates = p && finite(p.latitude) && finite(p.longitude) && Math.abs(p.latitude)<=90 && Math.abs(p.longitude)<=180;
         const quality = !['POOR','REJECTED'].includes(input.quality) && p?.ui_observation_valid !== false &&
             (p?.accuracy_m == null || (finite(p.accuracy_m) && p.accuracy_m>=0 && p.accuracy_m<=50));
-        const valid = coordinates && Number.isFinite(age) && age>=-60;
+        const positionIdentity=(!p?.vehicle_id||!input.vehicleId||p.vehicle_id===input.vehicleId)&&(!p?.project_id||!input.projectId||p.project_id===input.projectId);
+        const valid = coordinates && positionIdentity && Number.isFinite(age) && age>=-60;
         const delayed = Number(input.config?.delayedSeconds)||90, offline = Math.max(delayed,Number(input.config?.offlineSeconds)||300);
         const gps = !valid || input.unavailable || !quality || age>offline ? 'unavailable' : age>delayed ? 'delayed' : 'live';
         const identity = !!raw && raw.version===3 && input.mapVersion!=null && String(raw.mapVersion)===String(input.mapVersion) &&
@@ -32,22 +33,38 @@
         const current = op ? find(op.currentStop) : null, next = op ? find(op.nextStop) : null;
         const completed = op ? [...new Set((op.completedStops||[]).filter(n=>find(n)).map(String))] : [];
         const speed = finite(p?.speed_kmh) && p.speed_kmh>=0 ? p.speed_kmh : null;
-        let activity='unknown', message='Live location temporarily unavailable';
-        if (gps==='delayed') message=current?'Last seen at '+current.name:'Location update delayed';
-        if (gps==='live' && coherent) {
-            if (current && op.status==='PARKED') { activity='stopped'; message='At '+current.name; }
-            else if (current && op.status==='ARRIVING') { activity='approaching'; message='Approaching '+current.name; }
-            else if (current) { message='Near '+current.name; }
-            else if (op.movement==='STATIONARY' && speed!==null && speed<=3 && p.movement_state==='STATIONARY') {
-                activity='stopped'; message='Temporarily stopped';
-            } else if (op.status==='DEPARTED' && find(op.lastDeparted) && speed>3) {
-                activity='departed'; message='Departed '+find(op.lastDeparted).name;
-            } else if (op.movement==='MOVING' && speed>3) {
-                activity='moving'; message=next?'LIVE · On the way to '+next.name:'LIVE · On the way';
-            }
-        } else if (gps==='live') message='Updating route information';
-        // Current production contract has no independent arrival/dwell confirmation.
-        // ARRIVING means recognition within RC1's radius; PARKED alone never proves dwell.
+        let activity='unknown', passengerState='unavailable', activityConfidence='unknown', message='Live location temporarily unavailable';
+        const skipPending=op?.skipCandidate!=null && Number(op.skipInside||0)<2;
+        const associationValid=!skipPending&&Number(op?.outside||0)===0;
+        const historicalStop=current && opTime===recorded && associationValid ? current : null;
+        const departureStop=op ? find(op.lastDeparted) : null;
+        const moving=speed>3 && p?.movement_state==='MOVING';
+        const stationary=speed!==null && speed<=3 && p?.movement_state==='STATIONARY';
+        const distance=coherent && finite(op?.distanceToNextMetres) && op.distanceToNextMetres>=0 ? op.distanceToNextMetres : null;
+        // Dormant capability: the current production contract does not supply independent parking evidence.
+        // A future trusted adapter must bind status measurement time, visit and identity, never receipt time.
+        const parking=input.parkingEvidence, parkingTime=time(parking?.observedAt), parkingAge=(now-parkingTime)/1000;
+        const parkingVerified=!!(input.capabilities?.independentParking===true && parking && historicalStop && quality && valid && !input.unavailable && age<=offline &&
+            parking.source==='scorpiontrack' && parking.continuityVerified===true && parking.noMovementSinceVisit===true &&
+            time(parking.stationarySince)>=time(row?.entered_at) && time(parking.stationarySince)<=recorded && parking.ignitionOff===true && parking.moving===false && parking.parked===true &&
+            parking.vehicleId===input.vehicleId && parking.projectId===input.projectId && String(parking.mapVersion)===String(input.mapVersion) &&
+            String(parking.sourceRun)===String(p.source_run_id) && String(parking.stopId)===current.id &&
+            typeof row?.entered_at==='string' && parking.visitStartedAt===row.entered_at && parkingTime>=time(row.entered_at) &&
+            parkingAge>=0 && parkingAge<=90 && !moving);
+        if(parkingVerified){activity='parked';passengerState='parked';activityConfidence='confirmed';message='Parked at '+current.name;}
+        else if(gps==='live') {
+            if(coherent && current && associationValid && op.status==='PARKED' && stationary){activity='stopped';passengerState='at_stop';activityConfidence='confirmed';message='At '+current.name;}
+            else if(coherent && current && associationValid && op.status==='ARRIVING' && moving){activity='approaching';passengerState='approaching';activityConfidence='confirmed';message='Approaching '+current.name;}
+            else if(coherent&&current&&associationValid){passengerState='location';message='Near '+current.name;}
+            else if(coherent && !current && op.status==='DEPARTED' && departureStop && moving){activity='departed';passengerState='departing';activityConfidence='confirmed';message='Departing '+departureStop.name;}
+            else if(coherent && !skipPending && !current && next && moving && distance!==null && distance<=200){activity='approaching';passengerState='approaching';activityConfidence='confirmed';message='Approaching '+next.name;}
+            else if(coherent&&current&&!associationValid&&!skipPending){passengerState='location';activityConfidence='inferred';message='Near '+current.name;}
+            else if(moving){activity='moving';passengerState='moving';activityConfidence='confirmed';message=coherent&&!skipPending&&next?'On the way to '+next.name:'The van is on the way';}
+            else if(stationary){activity='stopped';passengerState='stopped';activityConfidence='confirmed';message=coherent&&!skipPending&&!current?'Temporarily stopped between stops':'The van is temporarily stopped';}
+            else {passengerState='location';message='Live van location';}
+        } else if(valid && quality && !input.unavailable && age<=86400){
+            passengerState='last_seen';activityConfidence='historical';message=historicalStop?'Last seen at '+historicalStop.name:'Last known van location';
+        }
         const e=input.eta;
         const etaIdentity = !e || (String(e.map_version_id)===String(op?.mapVersion) && String(e.next_stop_number)===String(next?.number) &&
             (!e.vehicle_id || !input.vehicleId || e.vehicle_id===input.vehicleId) &&
@@ -55,10 +72,10 @@
             (e.source_run_id==null || String(e.source_run_id)===String(op?.sourceRun)) &&
             finite(e.eta_seconds) && e.eta_seconds===op?.etaSeconds && (e.confidence==null || ['MEDIUM','HIGH'].includes(e.confidence)));
         const hasEta=finite(op?.etaSeconds) && op.etaSeconds>=0;
-        const etaValid=gps==='live' && coherent && etaIdentity && next && !current && ['moving','departed'].includes(activity) && hasEta;
+        const etaValid=gps==='live' && coherent && !skipPending && etaIdentity && next && !current && ['moving','departed','approaching'].includes(activity) && hasEta;
         const etaConfidence=etaValid?'valid':hasEta && (!coherent || gps!=='live' || !etaIdentity)?'outdated':'unavailable';
         const local=clock(now), schedule=input.schedule;
-        const scheduleValid=schedule && schedule.date===local.date && finite(schedule.receivedAt) && now-schedule.receivedAt>=0 && now-schedule.receivedAt<=90000 &&
+        const scheduleValid=schedule && schedule.verifiedForVehicle===true && schedule.vehicleId===input.vehicleId && schedule.date===local.date && finite(schedule.receivedAt) && now-schedule.receivedAt>=0 && now-schedule.receivedAt<=90000 &&
             Array.isArray(schedule.times) && schedule.times.every(t=>typeof t==='string' && /^(?:[01]\d|2[0-3]):[0-5]\d$/.test(t));
         const times=scheduleValid?[...new Set(schedule.times)].sort():[];
         const departure=times.find(t=>t>=local.time)||null;
@@ -66,26 +83,32 @@
         if (scheduleValid) {
             service='scheduled';
             serviceMessage=!times.length?'No scheduled tours today':local.time<times[0]?'Tours start at '+times[0]:!departure?'No more scheduled departures today':'';
-            if (local.time<times[0] && !['moving','departed','approaching'].includes(activity)) message=serviceMessage;
+            // The verified timetable complements activity; it does not overwrite it.
         }
         // A departure timetable is not evidence a tour is operating or has finished.
         const etaText=etaValid?(op.etaSeconds<60?'Estimated arrival · less than 1 min':'Estimated arrival · ~'+Math.round(op.etaSeconds/60)+' min'):'';
-        const timing=etaText || (departure?'Next scheduled departure · '+departure:'Live ETA unavailable');
+        const distanceText=passengerState==='approaching'&&!current&&distance!==null?Math.round(distance)+' m to the stop':'';
+        const timing=etaText || distanceText || (departure?'Next scheduled departure · '+departure:'');
         const observed=valid?new Date(recorded).toISOString():null;
-        const secondary=gps!=='live'?(current?'Last seen at '+current.name:next?'Last destination: '+next.name:'Last confirmed location unavailable'):
-            current&&next?'Next stop · '+next.name:next?'Next stop · '+next.name:'Route information updating';
-        const model={service,serviceMessage,activity,gps,etaConfidence,currentStop:current,nextStop:next,completedStops:completed,
+        const destination=passengerState==='approaching'&&current?current:next;
+        const nextConfirmedStop=gps==='live'&&coherent&&!skipPending?destination:null;
+        const secondary=['at_stop','parked','departing'].includes(passengerState)&&nextConfirmedStop?'Next stop · '+nextConfirmedStop.name:'';
+        const markerVisible=!!valid && quality && !input.unavailable && gps!=='unavailable';
+        const markerTone=gps!=='live'?'grey':passengerState==='approaching'?'amber':['at_stop','parked'].includes(passengerState)?'blue':['moving','departing'].includes(passengerState)&&activityConfidence==='confirmed'?'green':'grey';
+        const model={service,serviceMessage,activity,passengerState,activityConfidence,positionFreshness:gps,gps,etaConfidence,parkingVerified,markerVisible,markerTone,nextConfirmedStop,currentStop:associationValid?current:null,nextStop:next,completedStops:op?completed:null,
             coherent,positionValid:!!valid,qualityAccepted:quality,lastObservationAt:observed,ageSeconds:valid?Math.max(0,age):null,
             message,secondary,timing,etaText,etaSeconds:etaValid?op.etaSeconds:null,scheduledDeparture:departure,
-            currentConfirmed:gps==='live'&&coherent&&!!current,locationHistorical:gps!=='live',
-            stopStatuses:[],progressText:op?completed.length+' of '+stops.length+' stops observed':'Journey progress unavailable'};
+            currentConfirmed:(gps==='live'&&coherent&&associationValid&&!!current&&passengerState==='at_stop')||parkingVerified,locationHistorical:gps!=='live',
+            stopStatuses:[],progressKnown:!!op,progressText:op?(gps==='live'&&coherent?'Stops observed · ':'Previously observed · ')+completed.length+' of '+stops.length+' stops':'Journey progress not yet confirmed'};
         model.stopStatuses=stops.map(s=>{
             const at=model.currentConfirmed && s.number===current.number;
-            const target=gps==='live'&&coherent&&s.number===next?.number;
+            const target=gps==='live'&&coherent&&!skipPending&&s.number===nextConfirmedStop?.number;
             const seen=completed.includes(s.number);
             const departed=seen && op?.lastDeparted!=null && s.number===String(op.lastDeparted) && !at;
-            let label=at?message:seen?'Previously seen at this stop':target?'Next stop':gps!=='live'?'Live arrivals unavailable':'Upcoming stop';
-            if (!at && current && s.number===current.number && gps!=='live') label='Last seen at this stop';
+            const short={at_stop:'At this stop',parked:'Parked here',approaching:'Approaching',departing:'Departing',moving:'On the way'};
+            let label=at?(short[passengerState]||message):target?(['moving','approaching'].includes(passengerState)?short[passengerState]:'Next stop'):seen?'Previously observed':'Tour stop';
+            if(activity==='departed'&&s.number===departureStop?.number)label='Departing';
+            if (!at && historicalStop && s.number===historicalStop.number && gps!=='live') label='Last seen here';
             if (target && etaValid) label+=' · '+etaText;
             return {...s,current:at,next:!!target,completed:seen,label,bridgeState:departed?'departed':at?'current':target?'next':'upcoming',eta:target?etaText:''};
         });

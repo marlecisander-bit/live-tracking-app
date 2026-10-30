@@ -32,6 +32,7 @@
     <link rel="stylesheet" href="css/widget-controls.css">
     <link rel="stylesheet" href="css/live-map/responsive-presentation.css">
     <link rel="stylesheet" href="css/live-map/tourist-card.css">
+<link rel="stylesheet" href="css/live-map/final-tourist.css">
 
     <!-- LEAFLET -->
     <link
@@ -107,141 +108,26 @@
 
 
     <div id="map-loading" role="status" aria-live="polite">
-        Live location temporarily unavailable
+        Loading the sightseeing map…
     </div>
 
 
 
 
-    <!-- NEXT STOP CARD -->
-
-    <div id="next-card">
-
-        <div id="next-card-top">
-
-            <span id="operational-stop-badge" hidden aria-hidden="true"></span>
-            <div id="next-label">
-                Sightseeing Shkodra
-            </div>
-
-
-            <span id="operational-live">Unavailable</span>
-
-
+    <!-- One tourist information card; technical diagnostics stay in admin. -->
+    <section id="next-card" aria-label="Live sightseeing journey">
+      <header id="next-card-top"><span id="next-label">Sightseeing Shkodra</span><span id="operational-live" hidden>LIVE</span></header>
+      <div id="journey-main" aria-live="polite" aria-atomic="true">
+        <p id="journey-context"></p><h1 id="journey-destination">Live location temporarily unavailable</h1>
+        <div id="journey-facts">
+          <span id="journey-activity-row"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21 3-7 18-3-8-8-3Z"/></svg><span id="journey-activity"></span></span>
+          <span id="journey-eta-row" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span id="journey-eta"></span></span>
         </div>
-
-
-        <div id="van-message-label">
-
-        </div>
-
-
-        <div id="van-movement-status" aria-live="polite" aria-atomic="true">
-            Live location temporarily unavailable
-        </div>
-
-
-        <div id="next-destination-row">
-            <span id="next-destination-label">Going to</span>
-            <strong id="next-stop-name">Calculating...</strong>
-        </div>
-
-
-        <div id="next-meta">
-            <span id="eta-unavailable">Time unavailable</span>
-
-            <span>
-                <span class="vehicle-inline-icon" data-vehicle-icon></span>
-                <strong id="eta-value">--</strong>
-            </span>
-
-
-            <span>
-                <strong id="next-stop-distance">--</strong>
-            </span>
-
-        </div>
-
-
-        <p id="tourist-service-note"></p>
-        <div class="tourist-card-footer">
-            <time id="tourist-observation">Last GPS observation unavailable</time>
-            <div class="next-card-actions">
-                <div id="next-direction">--</div>
-                <button
-                    id="status-card-toggle"
-                    type="button"
-                    aria-label="Show more vehicle information"
-                    aria-expanded="false"
-                    aria-controls="tourist-details"
-                    data-action="toggleStatusCard"
-                >
-                    Details <span aria-hidden="true">&#8964;</span>
-                </button>
-            </div>
-        </div>
-        <div id="tourist-details" class="status-card-extra">
-            <p id="tourist-progress">Journey progress unavailable</p>
-        </div>
-        <div id="eta-progress-wrap" class="status-card-extra">
-
-            <div id="eta-progress-head">
-
-                <span>
-                    Route progress
-                </span>
-
-                <span id="eta-progress-value">
-                    --
-                </span>
-
-            </div>
-
-
-            <div id="eta-progress-track">
-                <div id="eta-progress-bar"></div>
-            </div>
-
-        </div>
-
-        <div id="tourist-location-warning" hidden></div>
-        <!-- Temporary route messages stay with the next-stop information. -->
-        <div id="route-status-banner" class="status-card-extra" aria-live="polite"></div>
-
-    </div>
-
-
-
-
-    <!-- NEAREST STOP CARD -->
-
-    <div id="nearest-stop-card">
-
-        <div class="nearest-stop-head">
-            <div id="nearest-stop-label">NEAREST STOP</div>
-            <div id="nearest-stop-distance">--</div>
-        </div>
-
-        <div id="nearest-stop-name">Finding nearest stop...</div>
-
-        <div class="nearest-stop-bottom">
-
-            <div id="nearest-stop-van-eta">
-                Van <strong>--</strong>
-            </div>
-
-            <button
-                id="walk-to-stop"
-                type="button"
-        data-action="walkToNearestStop"
-            >
-                Walk to Stop &rarr;
-            </button>
-
-        </div>
-
-    </div>
-
+      </div>
+      <ol id="tourist-timeline" aria-label="Five-stop journey"></ol>
+      <!-- Retained hidden adapter anchors for existing refresh/control contracts. -->
+      <div hidden aria-hidden="true" id="legacy-status-anchors"><span id="van-movement-status"></span><span id="van-message-label"></span><span id="operational-stop-badge"></span><span id="next-destination-label"></span><span id="next-stop-name"></span><span id="next-destination-row"></span><span id="eta-value"></span><span id="eta-unavailable"></span><span id="next-stop-distance"></span><span id="next-meta"></span><span id="tourist-service-note"></span><span id="tourist-observation"></span><span id="tourist-progress"></span><span id="tourist-activity-confidence"></span><span id="tourist-position-confidence"></span><span id="tourist-eta-confidence"></span><span id="tourist-next-destination"></span><span id="tourist-schedule-details"></span><span id="tourist-location-warning"></span><span id="route-status-banner"></span></div>
+    </section>
 
     <!-- FOLLOW INDICATOR -->
 
@@ -460,6 +346,11 @@
         </div>
 
 
+        <div id="nearest-stop-card" aria-label="Walking directions to your nearest stop">
+          <span id="nearest-stop-name"></span><button id="walk-to-stop" type="button" data-action="walkToNearestStop">Walking directions</button>
+          <span id="nearest-stop-label" hidden>Nearest stop</span><span id="nearest-stop-distance" hidden></span><span id="nearest-stop-van-eta" hidden></span>
+        </div>
+
         <div id="stop-arrivals-list">
 
             Waiting for route information...
@@ -495,7 +386,10 @@
 <script src="js/live-map/load-vehicle-progress.js"></script>
 <script src="js/live-map/tourist-state.js"></script>
 <script src="js/live-map/tourist-schedule.js"></script>
+<script src="js/live-map/tourist-view.js"></script>
 <script src="js/live-map/public-presentation.js"></script>
+<script src="js/live-map/journey-route.js"></script>
+<script src="js/live-map/journey-framing.js"></script>
 <script src="js/live-map/update-route-progress.js"></script>
 <script src="js/live-map/stops-panel.js"></script>
 <script src="js/live-map/map-popups.js"></script>

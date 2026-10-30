@@ -1,0 +1,10 @@
+{
+  "frontend": "frontend",
+  "output": "dist",
+  "baselineManifest": "release/production-baseline-20261030.json",
+  "baselineManifestSha256": "92c40e3a52cca08912e6b5da43a6ea4181e6b1a244d37174d4a42a88c4814891",
+  "localOverrides": {
+    "js/shared/gps-source.js": "8edbcd29a97c395f78785a0b4f32f3c8dfc694fe1a5fadcf3bb490dbe0118429"
+  },
+  "status": "Local inspection candidate only; no deployment authorization"
+}

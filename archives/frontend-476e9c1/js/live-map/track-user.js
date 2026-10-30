@@ -1,0 +1,517 @@
+// A delayed permission/GPS response may center only the latest Find Me request.
+var pendingUserCamera = false;
+/* ============================================================
+   USER GPS
+============================================================ */
+
+function startUserLocation() {
+
+
+    if (
+        userLocationStarted
+    ) {
+
+        return;
+
+    }
+
+
+    userLocationStarted =
+        true;
+
+
+    if (
+        !navigator.geolocation
+    ) {
+
+
+        showToast(
+            'Location not supported'
+        );
+
+
+        return;
+
+    }
+
+
+    watchID = navigator
+        .geolocation
+        .watchPosition(
+
+            updateUserPosition,
+
+            userLocationError,
+
+            {
+
+                enableHighAccuracy:
+                    true,
+
+                timeout:
+                    15000,
+
+                maximumAge:
+                    5000
+
+            }
+
+        );
+
+}
+
+
+
+function updateUserPosition(position) {
+
+
+    var latitude =
+        position.coords.latitude;
+
+
+    var longitude =
+        position.coords.longitude;
+
+
+    var accuracy =
+        position.coords.accuracy;
+
+
+    userAccuracyMeters =
+        Number(accuracy) || null;
+
+
+    userPosition =
+        L.latLng(
+            latitude,
+            longitude
+        );
+
+
+    if (
+        !userMarker
+    ) {
+
+
+        userMarker =
+            L.marker(
+
+                userPosition,
+
+                {
+
+                    icon:
+                        createUserIcon(),
+
+                    zIndexOffset:
+                        1800
+
+                }
+
+            )
+            .addTo(map);
+
+
+        userMarker.bindPopup(
+            '<strong>You are here</strong>', { autoPan: false, className: 'user-location-popup' }
+        );
+
+    }
+
+
+    else {
+
+
+        userMarker
+            .setLatLng(
+                userPosition
+            );
+
+    }
+
+
+    if (
+        !userAccuracyCircle
+    ) {
+
+
+        userAccuracyCircle =
+            L.circle(
+
+                userPosition,
+
+                {
+
+                    radius:
+                        accuracy,
+
+                    weight:
+                        1,
+
+                    opacity:
+                        0.35,
+
+                    fillOpacity:
+                        0.06
+
+                }
+
+            )
+            .addTo(map);
+
+    }
+
+
+    else {
+
+
+        userAccuracyCircle
+            .setLatLng(
+                userPosition
+            );
+
+
+        userAccuracyCircle
+            .setRadius(
+                accuracy
+            );
+
+    }
+
+
+    if (pendingUserCamera) {
+        pendingUserCamera = false;
+        var button = document.getElementById('btn-find-me');
+        if (button && button.classList.contains('active') && !followVan) findUser();
+    }
+    updateSmartRouteInformation();
+
+
+    updateNearestStopCard();
+
+}
+
+
+
+function userLocationError(error) {
+
+    if (watchID !== null) {
+        navigator.geolocation.clearWatch(watchID);
+        watchID = null;
+    }
+    userLocationStarted = false;
+
+
+    var message =
+        'Location unavailable';
+
+
+    if (
+        error.code === 1
+    ) {
+
+        message =
+            'Location permission denied';
+
+    }
+
+
+    showToast(
+        message
+    );
+
+}
+
+
+
+
+/* ============================================================
+   NEAREST STOP + WALK TO STOP
+============================================================ */
+
+function getCurrentArrivalsForNearestStop(){return calculateUpcomingArrivals();}
+
+function updateNearestStopCard() {
+
+    var card =
+        document.getElementById(
+            'nearest-stop-card'
+        );
+
+    var findMeButton =
+        document.getElementById(
+            'btn-find-me'
+        );
+
+    /* Location updates continue in the background. Only let them display this
+       card while Find Me is the visitor's active map mode. */
+    if (!findMeButton || !findMeButton.classList.contains('active')) {
+        card.classList.remove('visible');
+        return;
+    }
+
+    if (
+        !userPosition
+        ||
+        stopRecords.length === 0
+    ) {
+
+        nearestStopRecord = null;
+        nearestStopDistanceKm = null;
+
+        card.classList.remove(
+            'visible'
+        );
+
+        return;
+    }
+
+    var userPoint =
+        turf.point([
+            userPosition.lng,
+            userPosition.lat
+        ]);
+
+    var bestStop =
+        null;
+
+    var bestDistance =
+        Infinity;
+
+    stopRecords.forEach(
+        function(stop) {
+
+            var distance =
+                turf.distance(
+                    userPoint,
+                    turf.point(
+                        stop.feature
+                        .geometry
+                        .coordinates
+                    ),
+                    {
+                        units:
+                            'kilometers'
+                    }
+                );
+
+            if (
+                distance <
+                bestDistance
+            ) {
+
+                bestDistance =
+                    distance;
+
+                bestStop =
+                    stop;
+            }
+        }
+    );
+
+    if (!bestStop) {
+
+        card.classList.remove(
+            'visible'
+        );
+
+        return;
+    }
+
+    nearestStopRecord =
+        bestStop;
+
+    nearestStopDistanceKm =
+        bestDistance;
+
+
+    document
+        .getElementById(
+            'nearest-stop-label'
+        )
+        .innerText =
+        (
+            userAccuracyMeters !== null
+            &&
+            userAccuracyMeters > 100
+        )
+        ?
+            'NEAREST STOP · APPROX.'
+        :
+        'NEAREST STOP';
+
+
+    var p =
+        bestStop.feature
+        .properties || {};
+
+    document
+        .getElementById(
+            'nearest-stop-name'
+        )
+        .innerText =
+        (
+            p.stopNumber
+            ?
+            p.stopNumber + '. '
+            :
+            ''
+        )
+        +
+        (
+            p.name ||
+            'Sightseeing Stop'
+        );
+
+    document
+        .getElementById(
+            'nearest-stop-distance'
+        )
+        .innerText =
+        formatDistance(
+            bestDistance
+        )
+        +
+        ' from you';
+
+    var entry=window.publicOperationalStatus?.stopStatuses?.find(s=>s.id===String(bestStop.feature.properties.objectId));
+    document.getElementById('nearest-stop-van-eta').textContent=entry?.label||'Route information updating';
+
+    card.classList.add(
+        'visible'
+    );
+}
+
+
+function hideNearestStopCard() {
+    var card = document.getElementById('nearest-stop-card');
+    if (card) card.classList.remove('visible');
+}
+
+
+function walkToNearestStop() {
+
+    if (!nearestStopRecord) {
+
+        showToast(
+            'Nearest stop unavailable'
+        );
+
+        return;
+    }
+
+    var coords =
+        nearestStopRecord
+        .feature
+        .geometry
+        .coordinates;
+
+    var destination =
+        coords[1] +
+        ',' +
+        coords[0];
+
+    var url =
+        'https://www.google.com/maps/dir/?api=1' +
+        '&destination=' +
+        encodeURIComponent(
+            destination
+        ) +
+        '&travelmode=walking';
+
+    if (
+        userPosition
+    ) {
+
+        url +=
+            '&origin=' +
+            encodeURIComponent(
+                userPosition.lat +
+                ',' +
+                userPosition.lng
+            );
+    }
+
+    /* Use the current tab. On iOS, opening Google Maps in a new tab can leave
+       a blank intermediary tab behind when the native Maps app launches. */
+    window.location.assign(url);
+}
+
+
+/* ============================================================
+   FIND USER / VAN
+============================================================ */
+
+function findUser() {
+    pendingUserCamera = !userPosition;
+
+
+    if (
+        !userLocationStarted
+    ) {
+
+
+        startUserLocation();
+
+
+        showToast(
+            'Requesting your location...'
+        );
+
+
+        return;
+
+    }
+
+
+    if (
+        !userPosition
+    ) {
+
+
+        showToast(
+            'Finding your location...'
+        );
+
+
+        return;
+
+    }
+
+
+    map.stop();
+    map.closePopup();
+    map.setView(userPosition, 16, { animate: false });
+
+
+    userMarker
+        .openPopup();
+
+}
+
+
+
+function findVan() {
+    pendingUserCamera = false;
+    map.stop();
+    map.closePopup();
+
+
+    if (
+        !vanPosition
+    ) {
+
+
+        showToast(
+            'Locating van...'
+        );
+
+
+        return;
+
+    }
+
+
+    map.setView(vanPosition, VAN_FOLLOW_ZOOM, { animate: false });
+
+}

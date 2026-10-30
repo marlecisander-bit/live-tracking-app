@@ -1,0 +1,11 @@
+{
+  "fixture": "native PostgreSQL; fictional state; no hosted access",
+  "checks": [
+    "runtime loss, surviving snapshot floor, stale rejection, monotonic revision, fresh recovery, binding invalidation, anon denial",
+    "two native sessions serialize and only one active lease",
+    "authenticated non-service caller denied; service-role RPC authorized",
+    "exact captured function rollback/reapply works; no table/column/persistence changes"
+  ],
+  "version": "17.10",
+  "pass": true
+}

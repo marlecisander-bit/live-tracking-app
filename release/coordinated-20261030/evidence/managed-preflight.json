@@ -1,0 +1,66 @@
+{
+  "jobs": [
+    {
+      "id": 1,
+      "name": "gps-current-v1",
+      "active": true,
+      "schedule": "5 seconds",
+      "commandMd5": "f981c66594dd21ebcdef83ae6ffc0030"
+    },
+    {
+      "id": 2,
+      "name": "tracking-cron-retention",
+      "active": true,
+      "schedule": "0 * * * *",
+      "commandMd5": "1a578f6f56c6369677b9edc0d79f356c"
+    }
+  ],
+  "version": "17.11",
+  "database": "postgres",
+  "functions": [
+    {
+      "acl": "{postgres=X/postgres}",
+      "md5": "9b989ff7cb8aaecbad7365e3c6b31931",
+      "name": "publish_current",
+      "schema": "tracking_private",
+      "identity": "target_vehicle text",
+      "securityDefiner": true
+    },
+    {
+      "acl": "{postgres=X/postgres,service_role=X/postgres}",
+      "md5": "dacf5de91a884d395efa10ffb7ebc768",
+      "name": "tracking_claim",
+      "schema": "public",
+      "identity": "target_vehicle text",
+      "securityDefiner": true
+    },
+    {
+      "acl": "{postgres=X/postgres,service_role=X/postgres}",
+      "md5": "613a4b5b9f44cbd63ef481dbd8297261",
+      "name": "tracking_commit",
+      "schema": "public",
+      "identity": "target_vehicle text, expected_revision bigint, lease_token uuid, map_version bigint, payload jsonb",
+      "securityDefiner": true
+    },
+    {
+      "acl": "{postgres=X/postgres}",
+      "md5": "1e6cc30c5c7a90cc9df47b3d6e0fa584",
+      "name": "binding_changed",
+      "schema": "tracking_private",
+      "identity": "",
+      "securityDefiner": true
+    }
+  ],
+  "recentCron": {
+    "count": 179,
+    "failed": 0
+  },
+  "recentHttp": {
+    "count": 179,
+    "non200": 0,
+    "timeouts": 0
+  },
+  "publication": [
+    "tracking_live_snapshots"
+  ]
+}

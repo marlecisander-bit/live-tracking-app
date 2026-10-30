@@ -69,8 +69,13 @@ window.selectedTracking = (function() {
         entry.pending = true; entry.started = Date.now(); metrics.reads++;
         var requestRevision = entry.revision;
         var promise = Promise.resolve().then(function() {
-            return realtime ? client.from('tracking_live_snapshots').select('snapshot,revision').eq('vehicle_id',vehicleId).maybeSingle()
+            var request = realtime ? client.from('tracking_live_snapshots').select('snapshot,revision').eq('vehicle_id',vehicleId).maybeSingle()
                 : client.rpc('selected_tracking_snapshot', { target_vehicle: vehicleId });
+            // A hung HTTP read must not keep pending=true through every reconnect.
+            if (typeof AbortSignal !== 'undefined' && AbortSignal.timeout && request.abortSignal) {
+                request = request.abortSignal(AbortSignal.timeout(10000));
+            }
+            return request;
         }).then(function(result) {
             if (result.error) throw result.error;
             entry.failures = 0; entry.retryAfter = 0;
