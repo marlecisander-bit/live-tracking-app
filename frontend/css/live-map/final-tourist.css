@@ -94,3 +94,10 @@
 #app[data-presentation] [data-journey-tone] .van-marker-circle{box-shadow:none}
 .van-marker-wrap{isolation:isolate}
 .journey-position-fresh .van-marker-wrap::before{content:'';position:absolute;left:50%;top:50%;width:82px;height:82px;transform:translate(-50%,-50%);border-radius:50%;border:1px solid #148c4b25;background:#148c4b12;pointer-events:none;z-index:-1}
+
+/* Selected and pressed controls share a high-contrast red/white treatment. */
+#app[data-presentation] #map-controls > button:is(.active,[aria-pressed="true"],:active) { background:#d90000; color:#fff; }
+#app[data-presentation] #map-controls > button:is(.active,[aria-pressed="true"],:active) .map-control-label,
+#app[data-presentation] #map-controls > button:is(.active,[aria-pressed="true"],:active) .map-control-icon { color:#fff; }
+#app[data-presentation] #map-controls > button:is(.active,[aria-pressed="true"],:active) .map-control-icon { background:transparent; box-shadow:none; }
+#app[data-presentation] #map-controls > button:is(.active,[aria-pressed="true"],:active) .vehicle-control-symbol { filter:brightness(0) invert(1); }

@@ -42,7 +42,7 @@
 [data-journey-tone="green"] { --marker-accent:#166534; }
 [data-journey-tone="amber"] { --marker-accent:#915600; }
 [data-journey-tone="blue"] { --marker-accent:#175a9b; }
-[data-journey-tone] .van-marker-circle::after { content:""; position:absolute; right:1px; bottom:-4px; width:10px; height:10px; border:2px solid white; border-radius:50%; background:var(--marker-accent); box-shadow:0 0 0 1px var(--marker-accent); }
+/* Keep the live van artwork free of an attached status dot. */
 [data-journey-tone="grey"] .van-heading, [data-journey-tone="blue"] .van-heading { visibility:hidden; }
 .tourist-last-seen { filter:none; }
 #stops-panel[aria-hidden="true"] { visibility:hidden; pointer-events:none; }
