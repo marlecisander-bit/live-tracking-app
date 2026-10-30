@@ -19,6 +19,10 @@ async function loadVanPosition() {
             var snapshot = await window.selectedTracking.read(supabaseClient, requestedVehicle);
             if (requestedVehicle !== VEHICLE_ID || requestedProject !== window.PROJECT_ID) return;
             var row = snapshot.position;
+            // A late response in the same source run cannot replace the accepted position or planner.
+            if(row&&canonicalLivePosition&&row.source_run_id===canonicalLivePosition.source_run_id&&Date.parse(row.source_recorded_at)<Date.parse(canonicalLivePosition.source_recorded_at)){
+                updateSmartRouteInformation();return;
+            }
             if(row){publicGpsQuality=publicQualityFilter.check(row,String(requestedProject)+'/'+row.source_run_id,Date.now());if(publicGpsQuality==='REJECTED'){window.publicPresentation?.setLocationUnavailable(true);updateGPSStatus();return;}
              if(activeRouteFeature){try{var projected=turf.nearestPointOnLine(activeRouteFeature,turf.point([row.longitude,row.latitude]),{units:'kilometers'});if(projected.properties.dist>.15)publicGpsQuality='POOR';}catch{}}
 }
@@ -44,27 +48,10 @@ async function loadVanPosition() {
         finally { vanPositionRequestInFlight = false; }
 }
 function getTrackerRecordedAt(data) {
-    var candidates = [
-        data && data.source_recorded_at,
-        data && data.received_at,
-        data && data.recorded_at,
-        data && data.gpsTime,
-        data && data.timestamp,
-        data && data.datetime,
-        data && data.dataOra
-    ];
-
-    for (var index = 0; index < candidates.length; index += 1) {
-        var candidate = candidates[index];
-        if (candidate === null || candidate === undefined || candidate === '') continue;
-        var numeric = Number(candidate);
-        var parsed = Number.isFinite(numeric)
-            ? new Date(numeric < 100000000000 ? numeric * 1000 : numeric)
-            : new Date(candidate);
-        if (Number.isFinite(parsed.getTime())) return parsed.getTime();
-    }
-
-    return null;
+    // The canonical contract names exactly one source clock; receipt/fetch time is never a fix.
+    var recorded = data && data.source_recorded_at;
+    var parsed = typeof recorded === 'string' ? Date.parse(recorded) : NaN;
+    return Number.isFinite(parsed) ? parsed : null;
 }
 
 

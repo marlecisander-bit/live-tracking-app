@@ -22,3 +22,12 @@ console.log('PASS real presenter: card/bridge consistency, stale projection, exa
  let same=adapter('https://www.sightseeingshkodra.com');await new Promise(r=>setImmediate(r));assert.equal(fetches,1);assert.equal(same.current.times[0],'09:00');assert(Number.isFinite(same.current.receivedAt));
  console.log('PASS schedule: CORS-dependent integration deferred without requests; same-origin read-only adapter accepts authoritative response');
 })().catch(e=>{console.error(e);process.exitCode=1});
+
+// Actual RAM model, not a hand-written presenter model, must agree across card, list and bridge.
+vm.runInContext(fs.readFileSync('frontend/js/live-map/tourist-state.js','utf8'),ctx);
+const phaseSession=window.touristState.createSession(),epoch=Date.parse('2026-10-30T10:00:00Z');
+const phaseStops=Array.from({length:5},(_,i)=>({id:'phase'+i,number:String(i+1),name:'Stop '+(i+1),coordinates:[i*.01,0]}));
+let lastPhaseInput;
+for(let n=0;n<4;n++){let at=new Date(epoch+n*10000).toISOString();lastPhaseInput={now:epoch+n*10000,vehicleId:'v',projectId:'p',mapVersion:1,stops:phaseStops,position:{latitude:0,longitude:.01,speed_kmh:0,accuracy_m:null,source_recorded_at:at,source_run_id:'r'},stopState:{entered_at:new Date(epoch).toISOString(),operational_state:{version:3,mapVersion:1,sourceRun:'r',timestamp:at,currentStop:2,nextStop:3,etaSeconds:480}}};phaseSession.resolve(lastPhaseInput);}
+for(const age of [0,120000,181000]){const m=phaseSession.resolve({...lastPhaseInput,now:lastPhaseInput.now+age});window.publicPresentation.render(m);const bridge=sent.at(-1).data;assert.equal(bridge.movement,m.message);assert.equal(bridge.phase,m.phase);assert.equal(element('van-movement-status').textContent,m.message);assert.equal(element('journey-eta').textContent,m.etaText);assert.equal(element('operational-live').hidden,!m.evidenceLive);assert.equal(bridge.stops[1].state,m.stopStatuses[1].bridgeState);if(age===120000){assert.equal(m.phase,'PARKED');assert.equal(bridge.confidence.position,'delayed');assert(bridge.statusValidUntil);assert.equal(element('journey-context').textContent,'PARKED AT');}if(age===181000){assert.equal(bridge.unavailable,true);assert.equal(m.phase,'UNKNOWN');}}
+console.log('PASS actual RAM model -> card/stop list/bridge, parked grace expiry and LIVE consistency');

@@ -1,0 +1,84 @@
+
+> shkodra-reconstructed-production-plus-stops@0.0.0 test
+> npm run test:frontend && npm run test:rc1 && npm run test:backend && npm run test:integration && npm run test:inspection
+
+
+> shkodra-reconstructed-production-plus-stops@0.0.0 test:frontend
+> node tests/run-frontend.cjs
+
+PASS shared tracking: concurrent readers, expiry, project/session isolation, error recovery and vehicle isolation
+PASS stream: shared fetch, bounded sanity, stale event rejection, disconnect fallback, failed read recovery, visibility/session cleanup
+PASS public expiry delegates to the unified presenter every five seconds
+PASS ETA formatter: single, explicit range, sub-minute, invalid/missing, LOW, at-stop and stationary at-stop; no malformed characters
+PASS movement: approach requires three observations and enters unchanged 200m recognition radius
+PASS movement: passing nearby never confirms a visit; leaving uses prior approach
+PASS movement: stationary dwell requires distinct fixes over 30s, then leaves
+PASS movement: boundary jitter and poor accuracy never count dwell or approach
+PASS movement: curved route approach tolerates temporary radial increase
+PASS movement: low-speed heading and one speed spike do not establish direction
+PASS movement: suppressed unchanged fixes keep bounded confirmed parking, never refresh source or LIVE
+PASS movement: communication loss while parked has 30s grace; moving becomes unknown immediately
+PASS movement: duplicate, older and delayed observations do not build dwell or vote direction
+PASS movement: unreliable jump and interrupted dwell reset confidence
+PASS movement: browser/runtime/source/map/guarded-loop restart cannot restore unverified visits or ETA
+PASS movement: EN ROUTE uses existing coherent route ETA, not a new calculation
+PASS movement: op timestamp/run/quality mismatch withholds predictions
+PASS movement: parked unknown departure is travel AFTER departure, not arrival countdown
+PASS movement: known verified visit departure includes only remaining dwell plus travel
+PASS movement: timetable is explicitly Scheduled and never supplies a stop departure
+PASS movement: unknown and stale have honest message, no LIVE, secondary source clock preserved
+PASS movement: resolve is pure, identity rejection, default PARKED flag cannot assert dwell
+PASS movement: observed sparse cadence fits 45s gaps/90s direction window; longer gaps need new evidence
+PASS movement: old parked packet cannot flicker state or replace measurement clock
+PASS movement: reverse published leg direction is respected, not noisy heading
+PASS movement: past the route stop anchor is not still arriving; proven away motion can leave inside 200m
+PASS movement: leaving is bounded and cannot mask the next approach for the whole leg
+PASS movement: parking grace cannot borrow a mismatched operational timestamp or stop
+PASS movement: parked hysteresis tolerates a single small speed wobble, not unknown speed or spatial drift
+PASS 25 movement/ETA scenario groups
+PASS real presenter: card/bridge consistency, stale projection, exact parent/source allowlist and no coordinate payloads
+PASS actual RAM model -> card/stop list/bridge, parked grace expiry and LIVE consistency
+PASS schedule: CORS-dependent integration deferred without requests; same-origin read-only adapter accepts authoritative response
+
+> shkodra-reconstructed-production-plus-stops@0.0.0 test:rc1
+> node tests/test-system-live-state.cjs && node tests/test-departure-sequence.cjs
+
+PASS 14 current RC1 contract scenarios
+(node:19519) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS: reproduced pre-fix delayed arrival loss; Rozafa departure, jitter, 30-minute dwell, repeated loops, no completed-stop regression, stale ETA suppression, persisted duplicate rejection at 0/120/1800-second delay
+(node:19520) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+> shkodra-reconstructed-production-plus-stops@0.0.0 test:backend
+> node tests/test-worker-contract.cjs
+
+(node:19541) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS current worker authentication, explicit vehicle and conflicting-processor guards; zero network
+
+> shkodra-reconstructed-production-plus-stops@0.0.0 test:integration
+> node tests/test-provider-integration.cjs
+
+(node:19562) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS real provider handler -> planner -> local SQL persistence/restart, skipped recovery, guarded reset and empty-queue idempotence; no hosted network
+
+> shkodra-reconstructed-production-plus-stops@0.0.0 test:inspection
+> node tests/test-recovery-floor.cjs && node tests/test-current-stream-timeout.cjs && node tests/test-current-stream.cjs && node tests/test-current-provider-movement.cjs
+
+PASS runtime-loss source/revision floor, fresh recovery, withheld continuity/ETA, bounded rows and denied anon RPC
+(node:19584) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/aleksandermarleci/Desktop/Projects%20Dev/live-tracking-app-release/supabase/functions/gps-worker/engine.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /Users/aleksandermarleci/Desktop/Projects Dev/live-tracking-app-release/package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS cached fallback retains failed transport health until a real successful read
+PASS stalled current-snapshot read aborts, clears pending and reconnects
+PASS stream: shared fetch, bounded sanity, stale event rejection, disconnect fallback, failed read recovery, visibility/session cleanup
+PASS heading-only curve false rejection removed; accuracy and impossible-jump protections retained
+(node:19587) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/aleksandermarleci/Desktop/Projects%20Dev/live-tracking-app-release/supabase/functions/gps-worker/engine.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /Users/aleksandermarleci/Desktop/Projects Dev/live-tracking-app-release/package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS actual frontend discards late same-run packet and never substitutes receipt time for measurement time
+PASS current provider timestamps/ignored flags, duplicate rejection, worker -> SQL -> RAM projection, withheld initial continuity and moving ETA; no production requests

@@ -1,6 +1,8 @@
 (function() {
-    // One cacheable vector asset for public/admin markers and controls.
+    // Keep the existing side-view artwork on live public/admin vehicle markers.
     const symbol = '<img class="vehicle-symbol" src="assets/brand/sightseeing-van.svg" alt="" aria-hidden="true" draggable="false">';
+
+    const controlSymbol = '<img class="vehicle-symbol vehicle-control-symbol" src="assets/brand/bus-front.svg" alt="" aria-hidden="true" draggable="false">';
 
     window.vehicleIconMarkup = function() { return symbol; };
     // The artwork faces west. Mirror only the image, never Leaflet's positioning.
@@ -27,7 +29,7 @@
     };
     window.renderVehicleIcons = function(root) {
         (root || document).querySelectorAll('[data-vehicle-icon]').forEach(function(element) {
-            element.innerHTML = symbol;
+            element.innerHTML = controlSymbol;
         });
     };
     window.renderVehicleIcons();

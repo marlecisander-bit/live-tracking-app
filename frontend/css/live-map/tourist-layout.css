@@ -127,3 +127,6 @@ body:has(#staging-banner) #nearest-stop-card { bottom:calc(104px + env(safe-area
 /* Full-map presentation: no public branding bar or reserved header space. */
 :root { --tourist-header:0px; }
 #header { display:none; }
+
+/* Front-view utility artwork is square; live marker sizing remains independent. */
+#btn-find-van .map-control-icon .vehicle-control-symbol { width:24px; height:24px; }

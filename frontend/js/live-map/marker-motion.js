@@ -15,8 +15,8 @@
   if(last&&(d/Math.max(1,dt)>40||d>1000)){
    if(!pending||time<=pending.time||metres(pending.point,point)>150){pending={time,point};return 'REJECTED';}
   }
-  const headingConflict=last&&Number(p.speed_kmh)>15&&d>100&&Number.isFinite(last.heading)&&Number.isFinite(Number(p.bearing_deg))&&Math.abs(angle(last.heading,Number(p.bearing_deg)))>120;
-  pending=null;last={time,point,heading:p.bearing_deg==null?null:Number(p.bearing_deg)};return accuracy>50||headingConflict?'POOR':accuracy===null?'ACCEPTABLE':'GOOD';
+  // Heading reversal alone can be a curved road/U-turn. Status direction uses several route/position observations.
+  pending=null;last={time,point};return accuracy>50?'POOR':accuracy===null?'ACCEPTABLE':'GOOD';
  },reset(){last=null;pending=null;}};}
  function create(options){
   let frame=null,display=null,last=null,heading=0,state=null;

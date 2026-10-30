@@ -26,7 +26,7 @@ window.selectedTracking = (function() {
         window.addEventListener('online', clear);
         window.addEventListener('pageshow', clear);
     }
-    return { clear: clear, metrics: metrics, read: function(client, vehicleId) {
+    return { clear: clear, metrics: metrics, health: function(client,vehicleId){var e=clients.get(client)?.get(vehicleId);return {failed:!!e&&e.failures>0};}, read: function(client, vehicleId) {
         var realtime = window.appConfig.selectedTrackingRealtimeEnabled === true;
         var entries = clients.get(client);
         if (!entries) { entries = new Map(); clients.set(client, entries); }

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="34 35 172 171" fill="none">
+  <title>Front-view bus</title>
+  <defs>
+    <linearGradient id="bus-red" x1="48" y1="35" x2="192" y2="206" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#be0803"/>
+      <stop offset="1" stop-color="#b60000"/>
+    </linearGradient>
+  </defs>
+  <path fill="url(#bus-red)" fill-rule="evenodd" d="M48 76V61C48 43 72 35 120 35S192 43 192 61V76H194C201 76 206 81 206 88V94C206 101 201 106 194 106H192V176C192 182 189 186 185 187V192C185 200 179 206 171 206S157 200 157 192V187H83V192C83 200 77 206 69 206S55 200 55 192V187C51 186 48 182 48 176V106H46C39 106 34 101 34 94V88C34 81 39 76 46 76H48Z
+    M89 48H151Q154 48 154 51V59Q154 62 151 62H89Q85 62 85 59V51Q85 48 89 48Z
+    M65 76H175Q178 76 178 79V134Q178 137 175 137H65Q62 137 62 134V79Q62 76 65 76Z
+    M79 165A8.5 8.5 0 1 1 62 165A8.5 8.5 0 1 1 79 165Z
+    M178 165A8.5 8.5 0 1 1 161 165A8.5 8.5 0 1 1 178 165Z" clip-rule="evenodd"/>
+</svg>

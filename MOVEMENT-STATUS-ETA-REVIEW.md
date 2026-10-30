@@ -1,0 +1,60 @@
+> Publication subsequently authorized by the owner on 30 October 2026. The local-review snapshot below is preserved. See release/movement-status-eta-20261030/RELEASE-PLAN.md and the generated publication receipt for execution state. The utility icon addition brings the candidate to123 files.
+
+# Movement/status and ETA — local review, 30 October 2026
+
+**Implemented locally; no commits, pushes, deployment, production mutation or migration. GO for code review; hosted/field acceptance remains unverified.**
+
+Canonical map: this `live-tracking-app-release` checkout, `master`, released HEAD `f910d3fb492424552312cf8bd11cc9801c71f213` (Netlify `6ae492cdd19d930c1d769411`). Website: `../SightseeingShkodra-Web-App-canonical`, `main`, HEAD `fe4a0fa5af59c0562de4fcfba677c56bd2696619`. Fresh remote heads still match. Both checkouts were clean before this task; their changes remain uncommitted for review. Original dirty/broken workspaces, historical manifests and archives were preserved. No map AGENTS.md exists in the canonical checkout or ancestors; website AGENTS/roadmap/decisions/phase guidance and local Next client-component guidance were consulted. The latest map release receipt is `reports/INFO-CARD-TEXT-RELEASE-20261030.json`; the earlier coordinated receipt remains historical.
+
+## Provider evidence and actual flow
+
+Canonical `supabase/functions/gps-worker/engine.ts:3` parses JSON/collector JSONP, matches one `uid`, and reads `ora`, `lat`, `lng`, `viteza`, `directie`. `ora` is normalized from seconds/milliseconds into `source_recorded_at`. The device-clock provenance of `ora` remains unproven: call it the **provider-reported observation time**, not an independently verified physical measurement clock. `received_at` is worker processing time after extraction; HTTP response time/provider Date headers are not a device heartbeat. No receipt/fetch timestamp is now accepted as a replacement source clock in the canonical planner or marker adapter.
+
+Accuracy is normalized to null. Ignition, explicit movement/parking status and independently timestamped stationary evidence are **not available in this normalized feed**. The normalized `movement_state` is derived from speed by RC1; it is not an independent sensor. Historical authenticated provider UI evidence included inconsistent ignition/movement/speed flags, and did not verify stationary reporting settings. Unsupported extra provider flags are ignored, with a regression test. No provider credential or raw payload was read or saved in this task.
+
+Read-only public observation: 90 seconds,10 successful reads,7 distinct observation timestamps,3 repeats, all 10 samples moving. Sampled advancing timestamp gaps were 3–32 seconds, and receipt time followed source time in all samples. These are aliased public-read observations, not configured device cadence. Five-second worker polling does not establish five-second GPS reporting. **No stationary/suppression behaviour was observed on the van**, so unchanged coordinates/HTTP200 cannot prove continued parking.
+
+Flow remains one provider → existing worker/RC1 → existing atomic current snapshot → existing shared reader → `touristState.createSession()` → one model consumed by card/marker/list/popups/summary/website bridge. The session classifies confidence from RC1's current/next association and published route; it never advances the authoritative stop sequence. Backend RC1 recognition/completion still means recognition, not dwell. Public visited checks now require this session's confirmed dwell instead of borrowing those recognition flags.
+
+## Initial rules and thresholds
+
+These are proposed, scenario-tested defaults, not calibrated driving measurements. Rules are centralized at `frontend/js/live-map/tourist-state.js:4`.
+
+| State | Evidence and hysteresis |
+| --- | --- |
+| ARRIVING | Relevant RC1 current/next stop, reliable forward progress, inside the existing 200m radius after an uncertainty margin, and not past its published route anchor. Three distinct valid fixes, last three speeds at least 5km/h, at least 10 seconds, net progress at least max(20m, twice reported accuracy). Published route arc/direction handles curves and reverse legs; headings do not vote. |
+| PARKED | Associated stop; at least four distinct observations spanning at least 30 seconds; speed 0–2km/h; stationary cluster within 20m; confidently inside 200m. Reported accuracy above 35m cannot establish dwell; above 50m rejects public quality. Missing accuracy remains unknown: a10m gating margin/20m direction floor is a conservative heuristic, not an accuracy claim. A small speed wobble below 5km/h can retain an established stationary cluster without renewing its stationary timestamp; missing speed or spatial drift cannot. |
+| LEAVING | Prior approach or confirmed visit; three reliable moving-away fixes, net radial increase at least 20m and displacement beyond max(40m, twice accuracy). Does not require crossing the geofence or imply a visit. The leaving presentation is bounded to 350m plus uncertainty, then EN ROUTE; it cannot mask the next approach. |
+| EN ROUTE | Reliable movement in the published direction toward RC1's next valid stop. Uses the worker's route-aware ETA; no independent browser ETA engine. |
+| UNKNOWN | Missing/incoherent identity, source time, continuity, quality or direction evidence. Fresh known position can say “Movement not yet confirmed”; genuinely unavailable evidence says “Location temporarily unavailable”. Never infer parking from missing updates. |
+
+Inter-observation gaps above 45 seconds reset local motion/dwell continuity. The direction window is 90 seconds to accommodate the observed 3–32-second sampled gaps. RAM holds at most 48 compact observations from 180 seconds and at most five confirmed-visit identities, scoped to vehicle/project/map/source run/guarded loop. Context loss and browser restart require new evidence; no localStorage, GPS trail, checkpoint, second subscription, new environment or persistent tracking field was added.
+
+The effective backend 200m recognition, two-moving-fix 220m departure, guarded origin reset and forward recovery were not changed. Extra confidence margins affect wording, not the authoritative recognition radius. Uncertainty/jump/route-distance protections remain. Heading reversal alone no longer downgrades a plausible position: the former 120-degree check rejected legitimate curves; accuracy and impossible-jump rejection remain and are tested.
+
+## Parking freshness, shared presentation and ETA
+
+Confirmed parking can remain for **at most 180 seconds from the last valid stationary measurement**, with no LIVE after the existing 90-second source freshness boundary. A detected communication failure instead allows at most 30 seconds from its first failure, bounded by the same absolute 180-second limit. It then becomes UNKNOWN. Grace uses a grey historical marker and secondary observation time. It is a bounded last-confirmed assumption, not a fresh provider heartbeat; indefinite parking retention is unsupported. Duplicate reads never renew the clock or count as dwell votes. Cached fallback data no longer clears failed transport health.
+
+The bridge carries additive v1 `phase` and `statusValidUntil` presentation fields, not GPS samples. Website consumers reuse the exact upstream message, respect its expiry and hide LIVE during grace. Their message timers expire at the earlier of upstream validity or 45 seconds. Legacy v1 messages remain supported. Pass-by LEAVING is not emitted as a visited/departed check unless dwell was confirmed.
+
+| Before | Local candidate |
+| --- | --- |
+| Radius/single speed could produce an approach label | “Arriving at [stop]” only with multiple direction observations; timing “Arriving now”. |
+| RC1 PARKED displayed conservatively as “At [stop]” | UNKNOWN until dwell, then “Parked at [stop]”. |
+| Departure flag drove “Departing [stop]” | “Leaving [stop]” from approach/visit plus moving-away evidence; pass-by stays unvisited. |
+| Fresh speed could drive a destination message immediately | “On the way to [next stop]” after reliable route progress. |
+| Parked source age simply expired | Bounded confirmed-parking grace without LIVE; then honest uncertainty. |
+| No parked trip estimate | Existing worker `etaSeconds`/distance fields now also contain route travel duration at a recognized stop. Public presentation labels it “Travel · ~N min after departure”, never a countdown. Moving ETA uses the existing algorithm. |
+
+A known departure must be explicitly verified and bound to this vehicle/project/map/source run/stop/visit. The optional application-level departure contract is tested with fictional data, but **no actual departure-time source is currently wired**. Thus real unknown-departure presentation remains travel-after-departure; the candidate never fabricates a departure from a tour timetable. If verified departure is supplied, next arrival includes only remaining dwell plus travel. Timetable values say “Scheduled”; no 15-minute waits are added. Invalid/old ETA identity, quality or continuity suppresses predictions. Parked-duration support requires the local worker change too; the currently deployed worker is unchanged.
+
+## Validation and remaining gates
+
+- Baseline map lint/full tests/typecheck/build passed before edits. Final map lint, full `npm test`, worker typecheck and pinned 122-file build pass. The state suite now has 25 scenario groups reflecting the requested semantics; unchanged RC1/departure/security/recovery suites still pass. Actual normalizer → current worker → local PGlite SQL projection → RAM model test covers receipt/source clocks, unsupported flags, duplicate ordering, unknown continuity, dwell and travel/arrival semantics. Actual presenter tests check card/list/bridge agreement, grace expiry and LIVE. Cached-disconnection and late-packet regression tests pass.
+- Website lint, typecheck, optimized build,216 integration tests and 145 component tests pass. Only these relevant suites were rerun; no new claim about its full database/native/owner acceptance suite. Build-generated next-env.d.ts was restored to its exact clean baseline, without touching other work.
+- Synthetic coverage includes all ten requested scenario families, plus sparse cadence, reverse legs, bounded leaving, parking spatial drift, stale operational clocks, source/map/loop isolation and departure-contract rejection. These are local simulations; the 90-second van observation was moving only. No synthetic production GPS or production writes were performed.
+- **Chrome acceptance blocked:** authorized tab discovery timed out repeatedly, including after the owner opened a new Chrome window. No current desktop/mobile standalone or website iframe visual PASS is claimed. No CDP/browser/security workaround was used. The supported troubleshooting next step if the connection remains broken is reinstalling the Browser plugin through the ChatGPT plugin UI, then reconnecting Chrome. Tests/HTTP reads do not substitute for that acceptance.
+- Device timestamp provenance, stationary suppression/cadence, current independent parking evidence, physical accuracy and field threshold calibration remain unknown. Existing isolated/historical 503 causes remain outside this change; successful snapshot reads do not establish worker uptime. Existing current-state persistence remains; this is not a zero-retention claim.
+
+Review files: shared model `frontend/js/live-map/tourist-state.js:25`; late response/source clock adapter `track-bus.js:22`; reader health `frontend/js/shared/gps-source.js:29`; worker duration `supabase/functions/_shared/stop-transition.ts:126`; website message/expiry validation `../SightseeingShkodra-Web-App-canonical/src/modules/tracking/journey-contract.ts:19`. Evidence and exact changed-file hashes: `reports/movement-status-eta-20261030/review-manifest.json` and neighbouring logs. The model/worker/website candidate must be reviewed together before any separately authorized publication.

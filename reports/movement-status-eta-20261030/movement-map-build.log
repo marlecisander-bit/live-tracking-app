@@ -1,0 +1,6 @@
+
+> shkodra-reconstructed-production-plus-stops@0.0.0 build
+> node tools/build-current.cjs
+
+PASS pinned 122-file current frontend and 10 reviewed local repair; not deployment authorization
+Built 122 exact current static files in dist; historical dist preserved; no backend packaging

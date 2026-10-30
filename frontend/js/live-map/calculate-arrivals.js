@@ -2,7 +2,7 @@
 function calculateUpcomingArrivals(){
  const model=window.publicOperationalStatus;
  if(!model||model.etaConfidence!=='valid'||!model.nextStop)return [];
- const stop=findStopRecordByNumber(model.nextStop.number);if(!stop)return [];
+ const stop=findStopRecordByNumber((model.etaKind==='arriving'?model.nextConfirmedStop:model.nextStop).number);if(!stop)return [];
  return [{stop,etaMinutes:model.etaSeconds/60,etaText:model.etaText,distanceKm:null}];
 }
 function applyBackendEtaToArrival(arrival){return arrival;}
