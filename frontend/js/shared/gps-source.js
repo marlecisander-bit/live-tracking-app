@@ -26,7 +26,8 @@ window.selectedTracking = (function() {
         window.addEventListener('online', clear);
         window.addEventListener('pageshow', clear);
     }
-    return { clear: clear, metrics: metrics, health: function(client,vehicleId){var e=clients.get(client)?.get(vehicleId);return {failed:!!e&&e.failures>0};}, read: function(client, vehicleId) {
+    return { clear: clear, metrics: metrics, health: function(client,vehicleId){var e=clients.get(client)?.get(vehicleId);return {failed:!!e&&e.failures>0};}, read: async function(client, vehicleId) {
+        if(window.serviceHours){let hours;try{hours=await window.serviceHours.read(client,vehicleId);}catch(error){clear();throw error;}if(!hours.open){clear();return {serviceClosed:true};}}
         var realtime = window.appConfig.selectedTrackingRealtimeEnabled === true;
         var entries = clients.get(client);
         if (!entries) { entries = new Map(); clients.set(client, entries); }

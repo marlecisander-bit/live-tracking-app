@@ -97,10 +97,10 @@ body:has(#staging-banner) #nearest-stop-card { bottom:calc(104px + env(safe-area
   #header { height:calc(var(--tourist-header) + env(safe-area-inset-top)); padding-top:env(safe-area-inset-top); padding-bottom:0; }
   #brand .brand-logo { width:122px; height:40px; }
 }
-/* Reserve a real layout column for Leaflet's existing accessible close link. */
-.leaflet-popup.user-location-popup { display:grid; grid-template-columns:auto 32px; align-items:center; padding-right:4px; background:white; border-radius:12px; box-shadow:0 3px 14px #0006; }
+/* Center the visitor label now that its close control is removed. */
+.leaflet-popup.user-location-popup { display:block; padding:0; background:white; border-radius:12px; box-shadow:0 3px 14px #0006; }
 .user-location-popup .leaflet-popup-content-wrapper { grid-column:1; grid-row:1; background:transparent; box-shadow:none; padding:0; }
-.user-location-popup .leaflet-popup-content { margin:12px; white-space:nowrap; width:auto !important; }
+.user-location-popup .leaflet-popup-content { margin:10px 14px; white-space:nowrap; width:auto !important; text-align:center; }
 .leaflet-container .user-location-popup a.leaflet-popup-close-button { position:static; grid-column:2; grid-row:1; width:32px !important; height:32px !important; line-height:32px !important; align-self:center; }
 .user-location-popup .leaflet-popup-tip-container { position:absolute; bottom:-20px; }
 

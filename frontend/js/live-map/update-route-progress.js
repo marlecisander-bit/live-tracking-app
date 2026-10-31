@@ -9,7 +9,7 @@ function formatOperationalStop(stop){return stop?stop.number+'. '+stop.name:'--'
 function getTouristInformation() {
     var routePosition=null;
     if(canonicalLivePosition&&activeRouteFeature){try{var projected=turf.nearestPointOnLine(activeRouteFeature,turf.point([canonicalLivePosition.longitude,canonicalLivePosition.latitude]),{units:"kilometers"});var targetNumber=vehicleStopState?.operational_state?.currentStop??vehicleStopState?.operational_state?.nextStop;var leg=operationalLegs.find(l=>String(l.to.feature.properties.stopNumber)===String(targetNumber));routePosition={direction:leg?.direction||1,wrap:routeProperties.directionMode!=="twoway",alongMetres:projected.properties.location*1000,offRouteMetres:projected.properties.dist*1000,lengthMetres:routeLengthKm*1000};}catch{}}
-    return touristSession.resolve({routePosition,position:canonicalLivePosition,stopState:vehicleStopState,eta:vehicleEtaState,
+    return touristSession.resolve({operationalService:window.serviceHours?.current(supabaseClient,VEHICLE_ID),routePosition,position:canonicalLivePosition,stopState:vehicleStopState,eta:vehicleEtaState,
         mapVersion:currentPublishedId,vehicleId:VEHICLE_ID,projectId:window.PROJECT_ID,
         quality:publicGpsQuality,unavailable:window.publicPresentation?.locationUnavailable||window.selectedTracking.health?.(supabaseClient,VEHICLE_ID)?.failed,
         config:window.appConfig.trackingV2,schedule:window.touristSchedule?.current,

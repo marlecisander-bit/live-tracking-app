@@ -65,7 +65,7 @@
         text('live-badge-text',model.message);
         if(typeof vanMarker!=='undefined' && vanMarker){
             vanMarker.setOpacity(model.markerVisible?1:0);
-            const element=vanMarker.getElement();if(element){if(element.style)element.style.pointerEvents=model.markerVisible?'':'none';element.setAttribute('aria-hidden',String(!model.markerVisible));element.setAttribute('tabindex',model.markerVisible?'0':'-1');if(!model.markerVisible)vanMarker.closePopup?.();element.classList.toggle('tourist-last-seen',model.locationHistorical);element.classList.toggle('journey-position-fresh',view.live&&model.markerVisible);element.dataset.journeyState=model.passengerState;element.dataset.journeyTone=model.markerTone;element.title=(model.locationHistorical?'Last reported position':model.message)+' · '+(model.updateAge||'Last report expired');element.setAttribute('aria-label',element.title+(model.lastObservationAt?' · '+observed.textContent:''));}
+            const element=vanMarker.getElement();if(element){if(element.style)element.style.pointerEvents=model.markerVisible?'':'none';element.setAttribute('aria-hidden',String(!model.markerVisible));element.setAttribute('tabindex',model.markerVisible?'0':'-1');if(!model.markerVisible)vanMarker.closePopup?.();element.classList.toggle('tourist-last-seen',model.locationHistorical);element.classList.toggle('journey-position-fresh',view.live&&model.markerVisible);element.dataset.journeyState=model.passengerState;element.dataset.journeyTone=model.markerTone;element.title=(model.service==='closed'?'Service closed · Last reported position':model.locationHistorical?'Last reported position':model.message)+' · '+(model.updateAge||'Last report expired');element.setAttribute('aria-label',element.title+(model.lastObservationAt?' · '+observed.textContent:''));}
             if(model.gps!=='live' && typeof publicMarkerController!=='undefined')publicMarkerController?.stop();
             if(model.locationHistorical&&model.markerVisible&&root.canonicalLivePosition)vanMarker.setLatLng([root.canonicalLivePosition.latitude,root.canonicalLivePosition.longitude]);
         }
@@ -74,7 +74,7 @@
             if(!el||!s)return;el.classList.toggle('tourist-current-stop',s.current);el.classList.toggle('tourist-next-stop',s.next);el.dataset.journeyState=s.skipped?'skipped':view.stops.find(x=>x.id===s.id)?.viewState||'unknown';
             el.setAttribute('aria-label','Stop '+s.number+' · '+s.name+' · '+s.label);
         });
-        if(typeof vanMarker!=='undefined'&&vanMarker&&root.mapContentSafety){const content=root.mapContentSafety.escape((model.locationHistorical?'Last reported position':model.message)+' · '+(model.updateAge||'Last report expired'));if(vanMarker.getPopup?.())vanMarker.setPopupContent(content);else vanMarker.bindPopup?.(content);}
+        if(typeof vanMarker!=='undefined'&&vanMarker&&root.mapContentSafety){const content=root.mapContentSafety.escape((model.service==='closed'?'Service closed · Last reported position':model.locationHistorical?'Last reported position':model.message)+' · '+(model.updateAge||'Last report expired'));if(vanMarker.getPopup?.())vanMarker.setPopupContent(content);else vanMarker.bindPopup?.(content);}
         root.stopMarkerLayout?.refresh();
         root.journeyFraming?.keepVehicleClear();
         send();

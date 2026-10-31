@@ -1,0 +1,10 @@
+#service-hours-panel { padding: 12px; border-top: 1px solid #ddd; }
+#service-hours-panel summary { cursor: pointer; min-height: 44px; align-content: center; font-weight: 600; }
+#service-hours-panel p { font-size: 13px; line-height: 1.5; }
+#service-hours-panel label { display: flex; gap: 6px; align-items: center; min-height: 36px; }
+#service-hours-panel input[type="checkbox"] { width: auto; min-height: 20px; margin: 0; }
+#service-hours-panel .hours-day { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 10px 0; }
+#service-hours-panel .hours-day label { flex-basis: 100%; }
+#service-hours-panel input[type="time"] { width: 104px; min-width: 0; flex: 1; font-size: 16px; }
+#service-hours-panel button { min-height: 44px; width: 100%; margin-top: 12px; }
+#service-hours-panel input:focus-visible, #service-hours-panel summary:focus-visible { outline: 3px solid #2563eb; outline-offset: 2px; }
