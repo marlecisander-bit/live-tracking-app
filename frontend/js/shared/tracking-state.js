@@ -31,7 +31,7 @@
         var delayed=Number(cfg.delayedSeconds||position?.delayed_seconds||20),offline=Number(cfg.offlineSeconds||position?.offline_seconds||120);
         // Observed stationary Scorpion reports are ~480s apart. A bounded quiet
         // allowance preserves stop context, but never invents a device heartbeat.
-        var quietLimit=Math.min(900,Math.max(offline,Number(cfg.parkedQuietSeconds||600)));
+        var quietLimit=Math.min(900,Math.max(offline,Number(cfg.historicalContextSeconds||600)));
         var parkedQuiet=position?.source==='scorpiontrack'&&context.atStop&&context.stationary!==false&&movement==='STATIONARY'&&
             Number.isFinite(age)&&age>=0&&age<=quietLimit&&!context.unavailable&&!['POOR','REJECTED'].includes(context.quality);
         var health=!Number.isFinite(age)||age< -60||context.unavailable||age>(parkedQuiet?quietLimit:offline)?'OFFLINE':

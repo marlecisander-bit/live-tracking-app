@@ -20,7 +20,7 @@ window.appConfig = {
   "selectedTrackingRealtimeEnabled": true,
   "vanFollowZoom": 17,
   "gpsUpdateInterval": 5000,
-  "trackingFallbackIntervalMs": 15000,
+  "trackingFallbackIntervalMs": 5000,
   "vehicleStateUpdateInterval": 5000,
   "vehicleEtaUpdateInterval": 5000,
   "publishedMapCheckInterval": 30000,
@@ -34,17 +34,17 @@ window.appConfig = {
   "trackingV2": {
     "delayedSeconds": 90,
     "degradedSeconds": 180,
-    "offlineSeconds": 300,
+    "offlineSeconds": 600,
     "approachMetres": 200,
     "approachExitMetres": 240,
-    "arrivalMetres": 100,
-    "arrivalExitMetres": 130,
+    "arrivalMetres": 200,
+    "arrivalExitMetres": 220,
     "arrivalDwellSeconds": 10,
     "predictionSeconds": 10,
     "maxPredictionMetres": 50,
     "segmentBaselinesMinutes": {},
     "defaultDwellMinutes": 0,
-    "parkedQuietSeconds": 600,
+    "historicalContextSeconds": 600,
     "parkedSeconds": 25
   },
   "allowedParentOrigins": [
@@ -59,3 +59,8 @@ window.SUPABASE_KEY=window.appConfig.supabaseKey;
 
 // Capture recovery intent before Supabase Auth consumes the callback fragment.
 window.appConfig.ownerRecoveryRequested = new URLSearchParams(window.location.hash.slice(1)).get("type") === "recovery";
+
+// Fixed website preview parents are trusted only by a loopback-served child.
+if (["http://localhost:4199", "http://127.0.0.1:4199"].includes(window.location.origin)) {
+  window.appConfig.allowedParentOrigins.push("http://localhost:3011", "http://127.0.0.1:3011");
+}

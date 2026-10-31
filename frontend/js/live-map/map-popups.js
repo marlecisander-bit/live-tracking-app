@@ -1,6 +1,6 @@
 /* Operational presentation only; no destination content or ETA calculations. */
 function createPointPopup(layer, p) {
-    layer.bindPopup(buildPointPopupHTML(p, null, null, null));
+    layer.bindPopup(buildPointPopupHTML(p, null, null, null), {closeButton:p.pointType !== 'stop'});
 }
 function buildPointPopupHTML(p, routeDistance, eta, userDistance, etaOptions) {
     var accent = p.pointType === 'stop' ? window.stopDesign.resolve(p).color : '#087638';
@@ -9,7 +9,7 @@ function buildPointPopupHTML(p, routeDistance, eta, userDistance, etaOptions) {
     html += '<strong>' + escapeHTML(p.name) + '</strong>';
     if (p.pointType === 'stop') {
         var entry=window.publicOperationalStatus?.stopStatuses?.find(s=>s.id===String(p.objectId));
-        html += '<p>' + escapeHTML(entry?.label || 'Route information updating') + '</p>';
+        html += '<p>' + escapeHTML((entry?.label || 'Route information updating')+(window.publicOperationalStatus?.updateAge?' · '+window.publicOperationalStatus.updateAge:'')) + '</p>';
     }
     return html + '</div>';
 }

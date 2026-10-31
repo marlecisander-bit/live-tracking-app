@@ -1,0 +1,11 @@
+# Coordinated tourist experience release — 31 October 2026
+
+Owner-authorized publication of the final Live Map and website changes developed in this session. One coordinated release across the existing Netlify companion and Vercel website; each keeps its established hosting and source repository.
+
+The companion shows useful stop/location context with source-update age, checks the current snapshot every five seconds using the existing cadence, and retains the fully opaque last-known van without extending LIVE, parking confirmation or ETA. Follow is enabled by default; manual exploration and interactive stop selection remain available. The information chart uses configured colored stop-number circles with ticks for current/passed route progress; ticks do not invent confirmed dwell visits. Map/Stops-list photo assets and the original illustrated van are retained. Find Me shows the visitor position, nearest active stop and Google Maps walking directions; stop and visitor popups omit the close X. The website consumes the same additive v1 status, validity and chart metadata.
+
+No GPS history, database/schema change, new worker/schedule, provider credential/configuration change, DNS or hosting-policy change is part of this release. The existing website external-status gate remains enabled. Shared read health, source clocks, duplicate rejection, movement/dwell evidence, hysteresis, skipped recovery and guarded loop reset remain authoritative.
+
+Validation: companion full tests/lint/typecheck/static build; website lint/typecheck/production build, all 668 tests and production dependency audit. Full-runtime child/browser and paired actual website component/iframe tests use isolated tracking fixtures. Published bytes, real read transport/tiles, policy and controls must also pass hosted smoke. No physical-device or GPS calibration result is claimed.
+
+Publication receipts, source/artifact hashes, prior production/rollback identities and hosted evidence are recorded in reports/coordinated-release-20261031. Website companion note: docs/TOURIST-EXPERIENCE-RELEASE-20261031.md. The publication result record identifies the actual deployed commits and IDs; this source note alone is not a deployment receipt.
