@@ -116,7 +116,7 @@
   const presentationKind=!contextUsable?'unavailable':historical?(reportedStopped?'historical_stopped':'historical_location'):phase==='UNKNOWN'&&reportedStopped?'reported_stopped':'fresh';
   const offRoute=finite(i.routePosition?.offRouteMetres)&&i.routePosition.offRouteMetres>150;
   const statusDetail=offRoute?'Reported location is outside the tour route':phase!=='UNKNOWN'?'':i.unavailable?'Waiting for a location update':!op?'Journey progress not yet confirmed':!q.coherent?'Waiting for a current location update':!q.quality?'Location quality is insufficient for ETA':finite(p?.speed_kmh)&&p.speed_kmh<=2?'Confirming the stop':finite(p?.speed_kmh)&&p.speed_kmh<rules.movingKmh?'Low speed; confirming direction':'Confirming travel direction';
-  const message=!contextUsable?'Live location unavailable':historical?(reportedStopped?'At stop · '+atReportedStop.name:'Live location delayed'):parked?'Parked at '+stop.name:arriving?'Approaching '+stop.name:leaving?'Leaving '+stop.name:phase==='EN_ROUTE'&&next?'Heading to '+next.name:reportedStopped?'At stop · '+atReportedStop.name:'Location updated';
+  const message=!contextUsable?'Live location unavailable':historical?(reportedStopped?'At stop: '+atReportedStop.name:'Live location delayed'):parked?'Parked at: '+stop.name:arriving?'Approaching: '+stop.name:leaving?'Leaving: '+stop.name:phase==='EN_ROUTE'&&next?'Heading to: '+next.name:reportedStopped?'At stop: '+atReportedStop.name:'Location updated';
   const passengerState=parked?'parked':arriving?'approaching':leaving?'departing':phase==='EN_ROUTE'?'moving':'unavailable';
   const etaRow=i.eta,etaIdentity=!etaRow||(String(etaRow.map_version_id)===String(op?.mapVersion)&&String(etaRow.next_stop_number)===String(next?.number)&&stamp(etaRow.calculated_at)===q.t&&
    (!etaRow.vehicle_id||etaRow.vehicle_id===i.vehicleId)&&(!etaRow.project_id||etaRow.project_id===i.projectId)&&(etaRow.source_run_id==null||String(etaRow.source_run_id)===String(op?.sourceRun))&&
@@ -151,6 +151,10 @@
    const label=reported&&!parked?message:at?'Parked here':departed?'Leaving':aim?arriving?'Approaching':parked?'Next stop':'On the way':planAvailable&&String(s.number)===String(next.number)?'Planned next stop':seen?'Visited (dwell confirmed)':missed?'Skipped · visit unconfirmed':checked?'Passed in route order · visit unconfirmed':phase==='UNKNOWN'?'Status unknown':'Upcoming stop';
    const timing=aim||duration!==null&&planAvailable&&String(s.number)===String(next.number)?etaText:'';
    return {...s,id:String(s.id),number:String(s.number),checked,current:at,next:!at&&planAvailable&&String(s.number)===String(next.number),completed:seen,skipped:missed,unknown:!contextUsable&&!seen&&!missed,label:label+(timing&&timing!==label?' · '+timing:''),bridgeState:at?'current':departed&&seen?'departed':planAvailable&&String(s.number)===String(next.number)?'next':'upcoming',eta:timing};});
+  if(i.operationalService?.open===false){
+   Object.assign(model,{phase:'UNKNOWN',message:i.operationalService.message,service:'closed',serviceMessage:'',passengerState:'unavailable',activity:'unknown',activityConfidence:'unknown',currentStop:null,departureStop:null,nextStop:null,reportedStop:null,reportedStopped:false,contextUsable:false,presentationKind:'unavailable',evidenceLive:false,gps:'unavailable',positionFreshness:'unavailable',parkingVerified:false,currentConfirmed:false,nextConfirmedStop:null,etaConfidence:'unavailable',etaKind:'unavailable',etaText:'',etaStatusText:'',etaSeconds:null,travelSeconds:null,timing:'',secondary:'',statusDetail:'',planAvailable:false,plannedNextStop:null,statusValidUntil:null,locationHistorical:true});
+   model.stopStatuses=model.stopStatuses.map(s=>({...s,current:false,next:false,eta:'',bridgeState:'upcoming',label:'Service closed'}));
+  }
   return model;
  }
  root.touristState={resolve,createSession,clock,rules};

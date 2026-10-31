@@ -140,3 +140,21 @@
 #tourist-timeline li[data-state=unknown] .journey-circle{outline:1px dotted #6b7785;outline-offset:2px}
 
 @container live-map (max-width:767px){#app[data-presentation]:has(#nearest-stop-card.visible) .leaflet-top.leaflet-left{top:auto;bottom:calc(var(--map-bottom,100px) + 110px)}}
+
+/* Compact status card, preserving readable copy and 44px stop touch targets. */
+#app[data-presentation] #next-card{width:min(360px,calc(100% - 88px));padding:11px 14px 8px;border-radius:16px}
+#app[data-presentation] #next-card-top{margin:0 0 6px}
+#app[data-presentation] #next-card-top:has(#operational-live[hidden]){display:none}
+#journey-destination,#next-card[data-display-state=unavailable] #journey-destination{font-size:20px;line-height:1.18}
+#journey-facts{margin:6px 0 8px;gap:4px 12px;font-size:12px}
+#tourist-timeline{padding-top:6px}
+#tourist-timeline button{min-height:44px}
+#tourist-timeline li[data-state] .journey-circle{width:30px;height:30px;margin:7px 0;font-size:12px}
+#tourist-timeline li+li:before{top:22px}
+#journey-main:has(#journey-facts[hidden]){padding-bottom:8px}
+@container live-map (max-width:767px){#app[data-presentation] #next-card{width:auto;padding:10px 12px 7px}}
+
+/* Size the card to its copy and five stop targets instead of stretching it. */
+#app[data-presentation] #next-card{left:auto;right:max(12px,env(safe-area-inset-right));top:max(12px,env(safe-area-inset-top));width:fit-content;min-width:264px;max-width:min(300px,calc(100% - 88px))}
+#tourist-timeline{width:236px;max-width:100%;grid-template-columns:repeat(5,44px);gap:4px}
+@container live-map (max-width:767px){#app[data-presentation] #next-card{left:auto;right:max(12px,env(safe-area-inset-right));width:fit-content;min-width:260px;max-width:min(300px,calc(100% - 24px - env(safe-area-inset-left) - env(safe-area-inset-right)))}}

@@ -2,7 +2,8 @@
 (function(root){
  function project(m){
   let label='',destination='',activity='',target=null;
-  if(m.presentationKind){
+  if(m.service==='closed'){destination=m.message;}
+  else if(m.presentationKind){
    destination=m.message;activity=m.presentationKind==='historical_location'&&m.reportedStop?'Last reported near '+m.reportedStop.name+' · '+m.updateAge.replace('Updated ',''):m.updateAge;
   }
   else if(m.phase){

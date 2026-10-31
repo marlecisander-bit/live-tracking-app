@@ -19,7 +19,7 @@
     "serve": "node tools/serve.cjs",
     "check:platform": "node tools/check-platform.cjs",
     "test:hosted": "node tests/hosted-readonly.cjs",
-    "test:inspection": "node tests/test-recovery-floor.cjs && node tests/test-current-stream-timeout.cjs && node tests/test-current-stream.cjs && node tests/test-current-provider-movement.cjs",
+    "test:inspection": "node tests/test-recovery-floor.cjs && node tests/test-current-stream-timeout.cjs && node tests/test-current-stream.cjs && node tests/test-current-provider-movement.cjs && node tests/test-service-hours.cjs",
     "test:native": "node tests/test-recovery-native.cjs"
   },
   "devDependencies": {
