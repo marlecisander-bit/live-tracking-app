@@ -7,7 +7,14 @@ const week=Array.from({length:7},()=>({open:'09:00',close:'18:00'}));const row={
  const night={...row,week:[null,null,null,null,{open:'22:00',close:'02:00'},null,null]};assert(hours.evaluate(night,Date.parse('2026-10-31T00:30:00Z')).open);assert(!hours.evaluate(night,Date.parse('2026-10-31T01:00:00Z')).open);
  const db=new PGlite();try{
  await db.exec(`CREATE ROLE anon; CREATE ROLE authenticated; CREATE ROLE service_role BYPASSRLS; CREATE SCHEMA auth; CREATE TABLE auth.users(id uuid PRIMARY KEY); CREATE FUNCTION auth.uid() RETURNS uuid LANGUAGE sql STABLE AS $$SELECT nullif(current_setting('request.jwt.claim.sub',true),'')::uuid$$;`);
- for(const f of ['001_tracking.sql','004_recovery_floor.sql','005_service_hours.sql'])await db.exec(fs.readFileSync('supabase/migrations/'+f,'utf8'));
+ for(const f of ['001_tracking.sql','004_recovery_floor.sql'])await db.exec(fs.readFileSync('supabase/migrations/'+f,'utf8'));
+ // Managed projects can grant new public tables broad defaults. RLS does not gate TRUNCATE.
+ await db.exec('ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO anon,authenticated,service_role');
+ await db.exec(fs.readFileSync('supabase/migrations/005_service_hours.sql','utf8'));
+ assert.equal((await db.query("SELECT has_table_privilege('anon','public.vehicle_service_hours','TRUNCATE') v")).rows[0].v,true,'Reproduce permissive managed defaults');
+ await db.exec(fs.readFileSync('supabase/migrations/006_service_hours_privileges.sql','utf8'));
+ for(const role of ['anon','authenticated','service_role'])for(const privilege of ['INSERT','UPDATE','DELETE','TRUNCATE','REFERENCES','TRIGGER'])assert.equal((await db.query('SELECT has_table_privilege($1,$2,$3) v',[role,'public.vehicle_service_hours',privilege])).rows[0].v,false,role+' '+privilege);
+
  const project='00000000-0000-4000-8000-000000000001',user='00000000-0000-4000-8000-000000000002';
  await db.query("INSERT INTO projects VALUES($1,'fixture','Fixture',true,'fixture')",[project]);await db.query("INSERT INTO vehicles VALUES('fixture',$1,'Fixture')",[project]);await db.query('INSERT INTO auth.users VALUES($1)',[user]);
  await db.query('INSERT INTO tracking_private.project_admins VALUES($1,$2)',[project,user]);
@@ -31,7 +38,7 @@ const week=Array.from({length:7},()=>({open:'09:00',close:'18:00'}));const row={
  assert.deepEqual((await db.query('SELECT * FROM tracking_private.runtime')).rows,leased);
  await db.query('UPDATE vehicle_service_hours SET week=$1',[week]);
  assert.equal((await db.query('SELECT tracking_private.service_closes_at($1,$2) v',['fixture','2026-10-31T08:00:00Z'])).rows[0].v.toISOString(),'2026-10-31T17:00:00.000Z');
- console.log('PASS weekly schedule, Tirane/DST, overnight/boundaries, admin authorization, closed claim/commit with zero GPS rows, write guard, disabled compatibility');
+ console.log('PASS explicit read-only table ACL under broad managed defaults, admin RPC writes, weekly schedule, Tirane/DST, overnight/boundaries, admin authorization, closed claim/commit with zero GPS rows, write guard, disabled compatibility');
  }finally{await db.close();}
  const {createHandler}=await import('../supabase/functions/gps-worker/handler.ts');let calls=[];const handler=createHandler({env:name=>({TRACKING_PROCESSOR_SECRET:'s'.repeat(32),SUPABASE_URL:'https://fixture',SUPABASE_SERVICE_ROLE_KEY:'fixture'})[name],fetcher:async url=>{calls.push(url);return new Response(JSON.stringify({serviceClosed:true}));}});const response=await handler(new Request('https://worker',{method:'POST',headers:{'x-tracking-secret':'s'.repeat(32)},body:JSON.stringify({vehicle_id:'fixture'})}));assert.equal(response.status,200);assert.equal((await response.json()).reason,'outside_operating_hours');assert.equal(calls.length,1);assert(calls[0].endsWith('/tracking_claim'));const closedDuringClaim=createHandler({now:()=>Date.parse('2026-10-31T17:00:01Z'),env:name=>({TRACKING_PROCESSOR_SECRET:'s'.repeat(32),SUPABASE_URL:'https://fixture',SUPABASE_SERVICE_ROLE_KEY:'fixture'})[name],fetcher:async()=>new Response(JSON.stringify({serviceClosesAt:'2026-10-31T17:00:00Z'}))});
  const atClose=await closedDuringClaim(new Request('https://worker',{method:'POST',headers:{'x-tracking-secret':'s'.repeat(32)},body:JSON.stringify({vehicle_id:'fixture'})}));assert.equal(atClose.status,200);assert.equal((await atClose.json()).reason,'outside_operating_hours');
