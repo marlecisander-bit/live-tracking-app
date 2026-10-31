@@ -13,7 +13,7 @@ function getTouristInformation() {
         mapVersion:currentPublishedId,vehicleId:VEHICLE_ID,projectId:window.PROJECT_ID,
         quality:publicGpsQuality,unavailable:window.publicPresentation?.locationUnavailable||window.selectedTracking.health?.(supabaseClient,VEHICLE_ID)?.failed,
         config:window.appConfig.trackingV2,schedule:window.touristSchedule?.current,
-        stops:stopRecords.map(r=>{var p=r.feature.properties;return {id:p.objectId,number:p.stopNumber,name:p.name,active:p.active,alongMetres:Number.isFinite(r.locationKm)?r.locationKm*1000:null,coordinates:r.feature.geometry.coordinates};})});
+        stops:stopRecords.map(r=>{var p=r.feature.properties;return {id:p.objectId,number:p.stopNumber,name:p.name,active:p.active,recognitionMetres:Number(p.geofenceMetres)>0?Number(p.geofenceMetres):200,alongMetres:Number.isFinite(r.locationKm)?r.locationKm*1000:null,coordinates:r.feature.geometry.coordinates};})});
 }
 function updateSmartRouteInformation() {
     if (!window.touristState) return;

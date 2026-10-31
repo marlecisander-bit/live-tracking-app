@@ -63,3 +63,6 @@ html, body { height:100%; overflow:hidden; }
  #app[data-presentation] #map-controls > button { height:46px; }
 }
 @media (prefers-reduced-motion:reduce) { #app *, #app *::before { scroll-behavior:auto; transition:none !important; animation:none !important; } }
+
+/* Opt-in website integration, enabled only after an allowed parent handshake. */
+#app[data-website-status="external-v1"] #next-card{display:none;}

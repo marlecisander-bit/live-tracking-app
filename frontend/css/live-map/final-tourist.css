@@ -75,9 +75,12 @@
 .stop-near-van .stop-pin{position:relative;top:-14px}
 .stop-near-van .numbered-stop::after{content:'';position:absolute;left:22px;top:31px;width:3px;height:17px;background:var(--stop-color);z-index:-1}
 
-#app[data-presentation] #stops-panel #nearest-stop-card{position:static;inset:auto;transform:none;width:auto;max-width:none;max-height:none;margin:0 16px 8px;padding:10px 0;box-shadow:none;border:0;border-bottom:1px solid #e6edf2;border-radius:0;background:none;display:none!important}
-#app[data-presentation] #stops-panel #nearest-stop-card.visible{display:flex!important;align-items:center;justify-content:space-between;gap:12px}
-#app[data-presentation] #nearest-stop-name{font-size:13px;margin:0;line-height:1.35}
+#app[data-presentation] #nearest-stop-card{display:none!important;position:absolute;left:50%;right:auto;transform:translateX(-50%);bottom:calc(var(--map-bottom,100px) + 10px);width:min(400px,calc(100% - 24px));max-height:calc(100% - var(--map-bottom,100px) - 24px);overflow:auto;margin:0;padding:12px;border:1px solid #d9e5ee;border-radius:14px;background:#fff;box-shadow:0 4px 20px #172b4d26;z-index:1325}
+#app[data-presentation] #nearest-stop-card.visible{display:flex!important;align-items:center;justify-content:space-between;gap:12px}
+.nearest-stop-copy{display:flex;flex-direction:column;gap:4px;min-width:0}
+#app[data-presentation] #nearest-stop-label{font-size:10px;font-weight:750;color:#526476;letter-spacing:.04em}
+#app[data-presentation] #nearest-stop-distance{font-size:11px;font-weight:500;color:#526476}
+#app[data-presentation] #nearest-stop-name{font-size:14px;margin:0;line-height:1.35;overflow-wrap:anywhere}
 #app[data-presentation] #walk-to-stop{min-height:44px;padding:7px 10px;border-radius:8px;font-size:12px;white-space:normal}
 
 #journey-main:has(#journey-facts[hidden]){padding-bottom:16px}
@@ -101,3 +104,39 @@
 #app[data-presentation] #map-controls > button:is(.active,[aria-pressed="true"],:active) .map-control-icon { color:#fff; }
 #app[data-presentation] #map-controls > button:is(.active,[aria-pressed="true"],:active) .map-control-icon { background:transparent; box-shadow:none; }
 #app[data-presentation] #map-controls > button:is(.active,[aria-pressed="true"],:active) .vehicle-control-symbol { filter:brightness(0) invert(1); }
+
+/* Reuse the approved 2ef7bf1 circular photography and persisted stop palette. */
+.photo-stop{position:relative;transform:translate(var(--pin-dx,0px),var(--pin-dy,0px));width:48px;height:64px}
+.photo-stop>.stop-portrait{position:absolute;left:-4px;top:-8px;width:56px;height:56px}
+.photo-stop .stop-name-pill{top:53px;background:var(--stop-color);white-space:normal;max-width:132px}
+.stop-pin-compact .photo-stop>.stop-portrait{width:44px;height:44px;left:2px;top:4px}
+.stop-pin-compact .photo-stop .stop-name-pill{display:none}
+.stop-selected .stop-photo-frame,.tourist-current-stop .photo-stop .stop-photo-frame{outline:3px solid #123c61;outline-offset:3px}
+#stop-arrivals-list .arrival-portrait{width:46px;height:46px}
+#tourist-timeline li+li:before{height:0;top:25px;background:none;border-top:2px dashed #e0ad00}
+#tourist-timeline li.leg-completed:before{background:none;border-top:3px solid #168051}
+/* Approved photo chart; historical association never paints a visit green. */
+#tourist-timeline button{min-height:80px;padding:0 2px;justify-content:flex-start}
+#tourist-timeline li[data-state] .journey-circle{width:42px;height:42px;margin:3px 0 5px;border:0;background:none;box-shadow:none}
+#tourist-timeline .journey-circle>.stop-portrait{width:42px;height:42px}
+#tourist-timeline .stop-number-badge{font-size:9px;width:17px;height:17px}
+#tourist-timeline .journey-stop-name{background:var(--stop-color,#526476);color:#fff;border-radius:6px;padding:3px 4px;text-shadow:0 1px 2px #0009}
+#tourist-timeline li[data-state=completed] .stop-photo-frame{outline:3px solid #168051;outline-offset:2px}
+#tourist-timeline li[data-state=next] .stop-photo-frame{outline:3px solid #e0ad00;outline-offset:2px}
+#tourist-timeline li[data-state=skipped] .stop-photo-frame{outline:2px dashed #6b7785;outline-offset:2px}
+#tourist-timeline li[data-state=unknown] .stop-photo-frame{outline:1px dotted #6b7785;outline-offset:2px}
+#journey-plan{flex-basis:100%;font-size:14px;font-weight:650;line-height:1.4;color:#163145}
+#journey-activity-row svg{display:none}
+.tourist-last-seen .van-marker-wrap::before{display:none}
+.tourist-stop-icon[data-journey-state=unknown] .stop-photo-frame{outline:1px dotted #6b7785;outline-offset:2px}
+#tourist-timeline li[data-state=current] .stop-photo-frame{outline:3px solid #168051;outline-offset:2px}
+
+/* Compact interactive stop chart: configured colors and numbers only. */
+#tourist-timeline button{min-height:48px;justify-content:center;padding:0}
+#tourist-timeline li[data-state] .journey-circle{width:34px;height:34px;margin:5px 0;border:2px solid white;background:var(--stop-color,#526476);color:var(--stop-ink,#fff);box-shadow:0 0 0 1px #dce3e9;font-size:13px}
+#tourist-timeline li[data-state=current] .journey-circle{outline:2px solid #168051;outline-offset:2px}
+#tourist-timeline li[data-state=next] .journey-circle{outline:2px solid #e0ad00;outline-offset:2px}
+#tourist-timeline li[data-state=skipped] .journey-circle{outline:2px dashed #6b7785;outline-offset:2px}
+#tourist-timeline li[data-state=unknown] .journey-circle{outline:1px dotted #6b7785;outline-offset:2px}
+
+@container live-map (max-width:767px){#app[data-presentation]:has(#nearest-stop-card.visible) .leaflet-top.leaflet-left{top:auto;bottom:calc(var(--map-bottom,100px) + 110px)}}

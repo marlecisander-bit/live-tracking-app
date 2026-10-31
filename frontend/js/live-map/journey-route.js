@@ -5,14 +5,17 @@
   const signature=JSON.stringify([view.routeProgressVerified,view.stops.map(s=>[s.id,s.completed]),typeof currentPublishedId==='undefined'?null:currentPublishedId]);
   if(group&&signature===last&&lastFeature===activeRouteFeature)return;
   last=signature;lastFeature=activeRouteFeature;if(!group)group=L.layerGroup().addTo(map);else group.clearLayers();
-  const color=window.mapContentSafety.color?window.mapContentSafety.color(routeProperties.color):routeProperties.color;
-  const base=/^#[0-9a-f]{6}$/i.test(color||'')?color:'#d90000';
+  // The progress layer replaces the active route stroke; leaving it beneath
+  // dashed upcoming legs falsely paints a continuous red journey.
+  if(typeof sightseeingLayers!=='undefined')sightseeingLayers.eachLayer(layer=>{
+   if(layer.feature?.properties?.objectType==='route'&&layer.setStyle)layer.setStyle({opacity:layer.feature.properties.objectId===activeRouteFeature.properties?.objectId?0:.92});
+  });
   if(typeof operationalLegs!=='undefined')for(const leg of operationalLegs){
    const a=view.stops.find(s=>s.id===String(leg.from.feature.properties.objectId)),b=view.stops.find(s=>s.id===String(leg.to.feature.properties.objectId));
-   const complete=view.routeProgressVerified&&a?.completed&&b?.completed&&!['next','approaching'].includes(b?.viewState);
+   const complete=a?.completed&&b?.completed&&!['next','approaching'].includes(b?.viewState);
    let from=leg.from.locationKm,to=leg.to.locationKm;if(!Number.isFinite(from)||!Number.isFinite(to))continue;
    const spans=to>=from?[[from,to]]:[[from,routeLengthKm],[0,to]];
-   for(const [start,end] of spans){if(end-start<.001)continue;try{L.geoJSON(turf.lineSliceAlong(activeRouteFeature,start,end,{units:'kilometers'}),{interactive:false,style:{color:complete?'#197b51':base,weight:complete?7:5,opacity:complete?.85:.7,lineCap:'round',dashArray:null}}).addTo(group);}catch{}}
+   for(const [start,end] of spans){if(end-start<.001)continue;try{L.geoJSON(turf.lineSliceAlong(activeRouteFeature,start,end,{units:'kilometers'}),{interactive:false,style:{color:complete?'#197b51':'#e0ad00',weight:complete?7:5,opacity:complete?.85:.7,lineCap:'round',dashArray:complete?null:'9 8'}}).addTo(group);}catch{}}
   }
   if(routeProperties.directionMode!=='twoway')for(let i=1;i<=7;i++){const km=routeLengthKm*i/8;
    try{const point=turf.along(activeRouteFeature,km,{units:'kilometers'}),next=turf.along(activeRouteFeature,Math.min(km+.025,routeLengthKm),{units:'kilometers'}),bearing=turf.bearing(point,next);

@@ -53,6 +53,7 @@ function setActiveControl(buttonId) {
 ============================================================ */
 
 function handleFindMe() {
+    if(document.getElementById('stops-panel').classList.contains('open'))closeStopsPanel();
 
 
     followVan =

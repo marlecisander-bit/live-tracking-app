@@ -3,6 +3,7 @@
 ============================================================ */
 
 var canonicalLivePosition = null;
+var acceptedTrackingBinding = null;
 var publicGpsQuality = 'ACCEPTABLE';
 var publicQualityFilter = window.markerMotion.qualityFilter();
 var publicMarkerController = null;
@@ -19,17 +20,21 @@ async function loadVanPosition() {
             var snapshot = await window.selectedTracking.read(supabaseClient, requestedVehicle);
             if (requestedVehicle !== VEHICLE_ID || requestedProject !== window.PROJECT_ID) return;
             var row = snapshot.position;
+            var binding=String(requestedProject)+'/'+String(requestedVehicle);
+            if(!row&&canonicalLivePosition&&acceptedTrackingBinding===binding){window.publicPresentation?.setLocationUnavailable(true);updateGPSStatus();return;}
             // A late response in the same source run cannot replace the accepted position or planner.
             if(row&&canonicalLivePosition&&row.source_run_id===canonicalLivePosition.source_run_id&&Date.parse(row.source_recorded_at)<Date.parse(canonicalLivePosition.source_recorded_at)){
                 updateSmartRouteInformation();return;
             }
-            if(row){publicGpsQuality=publicQualityFilter.check(row,String(requestedProject)+'/'+row.source_run_id,Date.now());if(publicGpsQuality==='REJECTED'){window.publicPresentation?.setLocationUnavailable(true);updateGPSStatus();return;}
+            if(row){var incomingQuality=publicQualityFilter.check(row,String(requestedProject)+'/'+row.source_run_id,Date.now());if(incomingQuality==='REJECTED'||incomingQuality==='POOR'||row.ui_observation_valid===false){window.publicPresentation?.setLocationUnavailable(true);updateGPSStatus();return;}
+             publicGpsQuality=incomingQuality;
              // Route adherence gates predictions in the shared model, not the validity of a fresh GPS fix.
 }
             vehicleStopState = snapshot.stop || null;
             vehicleEtaState = snapshot.eta || null;
             vehicleStopStateLoaded = true;
             canonicalLivePosition = row;
+            acceptedTrackingBinding = row?binding:null;
             if (window.publicPresentation) window.publicPresentation.setLocationUnavailable(!row);
             if (vanMarker) vanMarker.setOpacity(row ? 1 : 0);
             if (row) updateVanMarker({lat: row.latitude, lng: row.longitude, viteza: row.speed_kmh,

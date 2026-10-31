@@ -121,6 +121,7 @@
         <p id="journey-context"></p><h1 id="journey-destination">Live location temporarily unavailable</h1>
         <div id="journey-facts">
           <span id="journey-activity-row"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21 3-7 18-3-8-8-3Z"/></svg><span id="journey-activity"></span></span>
+          <span id="journey-plan" hidden></span>
           <span id="journey-eta-row" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span id="journey-eta"></span></span>
         </div>
       </div>
@@ -346,10 +347,7 @@
         </div>
 
 
-        <div id="nearest-stop-card" aria-label="Walking directions to your nearest stop">
-          <span id="nearest-stop-name"></span><button id="walk-to-stop" type="button" data-action="walkToNearestStop">Walking directions</button>
-          <span id="nearest-stop-label" hidden>Nearest stop</span><span id="nearest-stop-distance" hidden></span><span id="nearest-stop-van-eta" hidden></span>
-        </div>
+
 
         <div id="stop-arrivals-list">
 
@@ -361,6 +359,16 @@
     </div>
 
 
+
+    <div id="nearest-stop-card" aria-label="Walking directions to your nearest stop" role="region">
+      <div class="nearest-stop-copy">
+        <span id="nearest-stop-label">Nearest stop</span>
+        <strong id="nearest-stop-name"></strong>
+        <span id="nearest-stop-distance"></span>
+        <span id="nearest-stop-van-eta" hidden></span>
+      </div>
+      <button id="walk-to-stop" type="button" data-action="walkToNearestStop">Walking directions</button>
+    </div>
 
     <div id="toast" role="status" aria-live="polite"></div>
 

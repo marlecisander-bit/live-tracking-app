@@ -2,7 +2,7 @@
 (function(root){
  const finite=n=>typeof n==='number'&&Number.isFinite(n), stamp=s=>typeof s==='string'?Date.parse(s):NaN;
  const rules=Object.freeze({radius:200,exit:220,leavingMetres:350,movingKmh:5,stoppedKmh:2,dwellSeconds:30,minDwellFixes:4,maxGapSeconds:45,
-  directionSeconds:10,directionWindowSeconds:90,minDirectionFixes:3,directionMetres:20,stationarySpread:20,parkGraceSeconds:180,failedParkGraceSeconds:30});
+  directionSeconds:10,directionWindowSeconds:90,minDirectionFixes:3,directionMetres:20,stationarySpread:20,parkGraceSeconds:180,failedParkGraceSeconds:30,freshSeconds:90,historicalSeconds:600});
  const metres=(a,b)=>{const rad=n=>n*Math.PI/180,h=Math.sin(rad(b[1]-a[1])/2)**2+Math.cos(rad(a[1]))*Math.cos(rad(b[1]))*Math.sin(rad(b[0]-a[0])/2)**2;return 12742000*Math.asin(Math.sqrt(Math.min(1,h)));};
     function clock(now) {
         const parts = new Intl.DateTimeFormat('en-CA', {timeZone:'Europe/Tirane',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date(now));
@@ -22,8 +22,8 @@
   return {p,t,age,valid,quality,op:identity?op:null,coherent:identity&&stamp(op.timestamp)===t&&age<=delayed,delayed};
  }
  // This window classifies evidence for the presenter; it never chooses/advances an RC1 stop or calculates a moving ETA.
- function createSession(){let key=null,samples=[],visited=new Set(),park=null,approached=null,failureAt=null,lastAt=-Infinity,lastPhase='UNKNOWN',lastInput=null;
-  function clear(){key=null;samples=[];visited.clear();park=null;approached=null;failureAt=null;lastAt=-Infinity;lastPhase='UNKNOWN';lastInput=null;}
+ function createSession(){let key=null,samples=[],visited=new Set(),skipped=new Set(),priorTarget=null,park=null,approached=null,failureAt=null,lastAt=-Infinity,lastPhase='UNKNOWN',lastInput=null;
+  function clear(){key=null;samples=[];visited.clear();skipped.clear();priorTarget=null;park=null;approached=null;failureAt=null;lastAt=-Infinity;lastPhase='UNKNOWN';lastInput=null;}
   function resolveSession(i){const now=i.now??Date.now(),q=position(i),k=context(i),stops=i.stops||[];
    if(k!==key){clear();key=k;}
    if(q.quality&&q.t<lastAt&&lastInput)return resolveSession({...lastInput,now,unavailable:i.unavailable,quality:i.quality});
@@ -40,7 +40,17 @@
      samples.push({at:q.t,point,speed:p.speed_kmh,accuracy,along});samples=samples.filter(s=>s.at>=q.t-180000).slice(-48);lastAt=q.t;lastInput={...i,position:{...i.position},stopState:{...i.stopState,operational_state:{...i.stopState.operational_state}}};
     }
    }else if(q.valid&&q.t<lastAt){ignored=true;}
+   // Only a coherent authoritative forward recovery establishes skipped stops.
+   // Bootstrap, proximity and a pass-by never establish a confirmed visit.
+   if(q.coherent&&q.quality&&!i.unavailable&&q.t===lastAt&&q.op?.skipCandidate==null){
+    const current=Number(q.op.currentStop),next=Number(q.op.nextStop);
+    if(q.op.currentStop!=null&&priorTarget!==null&&current>priorTarget){
+     for(const s of stops)if(Number(s.number)>=priorTarget&&Number(s.number)<current&&!visited.has(String(s.number)))skipped.add(String(s.number));
+    }
+    priorTarget=Number.isFinite(next)&&q.op.nextStop!=null?next:priorTarget;
+   }
    const op=q.op,find=n=>stops.find(s=>s.active!==false&&String(s.number)===String(n)),target=find(op?.currentStop??op?.nextStop);
+   const stopRadius=s=>finite(s?.recognitionMetres)&&s.recognitionMetres>0?s.recognitionMetres:rules.radius;
    const stopDistance=(sample,s)=>Array.isArray(s?.coordinates)?metres(sample.point,s.coordinates):Infinity;
    let phase='UNKNOWN',stop=null;
    const recent=samples.filter(s=>s.at>=q.t-rules.directionWindowSeconds*1000),a=recent[0],b=recent.at(-1);
@@ -55,15 +65,15 @@
     }else if(target){const delta=stopDistance(a,target)-stopDistance(b,target);if(delta>=uncertainty)direction=1;else if(delta<=-uncertainty)direction=-1;}
    }
    if(q.coherent&&q.quality&&finite(q.p.speed_kmh)&&q.p.speed_kmh>=0&&q.p.speed_kmh<=250&&!i.unavailable&&!ignored&&target&&b&&b.at===q.t){
-    const distance=stopDistance(b,target),inside=distance+b.accuracy<=rules.radius;
+    const distance=stopDistance(b,target),inside=distance+b.accuracy<=stopRadius(target);
     let remaining=finite(target.alongMetres)&&b.along!==null?target.alongMetres-b.along:null;
     if(remaining!==null){if(i.routePosition.wrap!==false&&remaining< -i.routePosition.lengthMetres/2)remaining+=i.routePosition.lengthMetres;remaining*=i.routePosition.direction===-1?-1:1;}
     const pastTarget=remaining!==null&&remaining< -b.accuracy;
     const stationary=[];
-    for(let n=samples.length-1;n>=0;n--){const s=samples[n];if(!finite(s.speed)||s.speed<0||s.speed>rules.stoppedKmh||s.accuracy>35||stopDistance(s,target)+s.accuracy>rules.radius)break;stationary.unshift(s);}
+    for(let n=samples.length-1;n>=0;n--){const s=samples[n];if(!finite(s.speed)||s.speed<0||s.speed>rules.stoppedKmh||s.accuracy>35||stopDistance(s,target)+s.accuracy>stopRadius(target))break;stationary.unshift(s);}
     const dwell=op.currentStop!=null&&!op.skipCandidate&&!op.outside&&stationary.length>=rules.minDwellFixes&&(b.at-stationary[0].at)/1000>=rules.dwellSeconds&&stationary.every(s=>metres(s.point,stationary[0].point)<=rules.stationarySpread);
-    if(dwell){park={stop:target,at:q.t,point:stationary[0].point};visited.add(String(target.number));phase='PARKED';stop=target;}
-    else if(park&&!op.outside&&String(op.currentStop)===String(park.stop.number)&&finite(q.p.speed_kmh)&&q.p.speed_kmh<rules.movingKmh&&metres(b.point,park.point)<=rules.stationarySpread&&stopDistance(b,park.stop)+b.accuracy<=rules.radius){if(q.p.speed_kmh<=rules.stoppedKmh)park.at=q.t;phase='PARKED';stop=park.stop;}
+    if(dwell){park={stop:target,at:q.t,point:stationary[0].point};visited.add(String(target.number));skipped.delete(String(target.number));phase='PARKED';stop=target;}
+    else if(park&&!op.outside&&String(op.currentStop)===String(park.stop.number)&&finite(q.p.speed_kmh)&&q.p.speed_kmh<rules.movingKmh&&metres(b.point,park.point)<=rules.stationarySpread&&stopDistance(b,park.stop)+b.accuracy<=stopRadius(park.stop)){if(q.p.speed_kmh<=rules.stoppedKmh)park.at=q.t;phase='PARKED';stop=park.stop;}
     else if(direction!==0&&q.p.speed_kmh>=rules.movingKmh){
      // Leaving needs a prior approach/confirmed visit, radial exit and several moving fixes.
      const departed=park?.stop||approached;
@@ -75,61 +85,72 @@
      else if(direction===1&&op.currentStop==null){phase='EN_ROUTE';park=null;}
     }
     // Entry/exit hysteresis: hold an established approach through brief radial jitter, not speed reversal or stopping.
-    if(phase==='UNKNOWN'&&lastPhase==='ARRIVING'&&!pastTarget&&approached&&direction>=0&&q.p.speed_kmh>=rules.movingKmh&&stopDistance(b,approached)<=rules.exit+b.accuracy){phase='ARRIVING';stop=approached;}
+    if(phase==='UNKNOWN'&&lastPhase==='ARRIVING'&&!pastTarget&&approached&&direction>=0&&q.p.speed_kmh>=rules.movingKmh&&stopDistance(b,approached)<=stopRadius(approached)+(rules.exit-rules.radius)+b.accuracy){phase='ARRIVING';stop=approached;}
    }
    // Re-reading an unchanged fix does not extend either deadline, even if HTTP/Realtime is healthy.
    if(park&&phase==='UNKNOWN'&&stamp(op?.timestamp)===q.t&&!op?.outside&&String(op?.currentStop)===String(park.stop.number)&&q.valid&&q.quality&&!ignored&&q.t===lastAt&&finite(q.p.speed_kmh)&&q.p.speed_kmh>=0&&q.p.speed_kmh<=rules.stoppedKmh&&metres([q.p.longitude,q.p.latitude],park.point)<=rules.stationarySpread&&now-park.at<=rules.parkGraceSeconds*1000&&
      (failureAt===null||now-failureAt<=rules.failedParkGraceSeconds*1000)){phase='PARKED';stop=park.stop;}
    if(!q.quality||ignored||q.t!==lastAt){phase='UNKNOWN';stop=null;}
    lastPhase=phase;
-   return resolve({...i,evidence:{phase,stopNumber:stop?.number,visited:[...visited],live:!i.unavailable&&q.age<=q.delayed&&phase!=='UNKNOWN',validUntil:phase==='PARKED'?Math.min(park.at+rules.parkGraceSeconds*1000,failureAt===null?Infinity:failureAt+rules.failedParkGraceSeconds*1000):q.t+q.delayed*1000,ignored}});
+   return resolve({...i,evidence:{phase,stopNumber:stop?.number,visited:[...visited],skipped:[...skipped],live:!i.unavailable&&q.age<=q.delayed&&phase!=='UNKNOWN',validUntil:phase==='PARKED'?Math.min(park.at+rules.parkGraceSeconds*1000,failureAt===null?Infinity:failureAt+rules.failedParkGraceSeconds*1000):q.t+q.delayed*1000,ignored}});
   }
   return {resolve:resolveSession,clear};
  }
  function resolve(i){const now=i.now??Date.now(),q=position(i),p=q.p,op=q.op,e=i.evidence||{},find=n=>(i.stops||[]).find(s=>s.active!==false&&String(s.number)===String(n));
   let phase=e.phase||'UNKNOWN';if(!q.quality||e.ignored||!op||op.skipCandidate!=null)phase='UNKNOWN';
-  const offline=Math.max(q.delayed,Number(i.config?.offlineSeconds)||300),gps=!q.quality||i.unavailable||q.age>offline?'unavailable':q.age>q.delayed?'delayed':'live';
-  if(phase!=='PARKED'&&(!q.coherent||gps!=='live'))phase='UNKNOWN';
+  const offline=rules.historicalSeconds,gps=!q.quality||i.unavailable||q.age>offline?'unavailable':q.age>q.delayed?'delayed':'live';
+  if(!q.coherent||gps!=='live')phase='UNKNOWN';
   const stop=find(e.stopNumber),next=find(op?.nextStop);
   if(phase==='EN_ROUTE'&&!next||['ARRIVING','PARKED','LEAVING'].includes(phase)&&!stop)phase='UNKNOWN';
   const parked=phase==='PARKED'&&!!stop,arriving=phase==='ARRIVING'&&!!stop,leaving=phase==='LEAVING'&&!!stop;
   const moving=phase==='EN_ROUTE'||leaving,active=parked||arriving?stop:null;
   // Planned route context is a different fact from confirmed motion. Keep it available during warm-up/slow/off-route reporting.
-  const planAvailable=!!(q.valid&&q.coherent&&next&&!i.unavailable&&op.skipCandidate==null);
+  const snapshotMatches=!!op&&stamp(op.timestamp)===q.t;
+  const contextUsable=q.quality&&snapshotMatches&&q.age>=0&&q.age<=rules.historicalSeconds;
+  const associated=find(op?.currentStop),radius=Number(associated?.recognitionMetres)||rules.radius;
+  const atReportedStop=contextUsable&&op.skipCandidate==null&&!op.outside&&associated&&Array.isArray(associated.coordinates)&&metres([p.longitude,p.latitude],associated.coordinates)+(p.accuracy_m??10)<=radius?associated:null;
+  const reportedStopped=!!atReportedStop&&finite(p.speed_kmh)&&p.speed_kmh>=0&&p.speed_kmh<=3;
+  const historical=contextUsable&&(q.age>q.delayed||!!i.unavailable);
+  const planAvailable=!!(contextUsable&&next&&op.skipCandidate==null);
+  const ageText=q.valid?(q.age<60?'Updated just now':'Updated '+Math.floor(q.age/60)+' min ago'):'';
+  const presentationKind=!contextUsable?'unavailable':historical?(reportedStopped?'historical_stopped':'historical_location'):phase==='UNKNOWN'&&reportedStopped?'reported_stopped':'fresh';
   const offRoute=finite(i.routePosition?.offRouteMetres)&&i.routePosition.offRouteMetres>150;
   const statusDetail=offRoute?'Reported location is outside the tour route':phase!=='UNKNOWN'?'':i.unavailable?'Waiting for a location update':!op?'Journey progress not yet confirmed':!q.coherent?'Waiting for a current location update':!q.quality?'Location quality is insufficient for ETA':finite(p?.speed_kmh)&&p.speed_kmh<=2?'Confirming the stop':finite(p?.speed_kmh)&&p.speed_kmh<rules.movingKmh?'Low speed; confirming direction':'Confirming travel direction';
-  const message=parked?'Parked at '+stop.name:arriving?'Arriving at '+stop.name:leaving?'Leaving '+stop.name:phase==='EN_ROUTE'&&next?'On the way to '+next.name:
-   planAvailable?'Next planned stop · '+next.name:q.quality&&!i.unavailable&&q.age<=q.delayed?'Van location updated':'Location temporarily unavailable';
+  const message=!contextUsable?'Live location unavailable':historical?(reportedStopped?'At stop · '+atReportedStop.name:'Live location delayed'):parked?'Parked at '+stop.name:arriving?'Approaching '+stop.name:leaving?'Leaving '+stop.name:phase==='EN_ROUTE'&&next?'Heading to '+next.name:reportedStopped?'At stop · '+atReportedStop.name:'Location updated';
   const passengerState=parked?'parked':arriving?'approaching':leaving?'departing':phase==='EN_ROUTE'?'moving':'unavailable';
   const etaRow=i.eta,etaIdentity=!etaRow||(String(etaRow.map_version_id)===String(op?.mapVersion)&&String(etaRow.next_stop_number)===String(next?.number)&&stamp(etaRow.calculated_at)===q.t&&
    (!etaRow.vehicle_id||etaRow.vehicle_id===i.vehicleId)&&(!etaRow.project_id||etaRow.project_id===i.projectId)&&(etaRow.source_run_id==null||String(etaRow.source_run_id)===String(op?.sourceRun))&&
    etaRow.eta_seconds===op?.etaSeconds&&(etaRow.confidence==null||['MEDIUM','HIGH'].includes(etaRow.confidence)));
   const validTravel=q.coherent&&gps==='live'&&!offRoute&&etaIdentity&&next&&finite(op?.etaSeconds)&&op.etaSeconds>=0;
-  const liveEta=validTravel&&moving&&(!op.currentStop||leaving),arrivingNow=arriving&&q.coherent&&gps==='live';
-  // Optional departure is an explicitly verified visit-bound application contract, never a timetable or provider guess.
-  const d=i.departure,departureAt=stamp(d?.at),knownDeparture=parked&&validTravel&&d?.verified===true&&d.vehicleId===i.vehicleId&&d.projectId===i.projectId&&
-   String(d.mapVersion)===String(i.mapVersion)&&String(d.sourceRun)===String(p.source_run_id)&&String(d.stopNumber)===String(stop.number)&&d.visitStartedAt===i.stopState?.entered_at&&departureAt>=now;
-  const contextTravel=phase==='UNKNOWN'&&planAvailable&&validTravel?op.etaSeconds:null;
-  const duration=validTravel&&parked?op.etaSeconds:null,etaSeconds=arrivingNow?0:liveEta?op.etaSeconds:knownDeparture?(departureAt-now)/1000+duration:null;
+  const liveEta=validTravel&&moving&&(!op.currentStop||leaving);
+  const duration=validTravel&&(parked||reportedStopped)?op.etaSeconds:null,etaSeconds=liveEta?op.etaSeconds:null;
   const mins=s=>s<60?'less than 1 min':'~'+Math.round(s/60)+' min';
-  const etaText=arrivingNow?'Arriving now':liveEta?'Estimated arrival · '+mins(etaSeconds):knownDeparture?'Departure '+new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/Tirane',hour:'2-digit',minute:'2-digit'}).format(departureAt)+' · next arrival '+mins(etaSeconds):duration!==null?'Travel · '+mins(duration)+' after departure':contextTravel!==null?(op.currentStop!=null?'Travel · '+mins(contextTravel)+' after departure':'Route travel estimate · '+mins(contextTravel)):'';
+  const etaText=liveEta?'Estimated arrival · '+mins(etaSeconds):duration!==null?mins(duration)+' travel after departure':'';
   const etaConfidence=etaSeconds!==null?'valid':finite(op?.etaSeconds)&&!validTravel?'outdated':'unavailable';
   const local=clock(now),schedule=i.schedule;
   const scheduleValid=schedule?.verifiedForVehicle===true&&schedule.vehicleId===i.vehicleId&&schedule.date===local.date&&finite(schedule.receivedAt)&&now-schedule.receivedAt>=0&&now-schedule.receivedAt<=90000&&Array.isArray(schedule.times)&&schedule.times.every(t=>typeof t==='string'&&/^(?:[01]\d|2[0-3]):[0-5]\d$/.test(t));
   const times=scheduleValid?[...new Set(schedule.times)].sort():[],scheduledDeparture=times.find(t=>t>=local.time)||null;
   const completed=(e.visited||[]).filter(n=>find(n)).map(String),target=active||next,live=!!e.live&&phase!=='UNKNOWN'&&gps==='live';
-  const model={phase,message,statusDetail,plannedNextStop:planAvailable?next:null,planAvailable,etaStatusText:etaText?'':'ETA unavailable',passengerState,activity:parked?'parked':arriving?'approaching':leaving?'departed':moving?'moving':'unknown',activityConfidence:phase==='UNKNOWN'?'unknown':live?'confirmed':'historical',
-   gps,positionFreshness:gps,evidenceLive:live,statusValidUntil:phase==='UNKNOWN'?null:new Date(e.validUntil??(q.t+(parked?rules.parkGraceSeconds:q.delayed)*1000)).toISOString(),positionValid:q.valid,qualityAccepted:q.quality,coherent:q.coherent,parkingVerified:parked,markerVisible:q.quality&&q.age<=offline&&(!i.unavailable||parked),
+  const model={phase,message,presentationKind,reportedStop:atReportedStop,reportedStopped,contextUsable,updateAge:q.valid&&q.quality?ageText:'',statusDetail,plannedNextStop:planAvailable?next:null,planAvailable,etaStatusText:'',passengerState,activity:parked?'parked':arriving?'approaching':leaving?'departed':moving?'moving':'unknown',activityConfidence:phase==='UNKNOWN'?'unknown':live?'confirmed':'historical',
+   gps,positionFreshness:gps,evidenceLive:live,statusValidUntil:contextUsable?new Date(q.t+(historical?rules.historicalSeconds:q.delayed)*1000).toISOString():null,positionValid:q.valid,qualityAccepted:q.quality,coherent:q.coherent,parkingVerified:parked,markerVisible:q.valid&&q.quality,
    markerTone:!live?'grey':parked?'blue':arriving?'amber':moving?'green':'grey',currentStop:active,departureStop:leaving?stop:null,currentConfirmed:parked,nextStop:next,nextConfirmedStop:phase==='UNKNOWN'?null:target,
    completedStops:completed,progressKnown:!!op,progressText:'Confirmed visits this session · '+completed.length+' of '+(i.stops||[]).length+' stops',
-   etaConfidence,etaText,etaSeconds,etaKind:arrivingNow?'arriving':liveEta?'arrival':knownDeparture?'departure_and_arrival':duration!==null?'after_departure':contextTravel!==null?'travel_estimate':'unavailable',travelSeconds:duration??contextTravel,
-   timing:etaText||(scheduledDeparture?'Scheduled departure · '+scheduledDeparture:''),secondary:parked&&next?'Next stop · '+next.name:leaving?'Next stop · '+(next?.name||'not confirmed'):'',
-   lastObservationAt:q.valid?new Date(q.t).toISOString():null,ageSeconds:q.valid?Math.max(0,q.age):null,locationHistorical:!live,
+   etaConfidence,etaText,etaSeconds,etaKind:liveEta?'arrival':duration!==null?'after_departure':'unavailable',travelSeconds:duration,
+   timing:etaText||(scheduledDeparture?'Scheduled departure · '+scheduledDeparture:''),secondary:planAvailable?'Next on route: '+next.name:'',
+   lastObservationAt:q.valid?new Date(q.t).toISOString():null,ageSeconds:q.valid?Math.max(0,q.age):null,locationHistorical:q.valid&&(historical||!snapshotMatches||q.age>q.delayed||!!i.unavailable),
    scheduledDeparture,service:scheduleValid?'scheduled':'unknown',serviceMessage:scheduleValid&&!times.length?'No scheduled tours today':scheduledDeparture?'Scheduled departure · '+scheduledDeparture:scheduleValid?'No more scheduled departures today':''};
+  // Chart ticks indicate reached/passed route order, independently of dwell-confirmed visits.
+  const routeOrder=(i.stops||[]).filter(s=>s.active!==false).slice().sort((a,b)=>Number(a.number)-Number(b.number));
+  const frontier=routeOrder.findIndex(s=>String(s.number)===String(op?.currentStop??op?.lastDeparted));
+  const recognized=new Set((Array.isArray(op?.completedStops)?op.completedStops:[]).map(String));
+  const progressTrusted=snapshotMatches&&q.quality&&op.skipCandidate==null;
   model.stopStatuses=(i.stops||[]).filter(s=>s.active!==false).map(s=>{const at=parked&&String(s.number)===String(stop.number),aim=phase!=='UNKNOWN'&&String(s.number)===String((parked?next:target)?.number),departed=leaving&&String(s.number)===String(stop.number),seen=completed.includes(String(s.number));
-   const label=at?'Parked here':departed?'Leaving':aim?arriving?'Arriving now':parked?'Next stop':'On the way':planAvailable&&String(s.number)===String(next.number)?'Planned next stop':seen?'Visited (dwell confirmed)':'Tour stop';
-   const timing=aim||contextTravel!==null&&planAvailable&&String(s.number)===String(next.number)?etaText:'';
-   return {...s,id:String(s.id),number:String(s.number),current:at,next:aim&&!at,completed:seen,label:label+(timing&&timing!==label?' · '+timing:''),bridgeState:at?'current':departed&&seen?'departed':aim?'next':'upcoming',eta:timing};});
+   const checked=progressTrusted&&(recognized.has(String(s.number))||frontier>=0&&routeOrder.findIndex(x=>String(x.number)===String(s.number))<=frontier);
+   const missed=(e.skipped||[]).includes(String(s.number))&&!seen;
+   const reported=reportedStopped&&String(s.number)===String(atReportedStop.number);
+   const label=reported&&!parked?message:at?'Parked here':departed?'Leaving':aim?arriving?'Approaching':parked?'Next stop':'On the way':planAvailable&&String(s.number)===String(next.number)?'Planned next stop':seen?'Visited (dwell confirmed)':missed?'Skipped · visit unconfirmed':checked?'Passed in route order · visit unconfirmed':phase==='UNKNOWN'?'Status unknown':'Upcoming stop';
+   const timing=aim||duration!==null&&planAvailable&&String(s.number)===String(next.number)?etaText:'';
+   return {...s,id:String(s.id),number:String(s.number),checked,current:at,next:!at&&planAvailable&&String(s.number)===String(next.number),completed:seen,skipped:missed,unknown:!contextUsable&&!seen&&!missed,label:label+(timing&&timing!==label?' · '+timing:''),bridgeState:at?'current':departed&&seen?'departed':planAvailable&&String(s.number)===String(next.number)?'next':'upcoming',eta:timing};});
   return model;
  }
  root.touristState={resolve,createSession,clock,rules};

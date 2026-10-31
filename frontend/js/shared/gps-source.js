@@ -57,10 +57,14 @@ window.selectedTracking = (function() {
                 });
             }
         }
-        var fallback = Number(window.appConfig.trackingFallbackIntervalMs || 15000);
-        if (!Number.isFinite(fallback)) fallback = 15000;
-        fallback = Math.max(10000, Math.min(30000, fallback));
-        var ttl = realtime ? (entry.connected ? 60000 : fallback) : 4900;
+        var fallback = Number(window.appConfig.trackingFallbackIntervalMs || 5000);
+        if (!Number.isFinite(fallback)) fallback = 5000;
+        fallback = Math.max(5000, Math.min(30000, fallback));
+        // Use the existing visible-page refresh cadence even while Realtime is joined.
+        // Re-reading the snapshot never changes its provider observation clock.
+        var interval = Number(window.appConfig.gpsUpdateInterval || 5000);
+        if (!Number.isFinite(interval)) interval = 5000;
+        var ttl = Math.max(5000, Math.min(30000, interval)) - 100;
         if (!entry.pending && Date.now() < entry.retryAfter) {
             if (entry.value) return Promise.resolve(entry.value);
             return Promise.reject(new Error('Tracking reconnect pending'));

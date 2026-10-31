@@ -81,6 +81,9 @@ function updateUserPosition(position) {
         Number(accuracy) || null;
 
 
+    if(userMarker)userMarker.setOpacity(1);
+    if(userAccuracyCircle)userAccuracyCircle.setStyle({opacity:0.35,fillOpacity:0.06});
+
     userPosition =
         L.latLng(
             latitude,
@@ -113,7 +116,7 @@ function updateUserPosition(position) {
 
 
         userMarker.bindPopup(
-            '<strong>You are here</strong>', { autoPan: false, className: 'user-location-popup' }
+            '<strong>You are here</strong>', { autoPan: false, closeButton: false, className: 'user-location-popup' }
         );
 
     }
@@ -194,6 +197,11 @@ function updateUserPosition(position) {
 
 
 function userLocationError(error) {
+    pendingUserCamera = false;
+    hideNearestStopCard();
+    userPosition = null;
+    if(userMarker)userMarker.setOpacity(0);
+    if(userAccuracyCircle)userAccuracyCircle.setStyle({opacity:0,fillOpacity:0});
 
     if (watchID !== null) {
         navigator.geolocation.clearWatch(watchID);
@@ -280,6 +288,7 @@ function updateNearestStopCard() {
 
     stopRecords.forEach(
         function(stop) {
+            if(stop.feature.properties.active===false)return;
 
             var distance =
                 turf.distance(
@@ -434,7 +443,8 @@ function walkToNearestStop() {
 
     /* Use the current tab. On iOS, opening Google Maps in a new tab can leave
        a blank intermediary tab behind when the native Maps app launches. */
-    window.location.assign(url);
+    if(window.parent!==window)window.open(url,'_blank','noopener,noreferrer');
+    else window.location.assign(url);
 }
 
 
@@ -451,6 +461,7 @@ function findUser() {
     ) {
 
 
+        pendingUserCamera = true;
         startUserLocation();
 
 

@@ -93,10 +93,10 @@ function renderArrivalList(){
   }
   item.style.setProperty('--stop-color',appearance.color);item.style.setProperty('--stop-tint','rgba('+rgb.join(',')+',0.09)');
   item.classList.toggle('completed',!!entry?.completed);item.classList.toggle('current',!!entry?.current);item.classList.toggle('next',!entry?.current&&!!entry?.next);
-  const portrait='<span class="list-stop-number" aria-hidden="true">'+escapeHTML(p.stopNumber)+'</span>';
+  const portrait=window.stopDesign.portrait(p,false);
   if(item._portrait!==portrait){item.querySelector('.arrival-portrait').innerHTML=portrait;item._portrait=portrait;}
   item.querySelector('.arrival-name').textContent=p.name;
-  item.querySelector('.arrival-time').textContent=entry?.label||'Route information updating';
+  item.querySelector('.arrival-time').textContent=(entry?.label||'Route information updating')+(model?.updateAge?' · '+model.updateAge:'');
   item.onclick=()=>{closeStopsPanel();followVan=false;map.setView(L.latLng(stop.feature.geometry.coordinates[1],stop.feature.geometry.coordinates[0]),16);stop.layer.openPopup();};
   if(container.children[index]!==item)container.insertBefore(item,container.children[index]||null);index++;
  });
@@ -107,7 +107,7 @@ function updateStopPopups(){
  stopRecords.forEach(record=>{
   const html=buildPointPopupHTML(record.feature.properties);
   // setContent refreshes an already open popup as observations age.
-  if(record.layer.getPopup())record.layer.setPopupContent(html);else record.layer.bindPopup(html);
+  if(record.layer.getPopup())record.layer.setPopupContent(html);else record.layer.bindPopup(html, {closeButton:false});
  });
 }
 
