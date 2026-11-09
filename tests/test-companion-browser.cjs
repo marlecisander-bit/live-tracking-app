@@ -1,6 +1,6 @@
 /* Full canonical public page, real Leaflet/Turf and controls; all service traffic mocked before dispatch. */
 const fs=require('fs'),http=require('http'),path=require('path'),assert=require('assert/strict'),{chromium}=require('playwright-core');
-const root=path.resolve('frontend'),output=path.resolve(process.env.TRACKER_EVIDENCE_DIR||'reports/companion-20261031'),leaflet=path.dirname(require.resolve('leaflet/dist/leaflet.js'));
+const root=path.resolve(process.env.TRACKER_FRONTEND_DIR||'frontend'),output=path.resolve(process.env.TRACKER_EVIDENCE_DIR||'reports/companion-20261031'),leaflet=path.dirname(require.resolve('leaflet/dist/leaflet.js'));
 const mapData=require('./fixtures/published-map-106.json').map_data,photos=require('./fixtures/stop-photos/manifest.json');
 const turfFile=process.env.PHASE1_TURF_FILE||path.join(__dirname,'fixtures/turf-7.3.5.min.js');assert(fs.existsSync(turfFile),'Supply existing pinned Turf 7.3.5 via PHASE1_TURF_FILE');
 const server=http.createServer((req,res)=>{const u=new URL(req.url,'http://localhost');if(u.pathname==='/host'){res.setHeader('Content-Type','text/html');res.end('<style>body{margin:0}iframe{display:block;border:0;width:100%;height:100%}</style><div style="width:'+Number(u.searchParams.get('w'))+'px;height:'+Number(u.searchParams.get('h'))+'px"><iframe allow="geolocation" title="Synthetic map frame" src="http://127.0.0.1:4199/live-map.html?embed=1&websiteStatus=external-v1"></iframe></div><div style="height:1000px">Parent content</div>');return;}const file=path.resolve(root,'.'+u.pathname);if(!file.startsWith(root+path.sep)||!fs.existsSync(file)){res.writeHead(404).end();return;}res.setHeader('Content-Type',file.endsWith('.js')?'application/javascript':file.endsWith('.css')?'text/css':file.endsWith('.svg')?'image/svg+xml':'text/html');res.end(fs.readFileSync(file));});
@@ -95,6 +95,7 @@ const server=http.createServer((req,res)=>{const u=new URL(req.url,'http://local
  }
  // Approved first-load historical context: actual full child runtime, isolated source snapshot.
  for(const [w,h] of [[390,844],[768,1024],[1440,900]]){
+  await page.evaluate(()=>sessionStorage.removeItem('tourist-confirmed-visits-v1'));
   await page.setViewportSize({width:w,height:h});await page.goto('http://127.0.0.1:4199/live-map.html?fixtureStop=1&fixtureAge=270');await page.waitForFunction(()=>window.publicOperationalStatus?.message==='At stop: Start/Stop');
   assert.equal(await page.locator('#journey-eta-row').isVisible(),false);assert.equal(await page.locator('#operational-live').isVisible(),false);assert.equal(await page.evaluate(()=>publicOperationalStatus.completedStops.length),0);assert.equal(await page.evaluate(()=>vanMarker.options.opacity),1);assert(await page.evaluate(()=>vanMarker.getLatLng().distanceTo(L.latLng(canonicalLivePosition.latitude,canonicalLivePosition.longitude))<1));
   assert.equal(await page.locator('#tourist-timeline .journey-circle').count(),5);assert.equal(await page.evaluate(()=>followVan),true);await page.waitForFunction(()=>map.getZoom()===VAN_FOLLOW_ZOOM);
@@ -103,6 +104,8 @@ const server=http.createServer((req,res)=>{const u=new URL(req.url,'http://local
   await page.clock.fastForward(331000);await page.waitForFunction(()=>publicOperationalStatus.message==='Live location unavailable');assert.equal(await page.evaluate(()=>vanMarker.options.opacity),1);assert.equal(await page.evaluate(()=>followVan),true);assert((await page.locator('.van-marker-wrap').getAttribute('title')||await page.locator('.van-marker-wrap').evaluate(el=>el.parentElement.title)).includes('Last reported position'));assert.equal(await page.locator('#journey-eta-row').isVisible(),false);await page.screenshot({path:output+'/unavailable-'+w+'.png'});
   results.push({mode:'historical-first-load-reload-expiry',w,h,noInventedVisit:true,fadedVan:true});
  }
+ assert(sent.some(r=>r.path==='/js/vendor/turf.min.js'),'selected Turf loaded from built artifact');
+ assert.deepEqual(await page.evaluate(()=>Object.keys(window.turf).sort()),['along','bearing','distance','length','lineSliceAlong','lineString','nearestPointOnLine','point'].sort());
  assert.deepEqual(errors,[]);fs.writeFileSync(output+'/browser.json',JSON.stringify({result:'PASS',results,errors,limitations:['Real child runtime with synthetic transport and offline assets; separate paired-stop runner covers actual website','Physical devices, real GPS, canonical redirects and paired acceptance remain pending']},null,2));
  console.log('PASS companion real-runtime iframe, projection parity, cadence, expiry, reload and standalone browser checks');
  }finally{await browser.close();server.close();parentServer.close()}})().catch(e=>{console.error(e);process.exitCode=1;server.close()});

@@ -5,7 +5,7 @@
   "baselineManifestSha256": "92c40e3a52cca08912e6b5da43a6ea4181e6b1a244d37174d4a42a88c4814891",
   "localOverrides": {
     "js/shared/gps-source.js": "302fa4013362dcb056577b7cf3c76d394f328abebb7700bc595812ffcbee31c4",
-    "live-map.html": "9b19e2bf93f428cc4ee103ec8114364498b69823557ffbf0d5b159404335b280",
+    "live-map.html": "62148185c987adf3edd514070cb15075b93c365429b6ff80a55ed7bd6d13c233",
     "js/live-map/public-presentation.js": "a355b8fb6c5c5a79d8754d4b507925216c59ac3c78077472edb57148a01eecff",
     "css/live-map/final-tourist.css": "0d78ec9dfd4c50454cb52a5106dc72351908679f29b98cada81755e3e0348701",
     "js/live-map/calculate-arrivals.js": "2131d928f11cd4ad17a80c082915b17b3515f4e9e9c99e539c087faa30d1f017",
@@ -42,6 +42,8 @@
     "assets/brand/admin-icons-LICENSE.txt": "b495047bd93a9b06913511076f504daba17d5bbeb3e0650f3bb53a4220329c57",
     "js/admin/admin-icons.js": "2afa827ac8633d1350bfaa2012bd91ef18bd06d5fdee040f48f94b51c90ca010",
     "js/admin/admin-shell.js": "92e4d2f6883da127e69bb41f36e50c03d2e327b564eadcd7756d354277370821",
-    "css/admin/admin-redesign.css": "22d35217f72daa50b70fc12ba9372b903ee952a30c32419c8d3fdce743fe2ed8"
+    "css/admin/admin-redesign.css": "22d35217f72daa50b70fc12ba9372b903ee952a30c32419c8d3fdce743fe2ed8",
+    "js/vendor/turf.min.js": "d8a177c15dd24af5200346284b651604d8548f840c3596787424b4e549f879e6",
+    "js/vendor/turf.LICENSE": "f9b32b82fd5a1d3a990526d86da97f42fb805d9f4d9f978125c4679b674fce44"
   }
 }
