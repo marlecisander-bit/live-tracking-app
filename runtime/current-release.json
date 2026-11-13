@@ -7,7 +7,7 @@
     "js/shared/gps-source.js": "302fa4013362dcb056577b7cf3c76d394f328abebb7700bc595812ffcbee31c4",
     "live-map.html": "62148185c987adf3edd514070cb15075b93c365429b6ff80a55ed7bd6d13c233",
     "js/live-map/public-presentation.js": "a355b8fb6c5c5a79d8754d4b507925216c59ac3c78077472edb57148a01eecff",
-    "css/live-map/final-tourist.css": "0d78ec9dfd4c50454cb52a5106dc72351908679f29b98cada81755e3e0348701",
+    "css/live-map/final-tourist.css": "db43e260aebebd87ce7b6b8f836faa0c1454887ab56456db1af3c0c570a48b85",
     "js/live-map/calculate-arrivals.js": "2131d928f11cd4ad17a80c082915b17b3515f4e9e9c99e539c087faa30d1f017",
     "js/live-map/tourist-state.js": "a821fa532954ea3d55a31ffded7b968a4b5a470bda5da32dadabcf350c275f64",
     "js/live-map/tourist-view.js": "3ab2f73030f42140bf71f1bf48068678be933658c2e3beb2ab19582259a157aa",
@@ -22,7 +22,7 @@
     "js/shared/app-config.js": "e12319c8bb83e3f9db42583f4a95c047583bdee79e00e4eb15410090fb5fe124",
     "js/live-map/create-map.js": "fb49146902c692d945e5cad2b76b0b20375072a5f8269d8b48f9c3325f303264",
     "js/live-map/map-icons.js": "4c8730d8eb22204af2dde79ee64548a4a7d53a2296d40b9c29b913cb8e2118d8",
-    "js/live-map/stops-panel.js": "fca1fd886aa3f7e523c4657df5425088426f4e3080bd5c460ae0144eb8dacdf3",
+    "js/live-map/stops-panel.js": "3c9bffe58d17fc4ed66be0bfd1ab42365d599436c458b9b78968e63fa0ef3d76",
     "js/live-map/journey-route.js": "d70412b3e002c8c94f65f274e5a5757a6a62cf0e8873d691861992aca00c74ad",
     "js/live-map/stop-marker-layout.js": "43a260b26873123e1eb46509145b1c59880d8de94d1bc110f95fe34582b10ca4",
     "js/shared/tracking-state.js": "db238d13e18d1530cb2575e619f9b9de316590a900749282f3a461ba63e00cef",
@@ -30,7 +30,8 @@
     "js/live-map/track-user.js": "f19b9071560d0e958553a1b685ac8dde9da95bff8ee3b4d9079654b261a3cc45",
     "js/live-map/map-buttons.js": "92a3c29d0bb0465a6eeaa98ea1cc5bb5d42d33ccdbe59c3682854bd3dbf77043",
     "index.html": "d94f25db9f3790551e275b2437f887e22b47b99bbbd0124ad6ec6b3bd311d10b",
-    "js/live-map/display-full-route.js": "6a634ec2c68df8e86c046c52c65cd3fca00d7ad802f86ce0cfe5938ba711e309"
+    "js/live-map/display-full-route.js": "6a634ec2c68df8e86c046c52c65cd3fca00d7ad802f86ce0cfe5938ba711e309",
+    "css/stop-design.css": "5528bf21a950f2db3797af9d76fa7ec13ade996c6d472382dfc84b8781681445"
   },
   "status": "Owner-authorized coordinated tourist experience release \u2014 31 October 2026",
   "additionalFiles": {
