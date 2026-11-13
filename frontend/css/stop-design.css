@@ -20,14 +20,20 @@
 #app[data-presentation] #stops-panel { position:absolute; left:auto; right:max(10px,env(safe-area-inset-right)); width:min(420px,calc(100% - 20px - env(safe-area-inset-left) - env(safe-area-inset-right))); height:min(480px,calc(100% - var(--map-bottom,100px) - 16px)); min-height:0; max-height:none; border-radius:18px; overflow:hidden; }
 #app #panel-backdrop { position:absolute; bottom:var(--map-bottom,100px); }
 #app #stop-arrivals-list { overscroll-behavior:contain; touch-action:pan-y; padding:8px 10px 12px; min-height:0; }
-#app .arrival-item { display:grid; grid-template-columns:52px minmax(0,1fr); gap:10px; margin-bottom:7px; min-height:72px; border:1px solid var(--stop-color); border-radius:13px; padding:10px; background:var(--stop-tint); color:#202731; }
-#app .arrival-item:is(.current,.next,.completed) { background:var(--stop-tint); border-color:var(--stop-color); }
-#app .arrival-item .stop-portrait { width:46px; height:46px; grid-row:1/3; }
-#app .arrival-item .stop-number-badge { width:22px; height:22px; font-size:11px; }
-#app .arrival-item .arrival-name { color:#202731; font-size:14px; font-weight:650; line-height:1.3; overflow-wrap:anywhere; }
+#app .arrival-item { display:grid; grid-template-columns:104px minmax(0,1fr); gap:3px 14px; margin-bottom:7px; min-height:72px; border:1px solid #e9e6e2; border-radius:13px; padding:10px; background:#fff; color:#202731; }
+#app .arrival-item:is(.current,.next,.completed) { background:var(--stop-tint); border-color:#e9e6e2; }
+#app .arrival-item .arrival-portrait { grid-row:1/3; align-self:center; }
+#app .arrival-item .stop-portrait { width:104px; height:76px; }
+#app .arrival-item .stop-number-badge { top:6px; left:6px; width:24px; height:24px; font-size:12px; border:0; border-radius:6px; box-shadow:none; }
+#app .arrival-item .arrival-name { color:#202731; font-size:14px; font-weight:650; line-height:1.3; align-self:end; overflow-wrap:anywhere; }
 #app .arrival-time { grid-column:2; text-align:left; font-size:12px; font-weight:500; color:#44505f; white-space:normal; line-height:1.35; }
 #app .arrival-item:focus-visible { outline:3px solid #192d45; outline-offset:-3px; }
 #stop-appearance-group input[type=url] { width:100%; }
 #stop-appearance-group input[type=color] { width:100%; min-height:44px; padding:4px; }
 #stop-appearance-group small { display:block; margin:6px 0 12px; line-height:1.4; color:#59626e; }
 @media (min-width:768px) { .stop-marker-shell>.stop-portrait { width:72px; height:72px; } .stop-name-pill { font-size:12px; max-width:144px; } }
+
+#app .arrival-item .stop-photo-frame{border:0;padding:0;border-radius:10px;box-shadow:none;outline:0;}
+#app .arrival-item .stop-photo{width:100%;height:100%;object-fit:cover;border-radius:0;}
+.arrival-updated{display:block;font-size:10px;font-weight:400;color:#6b7280;margin-top:3px;}
+@media(max-width:600px){#app .arrival-item{grid-template-columns:88px minmax(0,1fr);gap:3px 12px;}#app .arrival-item .stop-portrait{width:88px;height:68px;}}

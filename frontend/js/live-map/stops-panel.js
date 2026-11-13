@@ -96,7 +96,8 @@ function renderArrivalList(){
   const portrait=window.stopDesign.portrait(p,false);
   if(item._portrait!==portrait){item.querySelector('.arrival-portrait').innerHTML=portrait;item._portrait=portrait;}
   item.querySelector('.arrival-name').textContent=p.name;
-  item.querySelector('.arrival-time').textContent=(entry?.label||'Route information updating')+(model?.updateAge?' · '+model.updateAge:'');
+  const timing=item.querySelector('.arrival-time');timing.textContent=entry?.label||'Route information updating';
+  const updated=document.createElement('small');updated.className='arrival-updated';updated.textContent=model?.updateAge||'';timing.append(updated);
   item.onclick=()=>{closeStopsPanel();followVan=false;map.setView(L.latLng(stop.feature.geometry.coordinates[1],stop.feature.geometry.coordinates[0]),16);stop.layer.openPopup();};
   if(container.children[index]!==item)container.insertBefore(item,container.children[index]||null);index++;
  });

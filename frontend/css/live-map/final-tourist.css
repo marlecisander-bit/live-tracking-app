@@ -36,7 +36,7 @@
 .tourist-stop-icon[data-journey-state=approaching] .stop-pin{outline-color:#b56b00}
 .tourist-stop-icon:focus-visible .stop-pin{outline:4px solid #123c61;outline-offset:4px}
 .tourist-stop-icon:has(.leaflet-popup-open) .stop-pin{outline:3px solid #123c61}
-#stop-arrivals-list .arrival-portrait{width:38px;height:38px;flex-shrink:0}
+
 .list-stop-number{display:flex;width:34px;height:34px;align-items:center;justify-content:center;border-radius:50%;background:#edf2f7;color:#23445f;font-size:15px;font-weight:800}
 #stop-arrivals-list .arrival-item{min-height:64px}
 [data-journey-tone=green] .van-marker-circle{box-shadow:0 0 0 7px #148c4b20,0 3px 10px #233b4928}
@@ -112,7 +112,7 @@
 .stop-pin-compact .photo-stop>.stop-portrait{width:44px;height:44px;left:2px;top:4px}
 .stop-pin-compact .photo-stop .stop-name-pill{display:none}
 .stop-selected .stop-photo-frame,.tourist-current-stop .photo-stop .stop-photo-frame{outline:3px solid #123c61;outline-offset:3px}
-#stop-arrivals-list .arrival-portrait{width:46px;height:46px}
+
 #tourist-timeline li+li:before{height:0;top:25px;background:none;border-top:2px dashed #e0ad00}
 #tourist-timeline li.leg-completed:before{background:none;border-top:3px solid #168051}
 /* Approved photo chart; historical association never paints a visit green. */
